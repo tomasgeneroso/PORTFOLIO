@@ -20,7 +20,6 @@ import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, SearchIcon } from "@/components/icons";
 
 export const Navbar = () => {
-  console.log(process.env)
   const title = process.env.NEXT_PUBLIC_PORTFOLIO_NAME || "Portafolios";
 
   return (
@@ -31,7 +30,9 @@ export const Navbar = () => {
         justify="center"
       >
         <div className="w-full hidden md:flex justify-between">
-          <h2 className="w-48">{title}</h2>
+          <NextLink href="/" className="w-48">
+            {title}
+          </NextLink>
           <ul className="flex gap-4 justify-start ml-2">
             {siteConfig.navItems.map((item) => (
               <NavbarItem key={item.href}>
@@ -57,7 +58,9 @@ export const Navbar = () => {
       {/* FOR MOBILE */}
       <NavbarContent className="sm:hidden basis-1 pl-4 w-full">
         <div className="flex justify-between items-center w-full">
-          <h2 className="w-48">{title}</h2>
+          <NextLink href="/" className="w-48">
+            {title}
+          </NextLink>
           <ThemeSwitch />
         </div>
         <NavbarMenuToggle />
