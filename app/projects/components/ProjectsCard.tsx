@@ -42,7 +42,7 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ projects }) => {
             <div className="flex flex-col text-center rounded border border-gray-300 justify-center px-10 py-4 w-full">
               <div className="flex flex-row items-center justify-center w-full space-x-10">
                 <img
-                  src={projectDetails.enterpriseLogo}
+                  src={projectDetails.enterpriseicono}
                   alt={`${projectName} logo`}
                   className="w-14 h-14"
                 />

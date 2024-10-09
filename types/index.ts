@@ -1,3 +1,4 @@
+
 export interface Icon {
   size?: number;
   width?: number;
@@ -71,3 +72,6 @@ export interface AvatarProps {
   className?: string;
  
 }
+export type ProjectsCardProps ={ 
+  projects: Project[];
+ }
