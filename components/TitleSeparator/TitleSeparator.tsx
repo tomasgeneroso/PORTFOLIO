@@ -1,0 +1,19 @@
+import { title } from "@/components/primitives";
+import { FunctionComponent } from "react";
+interface TitleSeparatorProps {
+  titleText: string;
+}
+
+export const TitleSeparator: FunctionComponent<TitleSeparatorProps> = ({
+  titleText,
+}) => {
+  return (
+    <div className="flex h-10 w-full items-center px-2 mb-20 ">
+      <h1 className={title({ size: "md" })}>{titleText}</h1>
+      <div
+        className="flex-1 ml-10 mb-1 w-full h-6 bg-amber-100"
+        style={{ alignSelf: "flex-end" }}
+      ></div>
+    </div>
+  );
+};

@@ -1,7 +1,8 @@
 export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
-  name: process.env.NEXT_PUBLIC_PORTFOLIO_NAME || "Portafolios",
+  name: process.env.NEXT_PUBLIC_PORTFOLIO_NAME || "Portfolio",
+  
   navItems: [
     {
       label: "Home",
@@ -9,19 +10,19 @@ export const siteConfig = {
     },
     {
       label: "Skills",
-      href: "/skills",
+      href: "#skillsSection",
     },
     {
       label: "Projects",
-      href: "/projects",
+      href: "#projectsSection",
     },
     {
       label: "Testimonies",
-      href: "/Tesimonies",
+      href: "#testimoniesSection",
     },
     {
       label: "Contact",
-      href: "/contact",
+      href: "#contactSection",
     },
   ],
   navMenuItems: [
@@ -31,7 +32,7 @@ export const siteConfig = {
     },
     {
       label: "Skills",
-      href: "/skills",
+      href: "#skillsSection", 
     },
     {
       label: "Portfolio",
@@ -39,11 +40,11 @@ export const siteConfig = {
     },
     {
       label: "Testimonies",
-      href: "/Tesimonies",
+      href: "#testimoniesSection",
     },
     {
       label: "Contact",
-      href: "/contact",
+      href: "#contactSection",
     },
   ],
 };
