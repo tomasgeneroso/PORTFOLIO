@@ -46,7 +46,7 @@ export default function RootLayout({
           <main className="container flex w-full h-full mx-2 pt-16  ">
             <div className="flex w-4/5 mb-16">{children}</div>
             {/*GRAFICO 3D */}
-            <div className="container bg-black w-1/5 justify-self-end "></div>
+            {/*  <div className="container bg-black w-1/5 justify-self-end "></div>*/}
           </main>
         </Providers>
       </body>
