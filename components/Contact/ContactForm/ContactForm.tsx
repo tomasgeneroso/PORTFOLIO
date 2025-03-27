@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { ContactInfoProps } from "@/types/index";
-import Github from "@/components/Icons/Github";
-import Linkedin from "@/components/Icons/Linkedin";
-import Gmail from "@/components/Icons/Gmail";
+import {
+  GithubIcon,
+  LinkedinIcon,
+  GmailIcon,
+} from "@/components/Icons/SkillIcons";
+
 const ContactForm: React.FC<ContactInfoProps> = ({ contactInfo }) => {
   return (
     <section className="bg-white dark:bg-gray-900">
@@ -12,9 +15,9 @@ const ContactForm: React.FC<ContactInfoProps> = ({ contactInfo }) => {
             {Object.entries(contactInfo).map(([platform, value], index) => {
               return (
                 <div key={index}>
-                  {platform == "Github" && <Github size={29} />}
-                  {platform == "Linkedin" && <Linkedin />}
-                  {platform == "Gmail" && <Gmail width={37} height={37} />}
+                  {platform == "Github" && <GithubIcon size={29} />}
+                  {platform == "Linkedin" && <LinkedinIcon />}
+                  {platform == "Gmail" && <GmailIcon size={29} />}
                 </div>
               );
             })}

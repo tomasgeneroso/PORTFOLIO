@@ -1,9 +1,6 @@
 import React from "react";
 
-const CopyIcon: React.FC<{ size?: number; className?: string }> = ({
-  size = 24,
-  className = "",
-}) => (
+const CopyIcon = ({ size = 24, ...props }) => (
   <svg
     id="Copy_24"
     width={size}
@@ -11,7 +8,7 @@ const CopyIcon: React.FC<{ size?: number; className?: string }> = ({
     viewBox="0 0 24 24"
     xmlns="http://www.w3.org/2000/svg"
     xmlnsXlink="http://www.w3.org/1999/xlink"
-    className={className}
+    {...props}
   >
     <rect width="24" height="24" stroke="none" fill="#000000" opacity="0" />
     <g transform="matrix(1.43 0 0 1.43 12 12)">

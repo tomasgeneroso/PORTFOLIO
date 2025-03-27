@@ -1,9 +1,9 @@
 import { IconSvgProps } from "@/types";
-const Gmail: React.FC<IconSvgProps> = ({ width, height }) => {
+const Gmail: React.FC<IconSvgProps> = ({ size = 24 }) => {
   return (
     <svg
-      width={width}
-      height={height}
+      width={size}
+      height={size}
       viewBox="0 0 32 32"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
