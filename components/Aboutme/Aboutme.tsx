@@ -8,7 +8,7 @@ import tomasgenerosoimage from "@/components/Aboutme/tomasgenerosoimage.jpeg";
 const AboutMe: React.FC<UserProps> = ({ userData }) => {
   return (
     <section
-      className="flex flex-col w-full mx-0 px-2 h-screen "
+      className="flex flex-col w-full mx-0 px-2 h-screen"
       id="aboutMeSection"
     >
       <TitleSeparator titleText="About me" />

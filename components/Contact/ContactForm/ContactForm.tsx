@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { ContactInfoProps } from "@/types/index";
 import {
   GithubIcon,
@@ -10,15 +10,21 @@ const ContactForm: React.FC<ContactInfoProps> = ({ contactInfo }) => {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="px-4 mx-auto max-w-screen-md">
-        <div className="flex flex-col  justify-center lg:mb-8">
-          <div className="flex flex-row items-center justify-center">
+        <div className="flex flex-col justify-center lg:mb-8">
+          <div className="flex flex-row items-center justify-center gap-4">
             {Object.entries(contactInfo).map(([platform, value], index) => {
+              const href = platform === "Gmail" ? `mailto:${value}` : value;
               return (
-                <div key={index}>
-                  {platform == "Github" && <GithubIcon size={29} />}
-                  {platform == "Linkedin" && <LinkedinIcon />}
-                  {platform == "Gmail" && <GmailIcon size={29} />}
-                </div>
+                <a
+                  key={index}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {platform === "Github" && <GithubIcon size={29} />}
+                  {platform === "Linkedin" && <LinkedinIcon size={29} />}
+                  {platform === "Gmail" && <GmailIcon size={29} />}
+                </a>
               );
             })}
           </div>
@@ -60,7 +66,7 @@ const ContactForm: React.FC<ContactInfoProps> = ({ contactInfo }) => {
           </div>
           <button
             type="submit"
-            className="py-3 px-5 text-sm font-normal text-center text-black  bg-amber-100 ring  ring-amber-100 sm:w-fit transition duration-300 ease-in-out hover:bg-white focus:ring-4 focus:outline-none focus:ring-amber-100 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+            className="py-3 px-5 text-sm font-normal text-center text-black bg-amber-100 ring ring-amber-100 sm:w-fit transition duration-300 ease-in-out hover:bg-white focus:ring-4 focus:outline-none focus:ring-amber-100 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
           >
             Send message
           </button>

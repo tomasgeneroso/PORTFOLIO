@@ -4,7 +4,10 @@ import TimeLine from "./TimeLine";
 import { UserProps } from "@/types";
 const PortfolioSection: React.FC<UserProps> = ({ userData }) => {
   return (
-    <section className="flex flex-col w-full h-screen" id="projectsSection">
+    <section
+      className="flex flex-col w-full h-screen mb-4"
+      id="projectsSection"
+    >
       <TitleSeparator titleText="Projects" />
       <div className="flex flex-wrap w-full gap-4">
         <TimeLine userData={userData} />

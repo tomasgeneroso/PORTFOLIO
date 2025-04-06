@@ -10,8 +10,11 @@ const Skills: React.FC<UserProps> = (userData) => {
       <TitleSeparator titleText="Skills" />
       <div className="flex flex-wrap w-full gap-4">
         {Object.entries(userData.userData.skills).map(([skill, details]) => (
-          <div key={skill} className="flex flex-col items-center w-40 h-40">
-            <div>
+          <div
+            key={skill}
+            className="flex flex-col items-center w-40 h-40 mx-4 mb-10"
+          >
+            <div className="mb-6">
               {details.icono && (
                 <CustomIcon svgContent={details.icono} className="w-40 h-40" />
               )}

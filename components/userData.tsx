@@ -1,4 +1,13 @@
-import { ReactIcon, JavascriptIcon } from "@/components/Icons/SkillIcons";
+import {
+  ReactIcon,
+  JavascriptIcon,
+  LaravelIcon,
+  ExpressIcon,
+  DockerIcon,
+  MongoLogo,
+  ShopifyIcon,
+  WordpressIcon,
+} from "@/components/Icons/SkillIcons";
 import React from "react";
 
 const userData = {
@@ -42,6 +51,36 @@ My background includes a bachelor's degree in Economics and three years of studi
     },
     {
       icono: <ReactIcon size={160} />,
+      level: 90,
+      color: "red",
+    },
+    {
+      icono: <ExpressIcon size={160} />,
+      level: 90,
+      color: "red",
+    },
+    {
+      icono: <LaravelIcon size={160} />,
+      level: 70,
+      color: "red",
+    },
+    {
+      icono: <DockerIcon size={160} />,
+      level: 50,
+      color: "red",
+    },
+    {
+      icono: <MongoLogo size={160} />,
+      level: 90,
+      color: "red",
+    },
+    {
+      icono: <ShopifyIcon size={160} />,
+      level: 90,
+      color: "red",
+    },
+    {
+      icono: <WordpressIcon size={160} />,
       level: 90,
       color: "red",
     },
