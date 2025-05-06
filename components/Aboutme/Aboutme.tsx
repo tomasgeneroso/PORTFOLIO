@@ -1,5 +1,5 @@
 import React from "react";
-import { Avatar } from "@nextui-org/react";
+import { Avatar } from "@heroui/react";
 import Github from "@/components/Icons/Github";
 import Linkedin from "@/components/Icons/Linkedin";
 import { TitleSeparator } from "@/components/TitleSeparator/TitleSeparator";
@@ -18,7 +18,7 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
             <Avatar
               src={tomasgenerosoimage.src}
               alt="devPhoto"
-              className="w-30 h-36 text-large my-auto border-r-medium"
+              className="w-32 h-56 text-large my-auto "
             />
             <div className="my-2">
               <p className="text-lg">
@@ -35,8 +35,8 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
             </div>
           </div>
         </div>
-        <div className="flex-1 h-full  ">
-          <div className="text-lg px-4 m-auto border-l-2 border-amber-100">
+        <div className="flex-1 h-full mx-8 ">
+          <div className="text-lg px-10 m-auto border-l-2 border-amber-100">
             {userData.aboutMe.split("\n").map((paragraph, index) => (
               <p key={index} className="mb-2">
                 {paragraph}

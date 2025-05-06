@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
 .hidden-sm {
     @media (max-width: 767px) { /* Adjust breakpoint if needed */
       display: none;

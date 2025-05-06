@@ -7,8 +7,17 @@ import {
   MongoLogo,
   ShopifyIcon,
   WordpressIcon,
+  TypeScriptLogo,
+  PostgreSQLLogo,
+  TailwindIcon,
+  PythonLogo,
+  BlenderLogo,
+  Cordova,
+  CSharpLogo,
+  Java,
 } from "@/components/Icons/SkillIcons";
-import React from "react";
+import ClubSanMartinLogo from "@/components/Images/ClubSanMartinLogo.svg";
+import projectsImgPredet from "@/components/Images/prueba1.png";
 
 const userData = {
   name: "Tomas",
@@ -51,7 +60,7 @@ My background includes a bachelor's degree in Economics and three years of studi
     },
     {
       icono: <ReactIcon size={160} />,
-      level: 90,
+      level: 80,
       color: "red",
     },
     {
@@ -76,35 +85,116 @@ My background includes a bachelor's degree in Economics and three years of studi
     },
     {
       icono: <ShopifyIcon size={160} />,
-      level: 90,
+      level: 70,
       color: "red",
     },
     {
       icono: <WordpressIcon size={160} />,
-      level: 90,
+      level: 70,
+      color: "red",
+    },
+    {
+      icono: <TypeScriptLogo size={160} />,
+      level: 70,
+      color: "red",
+    },
+    {
+      icono: <PostgreSQLLogo size={160} />,
+      level: 70,
+      color: "red",
+    },
+    {
+      icono: <TailwindIcon size={160} />,
+      level: 80,
+      color: "red",
+    },
+    {
+      icono: <PythonLogo size={150} />,
+      level: 60,
+      color: "red",
+    },
+    {
+      icono: <BlenderLogo size={150} />,
+      level: 70,
+      color: "red",
+    },
+    {
+      icono: <Cordova size={150} />,
+      level: 40,
+      color: "red",
+    },
+    {
+      icono: <CSharpLogo size={150} />,
+      level: 40,
+      color: "red",
+    },
+    {
+      icono: <Java size={150} />,
+      level: 40,
       color: "red",
     },
   ],
   projects: [
     {
-      projectName: "ProjectName1",
-      enterpriseicono: "",
-      projectImage: "../images/prueba1.png",
-      date: new Date("2023-12-01").toISOString(),
+      projectName: "ZAIFO",
+      enterpriseicono: "ZAIFOminilogo.svg",
+      projectImage: <img src="./Images/prueba1.png" alt="ZAIFO logo" />,
+      date: new Date("2018-07-01").toISOString(),
       description:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Solu tempora eligendi at ipsum.",
-      technologies: ["Nodejs", "Tailwind", "MongoDB"],
+        "It was my first entrepreneurship, an appweb where you can hire some constructor or plumber for example, to fix something or start some new project at home",
+      technologies: ["HTML", "CSS", "Javascript", "Project Owner"],
       link: "https://github.com/tomasgeneroso/PORTAFOLIO",
     },
     {
-      projectName: "ProjectName3",
-      enterpriseicono: "",
-      projectImage: "../images/prueba1.png",
-      date: new Date("2023-12-01").toISOString(),
+      projectName: "DO",
+      enterpriseicono: "DOlogoceleste.svg",
+      projectImage: "./Images/prueba1.png",
+      date: new Date("2020-10-20").toISOString(),
       description:
-        "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Solu tempora eligendi at ipsum.",
-      technologies: ["Nodejs", "Tailwind", "MongoDB"],
+        "It was my second entrepreneurship, there were 3 of us in the team. It was an appweb where you could find someone to solve any kind of task or service or you could search for tasks and/or services to do. It would be running in Argentina. We created the product, we developed the application with another development team, but then the company went down because of a team mistake",
+      technologies: [
+        "AdobeXD",
+        "React Native",
+        "Firebase",
+        "Scrum",
+        "Project Owner",
+      ],
       link: "https://google.com",
+    },
+
+    {
+      projectName: "System Analyst / Functional Consultor",
+      enterpriseicono: "ClubSanMartinLogo.jpg",
+      projectImage: "../images/prueba1.png",
+      date: new Date("2023-06-31").toISOString(),
+      description:
+        "I was responsible for analyzing and coordinating the flow of information between departments and implementing the club's ERP system, ensuring its integration with various sectors by studying the needs of the organizational system.",
+      technologies: [
+        "ERP Systems",
+        "Functional Consulting",
+        "Process Management",
+        "User Training",
+        "Negotiation",
+      ],
+      link: "",
+    },
+    {
+      projectName: "Front-End developer",
+      enterpriseicono: "DOlogoceleste.svg",
+      projectImage: "../images/prueba1.png",
+      date: new Date("2024-09-12").toISOString(),
+      description:
+        "I developed different modules like cart, dashboard, prepayment and Context in Next.js, Typescript, using Prisma and PostgreSQL",
+      technologies: [
+        "Next.js",
+        "TypeScript",
+        "TailwindCSS",
+        "PostgreSQL",
+        "Prisma",
+        "Sendgrid",
+        "GitHub Actions",
+      ],
+      link: "",
     },
   ],
 };

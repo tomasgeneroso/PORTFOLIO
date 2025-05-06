@@ -5,7 +5,6 @@ const CustomIcon: React.FC<CustomSvgIconProps> = ({
   svgContent,
   className,
 }) => {
-  console.log(svgContent);
   return (
     <div className={className}>
       {React.cloneElement(svgContent, {

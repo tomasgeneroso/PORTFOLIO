@@ -116,12 +116,10 @@ export default function Home() {
   return (
     <div className="w-full mx-0">
       {userData && <AboutMe userData={userData} />}
-
       {userData && <Skills userData={userData} />}
       {userData && <PortfolioSection userData={userData} />}
-
-      <Testimonies testimonies={userData?.testimonies || []} />
-
+      {/*AGREGAR CUANDO HAYA TESTIMONIES */}
+      {/* <Testimonies testimonies={userData?.testimonies || []} /> */}
       {userData && <ContactSection userData={userData} />}
     </div>
   );

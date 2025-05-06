@@ -1,5 +1,5 @@
 import React from "react";
-import { Tooltip } from "@nextui-org/react";
+import { Tooltip } from "@heroui/react";
 import Copy from "@/components/Icons/Copy"; // Ajusta la ruta según tu estructura de archivos
 import { ProjectsCardProps } from "@/types";
 

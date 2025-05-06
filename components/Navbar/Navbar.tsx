@@ -7,8 +7,8 @@ import {
   NavbarMenuToggle,
   NavbarItem,
   NavbarMenuItem,
-} from "@nextui-org/navbar";
-import { link as linkStyles } from "@nextui-org/theme";
+} from "@heroui/navbar";
+import { link as linkStyles } from "@heroui/theme";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import Github from "@/components/Icons/Github";

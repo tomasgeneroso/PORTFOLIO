@@ -11,7 +11,7 @@ export const TitleSeparator: FunctionComponent<TitleSeparatorProps> = ({
     <div className="flex h-10 w-full items-center px-2 mb-10 ">
       <h1 className={title({ size: "md" })}>{titleText}</h1>
       <div
-        className="flex-1 ml-10 w-full h-6 bg-amber-100"
+        className="flex-1 ml-10 w-full h-6 bg-amber-100 dark:bg-[#777272]"
         style={{ alignSelf: "flex-end" }}
       ></div>
     </div>

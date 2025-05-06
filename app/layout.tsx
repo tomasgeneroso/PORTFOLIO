@@ -43,10 +43,10 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
           <Navbar userLinks={userData.links} />
-          <main className="container flex w-full h-full mx-2 pt-2  ">
+          <main className="container flex w-full h-full mx-auto pt-2 ">
             {/*Cambiar cuando 3d listo*/}
             {/*<div className="flex w-4/5 mb-16">{children}</div>*/}
-            <div className="flex w-full mb-16">{children}</div>
+            <div className="flex w-full  mb-16">{children}</div>
             {/*GRAFICO 3D */}
             {/*  <div className="container bg-black w-1/5 justify-self-end "></div>*/}
           </main>

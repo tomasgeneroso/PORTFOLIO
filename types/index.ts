@@ -57,6 +57,10 @@ type Testimonies = {
   testimonial: string;
   projectLink: string;
 };
+export type LogoUrl={
+  alt?: string;
+  logoURL:string;
+}
 export interface CustomSvgIconProps {
   svgContent: JSX.Element; 
   className:  string;

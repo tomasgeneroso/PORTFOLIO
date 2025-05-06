@@ -16,10 +16,11 @@ export const siteConfig = {
       label: "Projects",
       href: "#projectsSection",
     },
-    {
-      label: "Testimonies",
-      href: "#testimoniesSection",
-    },
+    //Sacamos testimonies hasta que existan
+    //{
+     // label: "Testimonies",
+     // href: "#testimoniesSection",
+    //},
     {
       label: "Contact",
       href: "#contactSection",
@@ -38,10 +39,11 @@ export const siteConfig = {
       label: "Portfolio",
       href: "/portfolio",
     },
-    {
-      label: "Testimonies",
-      href: "#testimoniesSection",
-    },
+    //Sacamos testimonies hasta que existan
+   //{
+     // label: "Testimonies",
+     // href: "#testimoniesSection",
+    //},
     {
       label: "Contact",
       href: "#contactSection",
