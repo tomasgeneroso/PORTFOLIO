@@ -28,15 +28,15 @@ export type UserProps={
 }
 interface Project {
   projectName: string;
-  enterpriseicono: string;
-  projectImage: string;
+  enterpriseicono: (props?: React.ImgHTMLAttributes<HTMLImageElement>) => React.ReactNode;
+  projectImage: React.ReactNode;
   date: string;
   description: string;
   technologies: string[];
   link: string;
 }
 export interface Skill {
-  icono: JSX.Element;
+  icono: React.ReactNode;
   level: number;
   color: string;
 }
@@ -62,7 +62,7 @@ export type LogoUrl={
   logoURL:string;
 }
 export interface CustomSvgIconProps {
-  svgContent: JSX.Element; 
+  svgContent: React.ReactNode; 
   className:  string;
 }
 export interface IconSvgProps extends React.SVGProps<SVGSVGElement> {

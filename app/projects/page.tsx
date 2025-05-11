@@ -2,10 +2,10 @@
 import React from "react";
 import { title } from "@/components/primitives";
 import ProjectsCard from "@/app/projects/components/ProjectsCard";
-
 import userData from "@/components/userData";
+import { ProjectsCardProps } from "@/types";
 
-const ProjectsPage: React.FC = () => {
+const ProjectsPage: React.FC<ProjectsCardProps> = () => {
   const projects = userData.projects;
   return (
     <div className="w-full justify-center text-center ">

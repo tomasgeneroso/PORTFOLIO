@@ -18,6 +18,7 @@ import {
 } from "@/components/Icons/SkillIcons";
 import ClubSanMartinLogo from "@/components/Images/ClubSanMartinLogo.svg";
 import projectsImgPredet from "@/components/Images/prueba1.png";
+import { JSX, ClassAttributes, ImgHTMLAttributes } from "react";
 
 const userData = {
   name: "Tomas",
@@ -137,9 +138,13 @@ My background includes a bachelor's degree in Economics and three years of studi
   projects: [
     {
       projectName: "ZAIFO",
-      enterpriseicono: "ZAIFOminilogo.svg",
+      enterpriseicono: (
+        props: JSX.IntrinsicAttributes &
+          ClassAttributes<HTMLImageElement> &
+          ImgHTMLAttributes<HTMLImageElement>
+      ) => <img src="./Images/ZAIFOminilogo.svg" alt="ZAIFO logo" {...props} />,
       projectImage: <img src="./Images/prueba1.png" alt="ZAIFO logo" />,
-      date: new Date("2018-07-01").toISOString(),
+      date: "2018-07-01",
       description:
         "It was my first entrepreneurship, an appweb where you can hire some constructor or plumber for example, to fix something or start some new project at home",
       technologies: ["HTML", "CSS", "Javascript", "Project Owner"],
@@ -147,9 +152,19 @@ My background includes a bachelor's degree in Economics and three years of studi
     },
     {
       projectName: "DO",
-      enterpriseicono: "DOlogoceleste.svg",
-      projectImage: "./Images/prueba1.png",
-      date: new Date("2020-10-20").toISOString(),
+      enterpriseicono: (
+        props: JSX.IntrinsicAttributes &
+          ClassAttributes<HTMLImageElement> &
+          ImgHTMLAttributes<HTMLImageElement>
+      ) => (
+        <img
+          src="./Images/DOlogoceleste.svg"
+          alt="DO mini logo"
+          className="w-6 h-6 object-contain"
+        />
+      ),
+      projectImage: <img src="./Images/prueba1.png" alt="DO logo" />,
+      date: "2020-10-20",
       description:
         "It was my second entrepreneurship, there were 3 of us in the team. It was an appweb where you could find someone to solve any kind of task or service or you could search for tasks and/or services to do. It would be running in Argentina. We created the product, we developed the application with another development team, but then the company went down because of a team mistake",
       technologies: [
@@ -161,12 +176,23 @@ My background includes a bachelor's degree in Economics and three years of studi
       ],
       link: "https://google.com",
     },
-
     {
       projectName: "System Analyst / Functional Consultor",
-      enterpriseicono: "ClubSanMartinLogo.jpg",
-      projectImage: "../images/prueba1.png",
-      date: new Date("2023-06-31").toISOString(),
+      enterpriseicono: (
+        props: JSX.IntrinsicAttributes &
+          ClassAttributes<HTMLImageElement> &
+          ImgHTMLAttributes<HTMLImageElement>
+      ) => (
+        <img
+          src="./Images/ClubSanMartinLogo.jpg"
+          alt="Club San Martín logo"
+          className="w-6 h-6 object-contain"
+        />
+      ),
+      projectImage: (
+        <img src="./Images/prueba1.png" alt="Club San Martín ERP project" />
+      ),
+      date: "2023-06-30", // Corregida fecha inválida
       description:
         "I was responsible for analyzing and coordinating the flow of information between departments and implementing the club's ERP system, ensuring its integration with various sectors by studying the needs of the organizational system.",
       technologies: [
@@ -180,9 +206,21 @@ My background includes a bachelor's degree in Economics and three years of studi
     },
     {
       projectName: "Front-End developer",
-      enterpriseicono: "DOlogoceleste.svg",
-      projectImage: "../images/prueba1.png",
-      date: new Date("2024-09-12").toISOString(),
+      enterpriseicono: (
+        props: JSX.IntrinsicAttributes &
+          ClassAttributes<HTMLImageElement> &
+          ImgHTMLAttributes<HTMLImageElement>
+      ) => (
+        <img
+          src="./Images/DOlogoceleste.svg"
+          alt="DO mini logo"
+          className="w-6 h-6 object-contain"
+        />
+      ),
+      projectImage: (
+        <img src="./Images/prueba1.png" alt="Front-End Project logo" />
+      ),
+      date: "2024-09-12",
       description:
         "I developed different modules like cart, dashboard, prepayment and Context in Next.js, Typescript, using Prisma and PostgreSQL",
       technologies: [

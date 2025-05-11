@@ -69,19 +69,13 @@ const TimeLine: React.FC<UserProps> = (userData) => {
             style={{ width: "600px" }}
           >
             <div className="mt-3 sm:pe-8 w-808">
-              <div className="flex flex-row gap-x-8 my-8 text-center">
+              <div className="flex flex-row gap-x-8 my-8 text-center ">
                 <div className="z-10 flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
                   {enterpriseicono ? (
-                    <img
-                      src={`/Images/${enterpriseicono}`}
-                      alt={`logo ${{ projectName }}`}
-                      width={30}
-                      height={30}
-                      className="z-20 items-center"
-                    />
+                    enterpriseicono({ width: 40, height: 40 }) // Ajusta el tamaño según sea necesario
                   ) : (
                     <svg
-                      className="w-2.5 h-2.5 text-blue-800 dark:text-blue-300"
+                      className="w-2.5 h-2.5 text-[#777272]"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -95,6 +89,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                   {projectName}
                 </h3>
               </div>
+              {projectImage}
               <p className="block my-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                 {new Date(date).toLocaleDateString()}
               </p>

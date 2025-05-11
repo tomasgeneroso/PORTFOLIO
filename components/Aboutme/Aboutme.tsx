@@ -12,13 +12,13 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
       id="aboutMeSection"
     >
       <TitleSeparator titleText="About me" />
-      <div className="flex h-60 w-full mx-auto gap-1 ">
+      <div className="flex h-60 w-full mx-auto gap-1">
         <div className="flex w-40 ml-4">
           <div className="flex flex-col items-center justify-center">
             <Avatar
               src={tomasgenerosoimage.src}
-              alt="devPhoto"
-              className="w-32 h-56 text-large my-auto "
+              alt="Tomas Generoso"
+              className="w-42 h-76 text-large my-auto "
             />
             <div className="my-2">
               <p className="text-lg">
