@@ -16,8 +16,6 @@ import {
   CSharpLogo,
   Java,
 } from "@/components/Icons/SkillIcons";
-import ClubSanMartinLogo from "@/components/Images/ClubSanMartinLogo.svg";
-import projectsImgPredet from "@/components/Images/prueba1.png";
 import { JSX, ClassAttributes, ImgHTMLAttributes } from "react";
 
 const userData = {

@@ -39,7 +39,9 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ projects }) => {
             className="flex flex-col items-center justify-center gap-4 w-full md:py-10"
           >
             <div className="flex flex-col text-center  justify-center px-10 py-4 w-full">
-              {projectDetails.enterpriseicono?.({ className: "w-6 h-6" })}
+              {projectDetails.enterpriseicono && (
+                <projectDetails.enterpriseicono className="w-6 h-6" />
+              )}
               <h2 className="text-3xl text-white py-2">
                 {projectDetails.projectName}
               </h2>

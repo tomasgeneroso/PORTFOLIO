@@ -72,7 +72,10 @@ const TimeLine: React.FC<UserProps> = (userData) => {
               <div className="flex flex-row gap-x-8 my-8 text-center ">
                 <div className="z-10 flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
                   {enterpriseicono ? (
-                    enterpriseicono({ width: 40, height: 40 }) // Ajusta el tamaño según sea necesario
+                    React.createElement(enterpriseicono, {
+                      width: 40,
+                      height: 40,
+                    })
                   ) : (
                     <svg
                       className="w-2.5 h-2.5 text-[#777272]"
@@ -93,7 +96,6 @@ const TimeLine: React.FC<UserProps> = (userData) => {
               <p className="block my-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                 {new Date(date).toLocaleDateString()}
               </p>
-
               <div className="flex  gap-2 mb-2">
                 {technologies.map((tech, index) => (
                   <span
@@ -119,5 +121,4 @@ const TimeLine: React.FC<UserProps> = (userData) => {
     </ol>
   );
 };
-
 export default TimeLine;

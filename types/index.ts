@@ -28,7 +28,9 @@ export type UserProps={
 }
 interface Project {
   projectName: string;
-  enterpriseicono: (props?: React.ImgHTMLAttributes<HTMLImageElement>) => React.ReactNode;
+  enterpriseicono: React.ComponentType<
+    React.ImgHTMLAttributes<HTMLImageElement>
+  >
   projectImage: React.ReactNode;
   date: string;
   description: string;
