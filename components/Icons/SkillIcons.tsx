@@ -489,7 +489,7 @@ const BlenderLogo = ({ size = 32 }) => {
     <svg
       viewBox="0 0 499.77 405.98"
       width={size}
-      height={size * (405.98 / 499.77)} // Mantiene la proporción original
+      height={size * (405.98 / 499.77)}
       xmlns="http://www.w3.org/2000/svg"
     >
       <title>Blender Logo</title>

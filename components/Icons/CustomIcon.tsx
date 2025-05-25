@@ -7,10 +7,9 @@ const CustomIcon: React.FC<CustomSvgIconProps> = ({
   return (
     <div className={className}>
       {React.isValidElement(svgContent) &&
-        React.cloneElement(
-          svgContent as React.ReactElement<any>,
-          { className: className || "" } // añade clases CSS opcionalmente al SVG
-        )}
+        React.cloneElement(svgContent as React.ReactElement<any>, {
+          className: className || "",
+        })}
     </div>
   );
 };
