@@ -5,6 +5,8 @@ import Linkedin from "@/components/Icons/Linkedin";
 import { TitleSeparator } from "@/components/TitleSeparator/TitleSeparator";
 import { UserProps } from "@/types";
 import tomasgenerosoimage from "@/components/Aboutme/tomasgenerosoimage.jpeg";
+import Skills from "../Skills/Skills";
+import SkillsSlider from "../Skills/SkillsSlider";
 const AboutMe: React.FC<UserProps> = ({ userData }) => {
   return (
     <section
@@ -12,7 +14,7 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
       id="aboutMeSection"
     >
       <TitleSeparator titleText="About me" />
-      <div className="flex h-60 w-full mx-auto gap-1">
+      <div className="flex h-60 w-full mx-auto gap-1 my-10">
         <div className="flex w-40 ml-4">
           <div className="flex flex-col items-center justify-center">
             <Avatar
@@ -44,6 +46,9 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
             ))}
           </div>
         </div>
+      </div>
+      <div className="">
+        <SkillsSlider userData={userData} />
       </div>
     </section>
   );
