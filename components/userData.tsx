@@ -182,14 +182,18 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
       ) => (
         <img
-          src="./Images/ClubSanMartinLogo.jpg"
+          src="./Images/sanmartin/minilogo.svg"
           alt="Club San Martín logo"
           className="w-6 h-6 object-contain"
         />
       ),
-      projectImage: (
-        <img src="./Images/prueba1.png" alt="Club San Martín ERP project" />
-      ),
+      // projectImage: (
+      //   <img
+      //     src="./Images/sanmartin/Sanmartinpileta.jpg"
+      //     alt="Club San Martín ERP project"
+      //   />
+      // ),
+      projectImage: "",
       date: "2023-06-30", // Corregida fecha inválida
       description:
         "I was responsible for analyzing and coordinating the flow of information between departments and implementing the club's ERP system, ensuring its integration with various sectors by studying the needs of the organizational system.",
