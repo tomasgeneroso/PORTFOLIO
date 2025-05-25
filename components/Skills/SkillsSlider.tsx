@@ -33,8 +33,7 @@ const SkillsSlider: React.FC<UserProps> = ({ userData }) => {
   const repeatedSkills = [...skillEntries, ...skillEntries];
 
   return (
-    <section className="flex flex-col w-full mx-0 mt-40" id="skillsSection">
-      <h1 className="text-2xl text-center">Some tools</h1>
+    <div className="flex flex-col w-full mx-0 my-2 px-2">
       <div
         ref={sliderRef}
         className="overflow-hidden whitespace-nowrap w-full my-10"
@@ -58,7 +57,7 @@ const SkillsSlider: React.FC<UserProps> = ({ userData }) => {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 };
 

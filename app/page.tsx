@@ -8,7 +8,7 @@ import ContactSection from "@/components/Contact/Contact";
 import userData from "@/components/userData";
 
 export default function Home() {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [currentSection, setCurrentSection] = useState(0);
 
   const sections = [
@@ -22,39 +22,40 @@ export default function Home() {
     const handleWheel = (e: WheelEvent) => {
       e.preventDefault();
 
-      if (e.deltaY > 0) {
-        // scroll hacia abajo
-        setCurrentSection((prev) => Math.min(prev + 1, sections.length - 1));
-      } else {
-        // scroll hacia arriba
-        setCurrentSection((prev) => Math.max(prev - 1, 0));
-      }
+      setCurrentSection((prev) => {
+        if (e.deltaY > 0 && prev < sections.length - 1) {
+          return prev + 1;
+        } else if (e.deltaY < 0 && prev > 0) {
+          return prev - 1;
+        }
+        return prev;
+      });
     };
-
+    const target = sectionRefs.current[currentSection];
+    if (target) {
+      const offsetTop = target.offsetTop - 70;
+      window.scrollTo({
+        top: offsetTop,
+        behavior: "smooth",
+      });
+    }
     window.addEventListener("wheel", handleWheel, { passive: false });
 
     return () => {
       window.removeEventListener("wheel", handleWheel);
     };
-  }, [sections.length]);
-
-  useEffect(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTo({
-        top: window.innerHeight * currentSection,
-        behavior: "smooth",
-      });
-    }
-  }, [currentSection]);
+  }, [sections.length, currentSection]);
 
   return (
-    <div
-      ref={containerRef}
-      className="w-full h-screen overflow-hidden scroll-smooth"
-      style={{ scrollBehavior: "smooth" }}
-    >
+    <div className="w-full overflow-auto scroll-smooth">
       {sections.map((Section, index) => (
-        <div key={index} style={{ height: "100vh" }}>
+        <div
+          key={index}
+          ref={(el) => {
+            sectionRefs.current[index] = el;
+          }}
+          className="min-h-screen w-full flex flex-col mb-2"
+        >
           {Section}
         </div>
       ))}
