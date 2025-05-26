@@ -98,7 +98,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
             hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100 
             dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
         >
-          <a href="../../public/pdf/TOMAS GENEROSO CV EN.pdf" download>
+          <a href="/pdf/TOMAS_GENEROSO _CV_EN.pdf" download>
             CV
           </a>
         </button>

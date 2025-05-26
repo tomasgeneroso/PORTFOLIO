@@ -14,8 +14,8 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
       id="aboutMeSection"
     >
       <TitleSeparator titleText="About me" />
-      <div className="flex h-60 w-full mx-auto gap-1 my-10">
-        <div className="flex w-40 ml-4">
+      <div className="flex h-90 w-full mx-auto gap-1 p-8 bg-black/10 rounded-lg shadow-lg">
+        <div className="flex w-40 ml-4 ">
           <div className="flex flex-col items-center justify-center">
             <Avatar
               src={tomasgenerosoimage.src}
@@ -38,7 +38,7 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
           </div>
         </div>
         <div className="flex-1 h-full mx-8 ">
-          <div className="text-lg px-10 m-auto border-l-2 border-amber-100">
+          <div className="text-lg px-14 m-auto ">
             {userData.aboutMe.split("\n").map((paragraph, index) => (
               <p key={index} className="mb-2">
                 {paragraph}
