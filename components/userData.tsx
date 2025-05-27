@@ -238,6 +238,8 @@ My background includes a bachelor's degree in Economics and three years of studi
   experience: [
     {
       projectName: "Ceconni's, Berlin, Germany",
+      enterpriseicono: "",
+      projectImage: "",
       date: "Now",
       description:
         "I'm working for now as a waiter in a restaurant in Soho House, Berlin, Germany. I have been working here for 4 months.",
@@ -251,6 +253,8 @@ My background includes a bachelor's degree in Economics and three years of studi
     },
     {
       projectName: "Frontend Developer",
+      enterpriseicono: "",
+      projectImage: "",
       date: " 09/09/2023",
       description:
         "I have experience in full-stack development, where I contributed to the creation of shopping cart, dashboard, prepayment, and context modules for a catering service application with Angel Servers, using Typescript, Next.js, and TailwindCSS for the front-end. For the backend I used Prisma and PostgreSQL. We used CI/CD pipelines with Github Actions for source control workflows and code review processes, which facilitates efficient teamwork in dynamic environments.",
@@ -273,17 +277,7 @@ My background includes a bachelor's degree in Economics and three years of studi
 
     {
       projectName: "System Analyst / Functional Consultor",
-      enterpriseicono: (
-        props: JSX.IntrinsicAttributes &
-          ClassAttributes<HTMLImageElement> &
-          ImgHTMLAttributes<HTMLImageElement>
-      ) => (
-        <img
-          src="./Images/ClubSanMartinLogo.jpg"
-          alt="Club San Martín logo"
-          className="w-6 h-6 object-contain"
-        />
-      ),
+      enterpriseicono: "",
       projectImage: "",
       date: "2023-06-30",
       description:
@@ -299,17 +293,7 @@ My background includes a bachelor's degree in Economics and three years of studi
     },
     {
       projectName: "DO",
-      enterpriseicono: (
-        props: JSX.IntrinsicAttributes &
-          ClassAttributes<HTMLImageElement> &
-          ImgHTMLAttributes<HTMLImageElement>
-      ) => (
-        <img
-          src="./Images/DOlogoceleste.svg"
-          alt="DO mini logo"
-          className="w-6 h-6 object-contain"
-        />
-      ),
+      enterpriseicono: "",
       projectImage: "",
       date: "2020-10-20",
       description:

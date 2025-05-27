@@ -7,7 +7,7 @@ import ContactSection from "@/components/Contact/Contact";
 import Experience from "@/components/Experience/Experience";
 import userData from "@/components/userData";
 
-export default function Home() {
+const Home = () => {
   return (
     <div className="w-full mx-0 overflow-hidden scroll-smooth">
       <AboutMe userData={userData} />
@@ -17,4 +17,5 @@ export default function Home() {
       <ContactSection userData={userData} />
     </div>
   );
-}
+};
+export default Home;

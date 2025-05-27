@@ -1,3 +1,4 @@
+import { ClassAttributes, JSX, ImgHTMLAttributes } from "react";
 
 export interface Icon {
   size?: number;
@@ -18,7 +19,7 @@ export type User ={
     };
     skills: Skill[];
     projects: Project[];
-    experience: Project[];
+    experience: Experience[];
     testimonies: Testimonies[];
 }
 export type UserLinks = {
@@ -82,3 +83,12 @@ export interface AvatarProps {
 export type ProjectsCardProps ={ 
   projects: Project[];
  }
+ export type Experience = {
+  projectName: string;
+  enterpriseicono?: ((props: JSX.IntrinsicAttributes & ClassAttributes<HTMLImageElement> & ImgHTMLAttributes<HTMLImageElement>) => JSX.Element) | string;
+  projectImage?: JSX.Element | string;
+  date: string;
+  description: string;
+  technologies: string[];
+  link: string;
+};
