@@ -17,6 +17,7 @@ import {
   Java,
 } from "@/components/Icons/SkillIcons";
 import { JSX, ClassAttributes, ImgHTMLAttributes } from "react";
+import Image from "next/image";
 
 const userData = {
   name: "Tomas",
@@ -140,11 +141,11 @@ My background includes a bachelor's degree in Economics and three years of studi
         props: JSX.IntrinsicAttributes &
           ClassAttributes<HTMLImageElement> &
           ImgHTMLAttributes<HTMLImageElement>
-      ) => <img src="./Images/ZAIFOminilogo.svg" alt="ZAIFO logo" {...props} />,
-      projectImage: <img src="./Images/prueba1.png" alt="ZAIFO logo" />,
+      ) => <img src="./Images/ZAIFOminilogo.png" alt="ZAIFO logo" {...props} />,
+      projectImage: <img src="./Images/ZAIFOHome.png" alt="ZAIFO logo" />,
       date: "2018-07-01",
       description:
-        "It was my first entrepreneurship, an appweb where you can hire some constructor or plumber for example, to fix something or start some new project at home",
+        "It's basically an appweb for hire professionals for construction. It was my first entrepreneurship, an appweb where you can hire some constructor or plumber for example, to fix something or start some new project at home. The professionals could create their own profile and the users could search for them by location, price, etc.",
       technologies: ["HTML", "CSS", "Javascript", "Project Owner"],
       link: "https://github.com/tomasgeneroso/PORTAFOLIO",
     },
@@ -164,7 +165,7 @@ My background includes a bachelor's degree in Economics and three years of studi
       projectImage: <img src="./Images/prueba1.png" alt="DO logo" />,
       date: "2020-10-20",
       description:
-        "It was my second entrepreneurship, there were 3 of us in the team. It was an appweb where you could find someone to solve any kind of task or service or you could search for tasks and/or services to do. It would be running in Argentina. We created the product, we developed the application with another development team, but then the company went down because of a team mistake",
+        "It was my second entrepreneurship, we were a 3 people team. It was an app where you could find someone to solve any kind of task or service or you could search for tasks and/or services to do. It would be running in Argentina. We created the product, we developed the application with another development team, but then the company went down because of a team mistake",
       technologies: [
         "AdobeXD",
         "React Native",
@@ -182,17 +183,11 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
       ) => (
         <img
-          src="./Images/sanmartin/minilogo.svg"
+          src="./Images/ClubSanMartinLogo.jpg"
           alt="Club San Martín logo"
           className="w-6 h-6 object-contain"
         />
       ),
-      // projectImage: (
-      //   <img
-      //     src="./Images/sanmartin/Sanmartinpileta.jpg"
-      //     alt="Club San Martín ERP project"
-      //   />
-      // ),
       projectImage: "",
       date: "2023-06-30", // Corregida fecha inválida
       description:
@@ -220,7 +215,132 @@ My background includes a bachelor's degree in Economics and three years of studi
         />
       ),
       projectImage: (
-        <img src="./Images/prueba1.png" alt="Front-End Project logo" />
+        <img
+          src="./Images/Mateworld_CRUDCart.png"
+          alt="Front-End Project logo"
+        />
+      ),
+      date: "2024-09-12",
+      description:
+        "I developed different modules like cart, dashboard, prepayment and Context in Next.js, Typescript, using Prisma and PostgreSQL",
+      technologies: [
+        "Next.js",
+        "TypeScript",
+        "TailwindCSS",
+        "PostgreSQL",
+        "Prisma",
+        "Sendgrid",
+        "GitHub Actions",
+      ],
+      link: "",
+    },
+  ],
+  experience: [
+    {
+      projectName: "Ceconni's, Berlin, Germany",
+      date: "Now",
+      description:
+        "I'm working for now as a waiter in a restaurant in Soho House, Berlin, Germany. I have been working here for 4 months.",
+      technologies: [
+        "Teamwork",
+        "Diverse Languages",
+        "Customer Service",
+        "Adaptability",
+      ],
+      link: "",
+    },
+    {
+      projectName: "Frontend Developer",
+      date: " 09/09/2023",
+      description:
+        "I have experience in full-stack development, where I contributed to the creation of shopping cart, dashboard, prepayment, and context modules for a catering service application with Angel Servers, using Typescript, Next.js, and TailwindCSS for the front-end. For the backend I used Prisma and PostgreSQL. We used CI/CD pipelines with Github Actions for source control workflows and code review processes, which facilitates efficient teamwork in dynamic environments.",
+      technologies: [
+        "Teamwork",
+        "CD/CI pipelines",
+        "Typescript",
+        "Next.js",
+        "Prisma",
+        "PostgreSQL",
+        "TailwindCSS",
+        "GitHub Actions",
+        "Problem Solving",
+        "Communication",
+        "Time Management",
+        "Adaptability",
+      ],
+      link: "",
+    },
+
+    {
+      projectName: "System Analyst / Functional Consultor",
+      enterpriseicono: (
+        props: JSX.IntrinsicAttributes &
+          ClassAttributes<HTMLImageElement> &
+          ImgHTMLAttributes<HTMLImageElement>
+      ) => (
+        <img
+          src="./Images/ClubSanMartinLogo.jpg"
+          alt="Club San Martín logo"
+          className="w-6 h-6 object-contain"
+        />
+      ),
+      projectImage: "",
+      date: "2023-06-30",
+      description:
+        "I was responsible for analyzing and coordinating the flow of information between departments and implementing the club's ERP system, ensuring its integration with various sectors by studying the needs of the organizational system.",
+      technologies: [
+        "ERP Systems",
+        "Functional Consulting",
+        "Process Management",
+        "User Training",
+        "Negotiation",
+      ],
+      link: "",
+    },
+    {
+      projectName: "DO",
+      enterpriseicono: (
+        props: JSX.IntrinsicAttributes &
+          ClassAttributes<HTMLImageElement> &
+          ImgHTMLAttributes<HTMLImageElement>
+      ) => (
+        <img
+          src="./Images/DOlogoceleste.svg"
+          alt="DO mini logo"
+          className="w-6 h-6 object-contain"
+        />
+      ),
+      projectImage: "",
+      date: "2020-10-20",
+      description:
+        "I founded and led a digital startup from scratch, together with two friends who were also passionate about entrepreneurship. We developed an app to connect users with tasks and services in Argentina. I was responsible for ideation, product validation, team formation, and development supervision. Although the project didn't launch due to a negative experience with the developer who built the app, the experience taught me the importance of risk management, code ownership, legal contracts, and milestone-based payments. Today, I apply all of these lessons in my new projects.",
+      technologies: [
+        "Product Management",
+        "React Native",
+        "Firebase",
+        "Scrum",
+        "Project Owner",
+      ],
+      link: "https://google.com",
+    },
+    {
+      projectName: "Front-End developer project",
+      enterpriseicono: (
+        props: JSX.IntrinsicAttributes &
+          ClassAttributes<HTMLImageElement> &
+          ImgHTMLAttributes<HTMLImageElement>
+      ) => (
+        <img
+          src="./Images/DOlogoceleste.svg"
+          alt="DO mini logo"
+          className="w-6 h-6 object-contain"
+        />
+      ),
+      projectImage: (
+        <img
+          src="./Images/Mateworld_CRUDCart.png"
+          alt="Front-End Project logo"
+        />
       ),
       date: "2024-09-12",
       description:

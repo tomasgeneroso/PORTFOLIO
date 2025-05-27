@@ -18,6 +18,7 @@ export type User ={
     };
     skills: Skill[];
     projects: Project[];
+    experience: Project[];
     testimonies: Testimonies[];
 }
 export type UserLinks = {

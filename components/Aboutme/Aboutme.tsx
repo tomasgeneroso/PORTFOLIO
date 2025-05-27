@@ -9,12 +9,9 @@ import Skills from "../Skills/Skills";
 import SkillsSlider from "../Skills/SkillsSlider";
 const AboutMe: React.FC<UserProps> = ({ userData }) => {
   return (
-    <section
-      className="flex flex-col w-full mx-0 px-2 h-screen"
-      id="aboutMeSection"
-    >
+    <section className="flex flex-col w-full mx-0 px-2 " id="aboutMeSection">
       <TitleSeparator titleText="About me" />
-      <div className="flex h-90 w-full mx-auto gap-1 p-8 bg-black/10 rounded-lg shadow-lg">
+      <div className="flex  w-full mx-auto gap-1 p-8 bg-black/10 rounded-lg shadow-lg">
         <div className="flex w-40 ml-4 ">
           <div className="flex flex-col items-center justify-center">
             <Avatar
