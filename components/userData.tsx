@@ -17,7 +17,6 @@ import {
   Java,
 } from "@/components/Icons/SkillIcons";
 import { JSX, ClassAttributes, ImgHTMLAttributes } from "react";
-import Image from "next/image";
 
 const userData = {
   name: "Tomas",

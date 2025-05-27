@@ -20,12 +20,12 @@
       "clsx": "^2.0.0",
       "dotenv": "^16.4.5",
       "eslint": "8.48.0",
-      "eslint-config-next": "^0.2.4",
+      "eslint-config-next": "^15.4.0-canary.51",
       "framer-motion": "^12.6.5",
       "intl-messageformat": "^10.5.0",
       "mongodb": "^6.8.0",
       "mongoose": "^8.6.2",
-      "next": "^14.2.6",
+      "next": "^15.3.2",
       "next-themes": "^0.2.1",
       "postcss": "8.4.31",
       "react": "^18.2.0",
@@ -36,6 +36,7 @@
       "typescript": "5.0.4"
    },
    "devDependencies": {
+      "@types/next": "^9.0.0",
       "@types/react": "^19.1.1",
       "@types/react-dom": "^19.1.2"
    }

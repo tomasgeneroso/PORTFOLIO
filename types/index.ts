@@ -33,7 +33,7 @@ interface Project {
   enterpriseicono: React.ComponentType<
     React.ImgHTMLAttributes<HTMLImageElement>
   >
-  projectImage: React.ReactNode;
+  projectImage: React.ReactNode | string;
   date: string;
   description: string;
   technologies: string[];
