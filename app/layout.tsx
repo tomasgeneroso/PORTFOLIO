@@ -12,6 +12,7 @@ export const metadata: Metadata = {
     default: siteConfig.name,
     template: `%s - ${siteConfig.name}`,
   },
+  description: siteConfig.description,
 };
 export const viewport: Viewport = {
   themeColor: [

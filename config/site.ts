@@ -2,7 +2,7 @@ export type SiteConfig = typeof siteConfig;
 
 export const siteConfig = {
   name: process.env.NEXT_PUBLIC_PORTFOLIO_NAME || "Portfolio",
-  
+  description:"Tomas Generoso Portfolio",
   navItems: [
     {
       label: "About me",
