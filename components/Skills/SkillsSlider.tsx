@@ -28,7 +28,6 @@ const SkillsSlider: React.FC<UserProps> = ({ userData }) => {
     return () => clearInterval(interval);
   }, []);
 
-  // Duplicamos los ítems para crear el efecto infinito
   const skillEntries = Object.entries(userData.skills);
   const repeatedSkills = [...skillEntries, ...skillEntries];
 

@@ -1,16 +1,17 @@
 import { UserProps } from "@/types";
 import React, { useState, useRef, MouseEvent } from "react";
-import ScreenShot from "@/components/PortfolioSection/ScreenShot.png";
-import DOLogo from "@/components/Images/DOlogoceleste.svg";
-import logo from "@/components/Images/ClubSanMartinLogo.jpg";
 
 const TimeLine: React.FC<UserProps> = (userData) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [startX, setStartX] = useState<number | null>(null);
   const [scrollLeft, setScrollLeft] = useState<number>(0);
-  // Añade una propiedad HTMLElement para las listas
+
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchScrollLeft, setTouchScrollLeft] = useState<number>(0);
+
   const listRef = useRef<HTMLOListElement | null>(null);
 
+  // Desktop scroll
   const handleMouseDown = (e: MouseEvent<HTMLOListElement>) => {
     setIsDragging(true);
     setStartX(e.clientX);
@@ -23,10 +24,9 @@ const TimeLine: React.FC<UserProps> = (userData) => {
     if (!isDragging || startX === null) return;
     e.preventDefault();
     const x = e.clientX;
-    const walk = (x - startX) * 2; // Velocidad del desplazamiento
+    const walk = (x - startX) * 2;
     if (listRef.current) {
-      const newScrollLeft = scrollLeft - walk;
-      listRef.current.scrollLeft = newScrollLeft;
+      listRef.current.scrollLeft = scrollLeft - walk;
     }
   };
 
@@ -34,21 +34,44 @@ const TimeLine: React.FC<UserProps> = (userData) => {
     setIsDragging(false);
   };
 
+  // Mobile scroll
+  const handleTouchStart = (e: React.TouchEvent<HTMLOListElement>) => {
+    setTouchStartX(e.touches[0].clientX);
+    if (listRef.current) {
+      setTouchScrollLeft(listRef.current.scrollLeft);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLOListElement>) => {
+    if (touchStartX === null) return;
+    const currentX = e.touches[0].clientX;
+    const walk = (currentX - touchStartX) * 2;
+    if (listRef.current) {
+      listRef.current.scrollLeft = touchScrollLeft - walk;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setTouchStartX(null);
+  };
+
   return (
     <ol
-      className="flex flex-row p-1 sm:flex w-full "
+      className="flex flex-row p-1 sm:flex w-full overflow-x-auto md:overflow-hidden"
       style={{
         scrollBehavior: "smooth",
         userSelect: "none",
         whiteSpace: "nowrap",
-        overflow: "hidden",
         cursor: isDragging ? "grabbing" : "grab",
       }}
-      ref={listRef} // La referencia ahora es del tipo correcto
+      ref={listRef}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
     >
       {userData.userData.projects.map(
         (
@@ -65,11 +88,11 @@ const TimeLine: React.FC<UserProps> = (userData) => {
         ) => (
           <li
             key={index}
-            className="relative mb-6 sm:mb-0  mx-4 py-2 "
+            className="relative mb-6 sm:mb-0 mx-4 py-2"
             style={{ width: "600px" }}
           >
             <div className="mt-3 sm:pe-8 w-808">
-              <div className="flex flex-row gap-x-8 my-8 text-center ">
+              <div className="flex flex-row gap-x-8 my-8 text-center">
                 <div className="z-10 flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
                   {enterpriseicono ? (
                     React.createElement(enterpriseicono, {
@@ -96,7 +119,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
               <p className="block my-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                 {new Date(date).toLocaleDateString()}
               </p>
-              <div className="flex  gap-2 mb-2">
+              <div className="flex gap-2 mb-2">
                 {technologies.map((tech, index) => (
                   <span
                     key={index}
@@ -106,8 +129,8 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                   </span>
                 ))}
               </div>
-              <div className="text-wrap ">
-                <p className="text-base font-normal text-gray-500 dark:text-gray-400 ">
+              <div className="text-wrap">
+                <p className="text-base font-normal text-gray-500 dark:text-gray-400">
                   {description}
                 </p>
               </div>
@@ -121,4 +144,5 @@ const TimeLine: React.FC<UserProps> = (userData) => {
     </ol>
   );
 };
+
 export default TimeLine;

@@ -31,25 +31,48 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
   const handleMouseUp = () => {
     setIsDragging(false);
   };
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchScrollLeft, setTouchScrollLeft] = useState<number>(0);
 
+  const handleTouchStart = (e: React.TouchEvent<HTMLOListElement>) => {
+    setTouchStartX(e.touches[0].clientX);
+    if (listRef.current) {
+      setTouchScrollLeft(listRef.current.scrollLeft);
+    }
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLOListElement>) => {
+    if (touchStartX === null) return;
+    const currentX = e.touches[0].clientX;
+    const walk = (currentX - touchStartX) * 2;
+    if (listRef.current) {
+      listRef.current.scrollLeft = touchScrollLeft - walk;
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setTouchStartX(null);
+  };
   return (
     <section className="flex flex-col w-full" id="projectsSection">
       <TitleSeparator titleText="Experience" />
       <div className="flex flex-wrap w-full gap-4">
         <ol
-          className="flex flex-row p-1 sm:flex w-full "
+          className="flex flex-row p-1 sm:flex w-full overflow-x-auto md:overflow-hidden"
           style={{
             scrollBehavior: "smooth",
             userSelect: "none",
             whiteSpace: "nowrap",
-            overflow: "hidden",
             cursor: isDragging ? "grabbing" : "grab",
           }}
-          ref={listRef} // La referencia ahora es del tipo correcto
+          ref={listRef}
           onMouseDown={handleMouseDown}
           onMouseMove={handleMouseMove}
           onMouseUp={handleMouseUp}
           onMouseLeave={handleMouseUp}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
           {userData.experience.map(
             (
