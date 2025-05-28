@@ -1,7 +1,7 @@
 "use client";
 import ContactForm from "@/components/Contact/ContactForm/ContactForm";
 import { TitleSeparator } from "@/components/TitleSeparator/TitleSeparator";
-import { UserProps } from "@/types"; // Importa el tipo UserData
+import { UserProps } from "@/types";
 import { ContactInfo } from "@/types";
 const ContactSection: React.FC<UserProps> = ({ userData }) => {
   const { Github, Linkedin, Gmail, ...otherLinks } = userData.links;

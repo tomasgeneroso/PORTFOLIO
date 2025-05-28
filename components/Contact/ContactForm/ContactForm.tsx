@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { ContactInfoProps } from "@/types/index";
 import {
@@ -12,21 +13,22 @@ const ContactForm: React.FC<ContactInfoProps> = ({ contactInfo }) => {
       <div className="px-4 mx-auto max-w-screen-md">
         <div className="flex flex-col justify-center lg:mb-8">
           <div className="flex flex-row items-center justify-center gap-4">
-            {Object.entries(contactInfo).map(([platform, value], index) => {
-              const href = platform === "Gmail" ? `mailto:${value}` : value;
-              return (
-                <a
-                  key={index}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {platform === "Github" && <GithubIcon size={29} />}
-                  {platform === "Linkedin" && <LinkedinIcon size={29} />}
-                  {platform === "Gmail" && <GmailIcon size={29} />}
-                </a>
-              );
-            })}
+            {contactInfo &&
+              Object.entries(contactInfo).map(([platform, value], index) => {
+                const href = platform === "Gmail" ? `mailto:${value}` : value;
+                return (
+                  <a
+                    key={index}
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {platform === "Github" && <GithubIcon size={29} />}
+                    {platform === "Linkedin" && <LinkedinIcon size={29} />}
+                    {platform === "Gmail" && <GmailIcon size={29} />}
+                  </a>
+                );
+              })}
           </div>
         </div>
         <form action="#" className="space-y-4">
