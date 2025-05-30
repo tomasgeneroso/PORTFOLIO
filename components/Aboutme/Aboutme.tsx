@@ -16,7 +16,7 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
           <Avatar
             src={tomasgenerosoimage.src}
             alt="Tomas Generoso"
-            className="w-42 h-76 text-large my-auto sm:w-12 sm:h-46"
+            className="w-42 h-76 sm:w-24 sm:h-44 md:w-24 md:h-44 lg:w-42 lg:h-76"
           />
           <div className="my-2">
             <p className="text-base sm:text-base md:text-lg xl:text-xl text-center">

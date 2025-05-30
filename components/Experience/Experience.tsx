@@ -89,16 +89,18 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
             ) => (
               <li
                 key={index}
-                className="relative mb-6 sm:mb-0 mx-6 py-2 "
+                className="relative mb-6 sm:mb-0 mx-2 sm:mx-4 py-2"
                 style={{ width: "750px" }}
               >
                 <div className="mt-3 sm:pe-8 w-[800px] px-4">
                   <div className="flex flex-row gap-x-8 my-8 text-center ">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                    <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
                       {projectName}
                     </h3>
                   </div>
-                  {projectImage}
+                  <div className=" overflow-hidden rounded-md">
+                    {projectImage}
+                  </div>
                   <p className="block my-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                     {new Date(date).toLocaleDateString()}
                   </p>
@@ -113,7 +115,7 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
                     ))}
                   </div>
                   <div className="text-wrap ">
-                    <p className="text-base font-normal text-gray-500 dark:text-gray-400 ">
+                    <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 break-words">
                       {description}
                     </p>
                   </div>
