@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import {
   ReactIcon,
   JavascriptIcon,
@@ -124,6 +125,7 @@ My background includes a bachelor's degree in Economics and three years of studi
         props: JSX.IntrinsicAttributes &
           ClassAttributes<HTMLImageElement> &
           ImgHTMLAttributes<HTMLImageElement>
+        // eslint-disable-next-line @next/next/no-img-element
       ) => <img src="./Images/ZAIFOminilogo.png" alt="ZAIFO logo" {...props} />,
       projectImage: <img src="./Images/ZAIFOHome.png" alt="ZAIFO logo" />,
       date: "2018-07-01",

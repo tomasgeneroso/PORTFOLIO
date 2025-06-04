@@ -88,7 +88,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
         ) => (
           <li
             key={index}
-            className="w-[80vw] sm:w-[600px] mx-4 py-2 relative mb-6 sm:mb-0 sm:px-2"
+            className="w-[90vw] sm:w-1/3 min-w-[90vw] sm:min-w-[33.3333%] flex-shrink-0 px-4 py-2 relative"
           >
             <div className="mt-3 sm:pe-8 w-808">
               <div className="flex flex-col sm:flex-row gap-y-4 gap-x-8 my-4 text-center sm:text-left items-center">
