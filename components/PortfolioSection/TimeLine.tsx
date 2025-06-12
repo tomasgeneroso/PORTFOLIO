@@ -34,7 +34,6 @@ const TimeLine: React.FC<UserProps> = (userData) => {
     setIsDragging(false);
   };
 
-  // Mobile scroll
   const handleTouchStart = (e: React.TouchEvent<HTMLOListElement>) => {
     setTouchStartX(e.touches[0].clientX);
     if (listRef.current) {
@@ -88,7 +87,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
         ) => (
           <li
             key={index}
-            className="w-[90vw] sm:w-1/3 min-w-[90vw] sm:min-w-[33.3333%] flex-shrink-0 px-4 py-2 relative"
+            className="w-[95vw] sm:w-2/3 min-w-[80%] sm:min-w-[33.3333%] flex-shrink-0 px-4 py-2 relative"
           >
             <div className="mt-3 sm:pe-8 w-808">
               <div className="flex flex-col sm:flex-row gap-y-4 gap-x-8 my-4 text-center sm:text-left items-center">
@@ -114,11 +113,23 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                   {projectName}
                 </h3>
               </div>
-              {projectImage && (
-                <div className="w-full max-w-[100%] h-auto overflow-hidden rounded-md my-2">
-                  {projectImage}
-                </div>
-              )}
+
+              <div className="w-full  h-auto overflow-hidden rounded-md my-2">
+                {projectImage
+                  .filter((imageSrc) => imageSrc !== "")
+                  .map(
+                    (imageSrc, index) =>
+                      imageSrc !== "" && (
+                        <img
+                          key={index}
+                          src={imageSrc}
+                          className="h-80 w-140"
+                          alt={`${projectName} screenshot`}
+                        />
+                      )
+                  )}
+              </div>
+
               <p className="block my-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
                 {new Date(date).toLocaleDateString()}
               </p>

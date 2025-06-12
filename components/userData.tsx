@@ -127,7 +127,8 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
         // eslint-disable-next-line @next/next/no-img-element
       ) => <img src="./Images/ZAIFOminilogo.png" alt="ZAIFO logo" {...props} />,
-      projectImage: <img src="./Images/ZAIFOHome.png" alt="ZAIFO logo" />,
+      projectImage: ["./Images/ZAIFOHome.png", "./Images/ZAIFOChat.png"],
+
       date: "2018-07-01",
       description:
         "It's basically an appweb for hire professionals for construction. It was my first entrepreneurship, an appweb where you can hire some constructor or plumber for example, to fix something or start some new project at home. The professionals could create their own profile and the users could search for them by location, price, etc.",
@@ -147,12 +148,12 @@ My background includes a bachelor's degree in Economics and three years of studi
           className="w-6 h-6 object-contain"
         />
       ),
-      projectImage: <img src="./Images/prueba1.png" alt="DO logo" />,
+      projectImage: ["./Images/DOHome.png"],
       date: "2020-10-20",
       description:
         "It was my second entrepreneurship, we were a 3 people team. It was an app where you could find someone to solve any kind of task or service or you could search for tasks and/or services to do. It would be running in Argentina. We created the product, we developed the application with another development team, but then the company went down because of a team mistake",
       technologies: [
-        "AdobeXD",
+        "Figma",
         "React Native",
         "Firebase",
         "Scrum",
@@ -173,7 +174,7 @@ My background includes a bachelor's degree in Economics and three years of studi
           className="w-6 h-6 object-contain"
         />
       ),
-      projectImage: "",
+      projectImage: [""],
       date: "2023-06-30", // Corregida fecha inválida
       description:
         "I was responsible for analyzing and coordinating the flow of information between departments and implementing the club's ERP system, ensuring its integration with various sectors by studying the needs of the organizational system.",
@@ -199,12 +200,7 @@ My background includes a bachelor's degree in Economics and three years of studi
           className="w-6 h-6 object-contain"
         />
       ),
-      projectImage: (
-        <img
-          src="./Images/Mateworld_CRUDCart.png"
-          alt="Front-End Project logo"
-        />
-      ),
+      projectImage: ["./Images/Mateworld_CRUDCart.png"],
       date: "2024-09-12",
       description:
         "I developed different modules like cart, dashboard, prepayment and Context in Next.js, Typescript, using Prisma and PostgreSQL",
