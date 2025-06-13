@@ -42,7 +42,7 @@ interface Project {
 export interface Skill {
   icono: React.ReactNode;
   level: number;
-  color: string;
+  
 }
 export type ContactInfo = {
   Github: string,
