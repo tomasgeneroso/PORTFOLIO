@@ -1,6 +1,6 @@
 import { UserProps } from "@/types";
 import React, { useState, useRef, MouseEvent } from "react";
-
+import ImgProtfolioSlider from "@/components/PortfolioSection/ImgPortfolioSlider";
 const TimeLine: React.FC<UserProps> = (userData) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [startX, setStartX] = useState<number | null>(null);
@@ -115,19 +115,9 @@ const TimeLine: React.FC<UserProps> = (userData) => {
               </div>
 
               <div className="w-full  h-auto overflow-hidden rounded-md my-2">
-                {projectImage
-                  .filter((imageSrc) => imageSrc !== "")
-                  .map(
-                    (imageSrc, index) =>
-                      imageSrc !== "" && (
-                        <img
-                          key={index}
-                          src={imageSrc}
-                          className="h-80 w-140"
-                          alt={`${projectName} screenshot`}
-                        />
-                      )
-                  )}
+                {projectImage.length > 0 ? (
+                  <ImgProtfolioSlider images={projectImage} />
+                ) : null}
               </div>
 
               <p className="block my-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">

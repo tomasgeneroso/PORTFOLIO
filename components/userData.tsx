@@ -127,7 +127,11 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
         // eslint-disable-next-line @next/next/no-img-element
       ) => <img src="./Images/ZAIFOminilogo.png" alt="ZAIFO logo" {...props} />,
-      projectImage: ["./Images/ZAIFOHome.png", "./Images/ZAIFOChat.png"],
+      projectImage: [
+        "./Images/ZAIFOHome.png",
+        "./Images/ZAIFOChat.png",
+        "./Images/ZAIFOEmpresasPerfil.png",
+      ],
 
       date: "2018-07-01",
       description:
@@ -148,7 +152,12 @@ My background includes a bachelor's degree in Economics and three years of studi
           className="w-6 h-6 object-contain"
         />
       ),
-      projectImage: ["./Images/DOHome.png"],
+      projectImage: [
+        "./Images/DOlogin.png",
+        "./Images/DOregistrate.png",
+        "./Images/DOHome.png",
+        "./Images/DOarmarcaja.png",
+      ],
       date: "2020-10-20",
       description:
         "It was my second entrepreneurship, we were a 3 people team. It was an app where you could find someone to solve any kind of task or service or you could search for tasks and/or services to do. It would be running in Argentina. We created the product, we developed the application with another development team, but then the company went down because of a team mistake",

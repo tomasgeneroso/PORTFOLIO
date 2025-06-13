@@ -92,3 +92,8 @@ export type ProjectsCardProps ={
   technologies: string[];
   link: string;
 };
+export interface ImgProtfolioSliderProps {
+  images: string[];
+  altPrefix?: string;
+  className?: string;
+}

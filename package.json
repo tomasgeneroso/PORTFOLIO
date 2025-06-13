@@ -23,6 +23,7 @@
       "eslint-config-next": "^15.4.0-canary.51",
       "framer-motion": "^12.6.5",
       "intl-messageformat": "^10.5.0",
+      "keen-slider": "^6.8.6",
       "mongodb": "^6.8.0",
       "mongoose": "^8.6.2",
       "next": "^15.3.2",
