@@ -155,7 +155,7 @@ My background includes a bachelor's degree in Economics and three years of studi
       projectImage: [
         "./Images/DOlogin.png",
         "./Images/DOregistrate.png",
-        "./Images/DOHome.png",
+        "./Images/DOhome.png",
         "./Images/DOarmarcaja.png",
       ],
       date: "2020-10-20",
