@@ -5,13 +5,10 @@ const TimeLine: React.FC<UserProps> = (userData) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [startX, setStartX] = useState<number | null>(null);
   const [scrollLeft, setScrollLeft] = useState<number>(0);
-
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
   const [touchScrollLeft, setTouchScrollLeft] = useState<number>(0);
-
   const listRef = useRef<HTMLOListElement | null>(null);
 
-  // Desktop scroll
   const handleMouseDown = (e: MouseEvent<HTMLOListElement>) => {
     setIsDragging(true);
     setStartX(e.clientX);
