@@ -54,7 +54,7 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
     setTouchStartX(null);
   };
   return (
-    <section className="flex flex-col w-full" id="projectsSection">
+    <section className="flex flex-col w-full" id="experienceSection">
       <TitleSeparator titleText="Experience" />
       <div className="flex flex-wrap w-full gap-4">
         <ol

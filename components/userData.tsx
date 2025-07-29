@@ -230,7 +230,7 @@ My background includes a bachelor's degree in Economics and three years of studi
       projectName: "Ceconni's, Berlin, Germany",
       enterpriseicono: "",
       projectImage: "",
-      date: "19/07/2025",
+      date: "2025-07-19",
       description:
         "I'm working for now as a waiter in a restaurant in Soho House, Berlin, Germany, supporting waitstaff by ensuring fast and efficient table service, keeping service areas stocked and clean, and maintaining a smooth flow between the kitchen and dining areas. ",
       technologies: [
