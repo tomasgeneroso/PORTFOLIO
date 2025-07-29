@@ -184,7 +184,7 @@ My background includes a bachelor's degree in Economics and three years of studi
         />
       ),
       projectImage: [""],
-      date: "2023-06-30", // Corregida fecha inválida
+      date: "2023-06-30",
       description:
         "I was responsible for analyzing and coordinating the flow of information between departments and implementing the club's ERP system, ensuring its integration with various sectors by studying the needs of the organizational system.",
       technologies: [
@@ -230,7 +230,7 @@ My background includes a bachelor's degree in Economics and three years of studi
       projectName: "Ceconni's, Berlin, Germany",
       enterpriseicono: "",
       projectImage: "",
-      date: "Now",
+      date: "19/07/2025",
       description:
         "I'm working for now as a waiter in a restaurant in Soho House, Berlin, Germany. I have been working here for 4 months.",
       technologies: [
