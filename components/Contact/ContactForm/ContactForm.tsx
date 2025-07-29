@@ -70,20 +70,22 @@ const ContactForm: React.FC<ContactInfoProps> = ({ contactInfo }) => {
               id="message"
               name="message"
               rows={4}
-              className="block p-2.5 w-full text-sm text-gray-900 rounded-lg shadow-sm border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-[#3D2548]   dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+              className="block p-2.5 w-full text-sm text-gray-900 rounded-lg shadow-sm border dark:border-gray-600 focus:ring-primary-500 focus:border-primary-500 dark:bg-[#3D2548]   dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
               placeholder="Let us know how we can help you..."
             />
           </div>
-          <button
-            type="submit"
-            className="py-3 px-5 text-sm font-normal text-center text-gray-700
+          <div className="flex items-center justify-center">
+            <button
+              type="submit"
+              className="py-3 px-5 text-sm font-normal text-center  text-gray-700
             bg-amber-100 ring ring-amber-100 rounded-md
             sm:w-fit transition duration-300 ease-in-out 
             hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100 
             dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
-          >
-            Send message
-          </button>
+            >
+              Send message
+            </button>
+          </div>
         </form>
       </div>
     </section>

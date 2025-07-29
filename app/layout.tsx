@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import Navbar from "@/components/Navbar/Navbar";
 import clsx from "clsx";
 import userData from "@/components/userData";
+import Head from "next/head";
 
 export const metadata: Metadata = {
   title: {
@@ -28,7 +29,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <head />
+      <head>
+        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+      </head>
       <body
         className={clsx(
           "min-h-screen mx-1 bg-background font-sans antialiased ",
@@ -36,14 +39,10 @@ export default function RootLayout({
         )}
         style={{ height: "100%" }}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "light" }}>
+        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <Navbar userLinks={userData.links} />
           <main className="container flex w-full h-full mx-auto pt-2 ">
-            {/*Cambiar cuando 3d listo*/}
-            {/*<div className="flex w-4/5 mb-16">{children}</div>*/}
             <div className="flex w-full  mb-16">{children}</div>
-            {/*GRAFICO 3D */}
-            {/*  <div className="container bg-black w-1/5 justify-self-end "></div>*/}
           </main>
         </Providers>
       </body>
