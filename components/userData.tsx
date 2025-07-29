@@ -232,7 +232,7 @@ My background includes a bachelor's degree in Economics and three years of studi
       projectImage: "",
       date: "19/07/2025",
       description:
-        "I'm working for now as a waiter in a restaurant in Soho House, Berlin, Germany. I have been working here for 4 months.",
+        "I'm working for now as a waiter in a restaurant in Soho House, Berlin, Germany, supporting waitstaff by ensuring fast and efficient table service, keeping service areas stocked and clean, and maintaining a smooth flow between the kitchen and dining areas. ",
       technologies: [
         "Teamwork",
         "Diverse Languages",
