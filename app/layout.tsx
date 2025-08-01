@@ -1,4 +1,5 @@
 import "@/styles/globals.css";
+import "../styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
@@ -6,7 +7,6 @@ import { Providers } from "./providers";
 import Navbar from "@/components/Navbar/Navbar";
 import clsx from "clsx";
 import userData from "@/components/userData";
-import Head from "next/head";
 
 export const metadata: Metadata = {
   title: {

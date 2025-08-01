@@ -16,7 +16,7 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
           <Avatar
             src={tomasgenerosoimage.src}
             alt="Tomas Generoso"
-            className="w-42 h-76 sm:w-24 sm:h-44 md:w-24 md:h-44 lg:w-42 lg:h-76"
+            className="w-62 h-76 sm:w-24 sm:h-44 md:w-24 md:h-44 lg:w-42 lg:h-76 object-cover"
           />
           <div className="my-2">
             <p className="text-base sm:text-base md:text-lg xl:text-xl text-center">
@@ -33,8 +33,8 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
           </div>
         </div>
 
-        <div className="flex-1 h-full sm:mt-4 md:mt-0 md:ml-4">
-          <div className="text-sm sm:text-sm md:text-base xl:text-lg space-y-2">
+        <div className="flex-1 h-full  md:ml-4 my-auto    sm:mt-4 md:mt-0">
+          <div className="text-sm sm:text-sm md:text-base xl:text-xl gap-4 p-4">
             {userData.aboutMe.split("\n").map((paragraph, index) => (
               <p key={index}>{paragraph}</p>
             ))}

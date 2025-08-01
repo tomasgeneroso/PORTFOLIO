@@ -43,10 +43,6 @@ export const siteConfig = {
       label: "Portfolio",
       href: "/portfolio",
     },
-    {
-      label: "Experience",
-      href: "#experienceSection",
-    },
     //Sacamos testimonies hasta que existan
    //{
      // label: "Testimonies",

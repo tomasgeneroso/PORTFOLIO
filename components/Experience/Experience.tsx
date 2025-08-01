@@ -54,7 +54,7 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
     setTouchStartX(null);
   };
   return (
-    <section className="flex flex-col w-full" id="experienceSection">
+    <section className="flex flex-col w-full" id="projectsSection">
       <TitleSeparator titleText="Experience" />
       <div className="flex flex-wrap w-full gap-4">
         <ol
@@ -119,7 +119,10 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
                       {description}
                     </p>
                   </div>
-                  <a href={link} className="text-blue-500 underline">
+                  <a
+                    href={link}
+                    className="text-grey-100 hover:underline transition duration-300 ease-in-out text-sm font-normal text-gray-700 dark:text-gray-300 hover:text-primary focus:text-primary focus:font-medium"
+                  >
                     View Project
                   </a>
                 </div>

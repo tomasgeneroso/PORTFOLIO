@@ -9,31 +9,29 @@
       "lint": "next lint"
    },
    "dependencies": {
-      "@heroui/react": "^2.2.10",
-      "@heroui/system": "^2.1.2",
-      "@heroui/theme": "^2.1.18",
+      "@heroui/react": "^2.8.2",
+      "@heroui/system": "^2.4.20",
+      "@heroui/theme": "^2.4.20",
       "@prisma/client": "^5.19.0",
       "@react-aria/ssr": "^3.8.0",
       "@react-aria/visually-hidden": "^3.8.23",
       "@types/node": "20.5.7",
-      "autoprefixer": "10.4.16",
       "clsx": "^2.0.0",
       "dotenv": "^16.4.5",
       "emailjs-com": "^3.2.0",
+      "eslint": "8.48.0",
       "eslint-config-next": "^15.4.0-canary.51",
-      "framer-motion": "^12.6.5",
+      "framer-motion": "^12.23.12",
       "intl-messageformat": "^10.5.0",
       "keen-slider": "^6.8.6",
       "mongodb": "^6.8.0",
       "mongoose": "^8.6.2",
       "next": "^15.3.2",
       "next-themes": "^0.2.1",
-      "postcss": "8.4.31",
-      "react": "^18.2.0",
-      "react-dom": "^18.2.0",
+      "react": "^19.1.1",
+      "react-dom": "^19.1.1",
       "sharp": "^0.34.1",
       "tailwind-variants": "^0.1.18",
-      "tailwindcss": "^4.1.11",
       "typescript": "5.0.4"
    },
    "devDependencies": {
@@ -41,6 +39,8 @@
       "@types/next": "^9.0.0",
       "@types/react": "^19.1.1",
       "@types/react-dom": "^19.1.2",
-      "eslint": "^9.0.0"
+      "autoprefixer": "^10.4.21",
+      "postcss": "^8.5.6",
+      "tailwindcss": "^4.1.11"
    }
 }
