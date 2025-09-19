@@ -1,4 +1,3 @@
-import "@/styles/globals.css";
 import "../styles/globals.css";
 import { Metadata, Viewport } from "next";
 import { siteConfig } from "@/config/site";
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#FBF6C7" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
+    { media: "(prefers-color-scheme: dark)", color: "#3D2548" },
   ],
 };
 
@@ -34,7 +33,7 @@ export default function RootLayout({
       </head>
       <body
         className={clsx(
-          "min-h-screen mx-1 bg-background font-sans antialiased ",
+          "min-h-screen mx-1 font-sans antialiased ",
           fontSans.variable
         )}
         style={{ height: "100%" }}
@@ -42,7 +41,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <Navbar userLinks={userData.links} />
           <main className="container flex w-full h-full mx-auto pt-2 ">
-            <div className="flex w-full  mb-16">{children}</div>
+            <div className="flex w-full mb-16">{children}</div>
           </main>
         </Providers>
       </body>

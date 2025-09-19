@@ -75,7 +75,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
                 onClick={(e) => handleScrollToSection(e, item.href)}
                 className={clsx(
                   linkStyles,
-                  "text-gray-700 dark:text-gray-300 hover:text-primary hover:font-medium focus:text-primary focus:font-medium",
+                  "hover:text-primary hover:font-medium focus:text-primary focus:font-medium",
                   "data-[active=true]:text-primary data-[active=true]:font-medium scroll-smooth transition-all duration-300 ease-in-out"
                 )}
                 passHref
@@ -126,7 +126,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
             hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100
             dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
         >
-          <a href="/pdf/TOMAS_GENEROSO _CV_EN.pdf" download>
+          <a href="/pdf/TOMAS GENEROSO CV EN.pdf" download>
             CV
           </a>
         </button>

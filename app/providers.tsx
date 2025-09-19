@@ -17,9 +17,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <NextThemesProvider {...themeProps}>
       <HeroUIProvider navigate={router.push}>
-        <div className="min-h-screen bg-white dark:bg-[#3D2548]">
-          {children}
-        </div>
+        <div className="min-h-screen">{children}</div>
       </HeroUIProvider>
     </NextThemesProvider>
   );

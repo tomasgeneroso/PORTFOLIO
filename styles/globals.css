@@ -7,3 +7,12 @@ html {
       display: none;
     }
   }
+  .dark {
+  --background-color: #3D2548;
+  --text-color: #eae9eb;
+}
+ 
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}

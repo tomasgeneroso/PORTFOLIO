@@ -34,7 +34,7 @@ export const TitleSeparator: FunctionComponent<TitleSeparatorProps> = ({
       </h1>
       <div
         ref={lineRef}
-        className="ml-4 h-[2px] bg-amber-100 dark:bg-[#8c8c8c]"
+        className="ml-4 h-[3px] bg-[#fef3c6] dark:bg-[#8c8c8c]"
         style={{
           transition: "width 0.9s ease-in-out",
           width: isVisible ? "100%" : "10%",
