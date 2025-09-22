@@ -13,7 +13,7 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
       <TitleSeparator titleText="About me" />
       <div className="flex flex-col md:flex-row w-full mx-auto gap-4 p-8 bg-amber-200/10 rounded-lg shadow-lg dark:bg-[#2B1A33] dark:text-white ">
         <div className="flex flex-col items-center justify-center md:w-40">
-          <figure className="w-24 h-44 md:w-40 md:h-80 rounded-lg overflow-hidden">
+          <figure className="w-24 h-44 md:w-40 md:h-60 rounded-lg overflow-hidden">
             <Image
               src={tomasgenerosoimage}
               alt="Tomas Generoso"
