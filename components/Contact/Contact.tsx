@@ -11,12 +11,9 @@ const ContactSection: React.FC<UserProps> = ({ userData }) => {
     Gmail: Gmail,
   };
   return (
-    <section
-      className="flex flex-col w-full mx-0  h-screen"
-      id="contactSection"
-    >
+    <section className="flex flex-col w-full h-screen" id="contactSection">
       <TitleSeparator titleText="Contact" />
-      <div className="flex flex-wrap w-full flex-col">
+      <div className="flex flex-wrap w-full flex-col ">
         <ContactForm contactInfo={contactInfo} />
       </div>
     </section>

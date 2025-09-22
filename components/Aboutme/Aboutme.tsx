@@ -5,7 +5,7 @@ import Linkedin from "@/components/Icons/Linkedin";
 import { TitleSeparator } from "@/components/TitleSeparator/TitleSeparator";
 import { UserProps } from "@/types";
 import tomasgenerosoimage from "@/components/Aboutme/tomasgenerosoimage.jpeg";
-import Skills from "../Skills/Skills";
+import Image from "next/image";
 import SkillsSlider from "../Skills/SkillsSlider";
 const AboutMe: React.FC<UserProps> = ({ userData }) => {
   return (
@@ -13,11 +13,13 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
       <TitleSeparator titleText="About me" />
       <div className="flex flex-col md:flex-row w-full mx-auto gap-4 p-8 bg-amber-200/10 rounded-lg shadow-lg dark:bg-[#2B1A33] dark:text-white ">
         <div className="flex flex-col items-center justify-center md:w-40">
-          <Avatar
-            src={tomasgenerosoimage.src}
-            alt="Tomas Generoso"
-            className="w-62 h-76 sm:w-24 sm:h-44 md:w-24 md:h-44 lg:w-42 lg:h-76 object-cover"
-          />
+          <figure className="w-24 h-44 md:w-40 md:h-80 rounded-lg overflow-hidden">
+            <Image
+              src={tomasgenerosoimage}
+              alt="Tomas Generoso"
+              className="object-cover"
+            />
+          </figure>
           <div className="my-2">
             <p className="text-base sm:text-base md:text-lg xl:text-xl text-center ">
               {userData.name} {userData.surname}

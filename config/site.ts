@@ -41,13 +41,12 @@ export const siteConfig = {
     },
     {
       label: "Portfolio",
-      href: "/portfolio",
+      href: "#projectsSection",
     },
-    //Sacamos testimonies hasta que existan
-   //{
-     // label: "Testimonies",
-     // href: "#testimoniesSection",
-    //},
+    {
+      label: "Experience",
+      href: "#experienceSection",
+    },
     {
       label: "Contact",
       href: "#contactSection",

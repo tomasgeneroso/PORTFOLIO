@@ -41,7 +41,7 @@ export default function RootLayout({
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <Navbar userLinks={userData.links} />
           <main className="container flex w-full h-full mx-auto pt-2 ">
-            <div className="flex w-full mb-16">{children}</div>
+            <div className="flex w-full mb-4">{children}</div>
           </main>
         </Providers>
       </body>
