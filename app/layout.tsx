@@ -3,9 +3,12 @@ import { Metadata, Viewport } from "next";
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Providers } from "./providers";
-import Navbar from "@/components/Navbar/Navbar";
 import clsx from "clsx";
 import userData from "@/components/userData";
+import { LanguageMetadata } from "@/components/LanguageMetadata";
+import { StructuredData } from "@/components/StructuredData";
+import Navbar from "@/components/Navbar/Navbar";
+
 if (typeof window !== "undefined") {
   (window as any).USE_MONGO = true;
 }
@@ -77,27 +80,6 @@ export const viewport: Viewport = {
   ],
 };
 
-"use client";
-import { LanguageMetadata } from "@/components/LanguageMetadata";
-import { StructuredData } from "@/components/StructuredData";
-
-function RootLayoutClient({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <>
-      <LanguageMetadata />
-      <StructuredData />
-      <Navbar userLinks={userData.links} />
-      <main className="container flex w-full h-full mx-auto pt-2 ">
-        <div className="flex w-full mb-4">{children}</div>
-      </main>
-    </>
-  );
-}
-
 export default function RootLayout({
   children,
 }: {
@@ -116,7 +98,12 @@ export default function RootLayout({
         style={{ height: "100%" }}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <RootLayoutClient>{children}</RootLayoutClient>
+          <LanguageMetadata />
+          <StructuredData />
+          <Navbar userLinks={userData.links} />
+          <main className="container flex w-full h-full mx-auto pt-2 ">
+            <div className="flex w-full mb-4">{children}</div>
+          </main>
         </Providers>
       </body>
     </html>

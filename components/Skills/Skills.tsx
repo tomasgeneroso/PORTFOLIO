@@ -11,20 +11,27 @@ const Skills: React.FC<UserProps> = ({ userData }) => {
   return (
     <section className="flex flex-col w-full min-h-screen" id="skillsSection">
       <TitleSeparator titleText={t.skills.title} />
-      <div className="flex flex-wrap justify-center gap-6 py-6">
+      <div className="flex flex-wrap justify-center gap-8 md:gap-10 lg:gap-12 py-6 px-4">
         {userData.skills.map((skill, index) => (
           <div
             key={index}
-            className="flex flex-col items-center w-16 sm:w-20 md:w-24"
+            className="flex flex-col items-center w-20 sm:w-24 md:w-28 lg:w-32"
           >
-            <div className="w-10 h-10 md:w-36 md:h-36 flex items-center justify-center">
-              {skill.icono}
+            <div className="w-full aspect-square flex items-center justify-center mb-3">
+              <div className="w-full h-full flex items-center justify-center">
+                {React.cloneElement(skill.icono as React.ReactElement, {
+                  size: undefined,
+                  className: "w-full h-full object-contain",
+                  style: { width: '100%', height: '100%' }
+                })}
+              </div>
             </div>
             <Progress
-              className="w-full mt-3"
+              className="w-full"
               color="primary"
               aria-label={`Skill ${index}`}
               value={skill.level}
+              size="sm"
             />
           </div>
         ))}

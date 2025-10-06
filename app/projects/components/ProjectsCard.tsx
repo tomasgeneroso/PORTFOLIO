@@ -35,7 +35,7 @@ const ProjectsCard: React.FC<ProjectsCardProps> = ({ projects }) => {
           showArrow
         >
           <a
-            href={projectDetails.link}
+            href={projectDetails.link || "#"}
             className="flex flex-col items-center justify-center gap-4 w-full md:py-10"
           >
             <div className="flex flex-col text-center  justify-center px-10 py-4 w-full">

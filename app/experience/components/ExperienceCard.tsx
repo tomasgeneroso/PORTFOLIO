@@ -52,7 +52,7 @@ const ExperienceCard: React.FC<ExperienceCardProps> = ({ experience }) => {
             showArrow
           >
             <a
-              href={exp.link}
+              href={exp.link || "#"}
               className="flex flex-col items-center justify-center gap-4 w-full md:py-10"
             >
               <div className="flex flex-col text-center justify-center px-10 py-4 w-full">

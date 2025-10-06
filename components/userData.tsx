@@ -149,7 +149,7 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
       ) => (
         <img
-          src="./Images/DOlogoceleste.svg"
+          src="./Images/DOlogo.svg"
           alt="DO mini logo"
           className="w-6 h-6 object-contain"
         />
@@ -206,7 +206,7 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
       ) => (
         <img
-          src="./Images/DOlogoceleste.svg"
+          src="./Images/DOlogo.svg"
           alt="DO mini logo"
           className="w-6 h-6 object-contain"
         />
@@ -337,7 +337,7 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
       ) => (
         <img
-          src="./Images/DOlogoceleste.svg"
+          src="./Images/DOlogo.svg"
           alt="DO mini logo"
           className="w-6 h-6 object-contain"
         />

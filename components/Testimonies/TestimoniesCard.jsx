@@ -11,11 +11,11 @@ const TestimonialCard = ({ author, logo, projectLink, testimonial }) => {
                 className="rounded-full mb-4"
 
             />
-            <h5>{author}</h5>
-            <a href={projectLink} className="text-blue-500 hover:underline">
+            <h5 className="text-lg md:text-xl font-semibold">{author}</h5>
+            <a href={projectLink} className="text-base md:text-lg text-blue-500 hover:underline">
                 {projectLink}
             </a>
-            <p className="mt-2 text-wrap">{testimonial}</p>
+            <p className="mt-2 text-base md:text-lg text-wrap">{testimonial}</p>
         </div>
     );
 };

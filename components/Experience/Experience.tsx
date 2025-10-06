@@ -121,34 +121,34 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
                 >
                   <div className="mt-3 sm:pe-8 w-full px-4 max-w-4xl mx-auto">
                     <div className="flex flex-row gap-x-8 my-8 text-center ">
-                      <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">
+                      <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
                         {translation?.projectName || projectName}
                       </h3>
                     </div>
                     <div className=" overflow-hidden rounded-md">
                       {projectImage}
                     </div>
-                    <p className="block my-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+                    <p className="block my-2 text-lg font-normal leading-none text-gray-400 dark:text-gray-500">
                       {new Date(date).toLocaleDateString()}
                     </p>
                     <div className="flex flex-wrap gap-2 mb-2 w-full">
                       {(translation?.technologies || technologies).map((tech, techIndex) => (
                         <span
                           key={techIndex}
-                          className="bg-gray-700 text-gray-100 text-xs px-3 py-1 rounded-full shadow-sm whitespace-nowrap"
+                          className="bg-gray-700 text-gray-100 text-base px-3 py-1 rounded-full shadow-sm whitespace-nowrap"
                         >
                           {tech}
                         </span>
                       ))}
                     </div>
                     <div className="text-wrap ">
-                      <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 break-words">
+                      <p className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 break-words">
                         {translation?.description || description}
                       </p>
                     </div>
                     <a
-                      href={link}
-                      className="text-grey-100 hover:underline transition duration-300 ease-in-out text-sm font-normal text-gray-700 dark:text-gray-300 hover:text-primary focus:text-primary focus:font-medium"
+                      href={link || "#"}
+                      className="text-grey-100 hover:underline transition duration-300 ease-in-out text-base font-normal text-gray-700 dark:text-gray-300 hover:text-primary focus:text-primary focus:font-medium"
                     >
                       {t.experience.viewProject}
                     </a>
@@ -160,7 +160,7 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
         </ol>
 
         {/* Dots Navigation */}
-        <div className="flex gap-2 mt-4 justify-center">
+        <div className="flex gap-2 mt-4 justify-center w-full">
           {userData.experience.map((_, index) => (
             <span
               key={index}

@@ -87,7 +87,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
           >
             <div className="mt-3 sm:pe-8 w-full">
               <div className="flex flex-col sm:flex-row gap-y-4 gap-x-8 my-4 text-center sm:text-left items-center">
-                <div className="z-10 flex items-center justify-center w-14 h-14 bg-blue-100 rounded-full ring-0 ring-white dark:bg-blue-900 sm:ring-8 dark:ring-gray-900 shrink-0">
+                <div className="z-10 flex items-center justify-center w-14 h-14 bg-gray-100 rounded-full ring-0 ring-white dark:bg-gray-800 sm:ring-8 dark:ring-gray-900 shrink-0">
                   {project.enterpriseicono ? (
                     React.createElement(project.enterpriseicono, {
                       width: 40,
@@ -95,7 +95,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                     })
                   ) : (
                     <svg
-                      className="w-2.5 h-2.5 text-[#777272]"
+                      className="w-2.5 h-2.5 text-gray-700 dark:text-gray-300"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="currentColor"
@@ -105,7 +105,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                     </svg>
                   )}
                 </div>
-                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
                   {project.projectName}
                 </h3>
               </div>
@@ -116,7 +116,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                 )}
               </div>
 
-              <p className="block my-2 text-sm font-normal leading-none text-gray-400 dark:text-gray-500">
+              <p className="block my-2 text-base md:text-lg font-normal leading-none text-gray-400 dark:text-gray-500">
                 {new Date(project.date).toLocaleDateString()}
               </p>
 
@@ -125,20 +125,20 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                   {project.technologies.map((tech, index) => (
                     <span
                       key={index}
-                      className="bg-gray-700 text-gray-100 text-xs px-3 py-1 rounded-full shadow-sm"
+                      className="bg-gray-700 text-gray-100 text-sm md:text-base px-3 py-1 rounded-full shadow-sm"
                     >
                       {tech}
                     </span>
                   ))}
                 </div>
-                <p className="text-base font-normal text-wrap text-gray-500 dark:text-gray-400 md:text-sm">
+                <p className="text-lg md:text-xl font-normal text-wrap text-gray-500 dark:text-gray-400">
                   {project.description}
                 </p>
                 <a
-                  href={project.link}
-                  className="text-grey-100 hover:underline transition duration-300 ease-in-out text-sm font-normal text-gray-700 dark:text-gray-300 hover:text-primary focus:text-primary focus:font-medium"
+                  href={project.link || "#"}
+                  className="text-grey-100 hover:underline transition duration-300 ease-in-out text-base md:text-lg font-normal text-gray-700 dark:text-gray-300 hover:text-primary focus:text-primary focus:font-medium"
                 >
-                  Project repository
+                  View project
                 </a>
               </div>
             </div>

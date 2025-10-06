@@ -89,18 +89,18 @@ const Certificates: React.FC<CertificatesProps> = ({ certificates }) => {
                   </div>
 
                   <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-[#1a1a1a]">
-                    <h3 className="font-semibold text-sm md:text-base mb-1 line-clamp-2 text-gray-900 dark:text-gray-100">
+                    <h3 className="font-semibold text-lg md:text-xl mb-1 line-clamp-2 text-gray-900 dark:text-gray-100">
                       {translation?.title || certificate.title}
                     </h3>
 
                     {(translation?.issuer || certificate.issuer) && (
-                      <p className="text-xs md:text-sm text-gray-600 dark:text-gray-300 mb-1">
+                      <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 mb-1">
                         {translation?.issuer || certificate.issuer}
                       </p>
                     )}
 
                     {certificate.date && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                      <p className="text-base text-gray-500 dark:text-gray-400">
                         {certificate.date}
                       </p>
                     )}
