@@ -1,6 +1,6 @@
 @import "tailwindcss";
 html {
-  scroll-behavior: smooth; 
+  scroll-behavior: smooth;
 }
 .hidden-sm {
     @media (max-width: 767px) { /* Adjust breakpoint if needed */
@@ -11,8 +11,18 @@ html {
   --background-color: #3D2548;
   --text-color: #eae9eb;
 }
- 
+
 body {
   background-color: var(--background-color);
   color: var(--text-color);
+}
+
+/* Ocultar scrollbar pero mantener funcionalidad */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
 }

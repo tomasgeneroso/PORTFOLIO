@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useKeenSlider } from "keen-slider/react";
 import "keen-slider/keen-slider.min.css";
 import { ImgProtfolioSliderProps } from "@/types";
@@ -10,55 +10,62 @@ const ImgProtfolioSlider: React.FC<ImgProtfolioSliderProps> = ({
   altPrefix = "Slide",
   className = "",
 }) => {
-  const [sliderRef] = useKeenSlider<HTMLDivElement>({
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const filteredImages = images.filter((src) => src !== "");
+
+  const [sliderRef, instanceRef] = useKeenSlider<HTMLDivElement>({
     loop: true,
     slides: {
       perView: 1,
       spacing: 15,
     },
-    // Breakpoints opcionales para responsividad si deseas más de una imagen a la vez
-    // breakpoints: {
-    //   "(min-width: 768px)": {
-    //     slides: {
-    //       perView: 2,
-    //       spacing: 20,
-    //     },
-    //   },
-    //   "(min-width: 1024px)": {
-    //     slides: {
-    //       perView: 3,
-    //       spacing: 30,
-    //     },
-    //   },
-    // },
+    slideChanged(slider) {
+      setCurrentSlide(slider.track.details.rel);
+    },
   });
 
   return (
-    <div
-      ref={sliderRef}
-      className={`keen-slider rounded-md overflow-hidden my-2 ${className}`}
-    >
-      {images
-        .filter((src) => src !== "")
-        .map((src, index) => (
+    <div className="relative">
+      <div
+        ref={sliderRef}
+        className={`keen-slider rounded-md overflow-hidden my-2 scrollbar-hide ${className}`}
+      >
+        {filteredImages.map((src, index) => (
           <div
-            // *** CAMBIO CLAVE AQUÍ: Define una altura fija o máxima para el slide ***
-            // Por ejemplo, `h-80` (320px) o `max-h-[320px]` para que el slide tenga un límite.
-            // O `aspect-video` si todas tus imágenes son 16:9, o `aspect-square` para 1:1.
-            // Para la captura que enviaste, un `h-80` o `h-96` podría funcionar bien inicialmente.
             className="keen-slider__slide flex justify-center items-center h-80 p-2"
             key={index}
           >
             <Image
               src={src}
               alt={`${altPrefix} ${index + 1}`}
-              width={600} // Valor intrínseco para Next.js, no el tamaño mostrado final
-              height={400} // Valor intrínseco para Next.js
-              // Asegúrate de que estas clases de la imagen trabajen dentro del contenedor
+              width={600}
+              height={400}
               className="w-full h-full object-contain rounded-lg shadow-md"
             />
           </div>
         ))}
+      </div>
+
+      {/* Dots Navigation - solo mostrar si hay más de una imagen */}
+      {filteredImages.length > 1 && (
+        <div className="flex gap-2 mt-2 justify-center">
+          {filteredImages.map((_, index) => (
+            <span
+              key={index}
+              onClick={() => {
+                instanceRef.current?.moveToIdx(index);
+              }}
+              className="w-2 h-2 rounded-full transition-all duration-300 cursor-pointer"
+              style={{
+                backgroundColor: "#c2c2c2aa",
+                opacity: currentSlide === index ? 1 : 0.4,
+                transform: currentSlide === index ? "scale(1.2)" : "scale(1)",
+              }}
+              aria-label={`Go to image ${index + 1}`}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 };

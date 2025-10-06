@@ -5,50 +5,53 @@ export const siteConfig = {
   description:"Tomas Generoso Portfolio",
   navItems: [
     {
-      label: "About me",
-      href: "/",
+      key: "aboutMe",
+      href: "#aboutMeSection",
     },
     {
-      label: "Skills",
+      key: "skills",
       href: "#skillsSection",
     },
     {
-      label: "Projects",
+      key: "projects",
       href: "#projectsSection",
     },
     {
-      label: "Experience",
+      key: "experience",
       href: "#experienceSection",
     },
-    //Sacamos testimonies hasta que existan
-    //{
-     // label: "Testimonies",
-     // href: "#testimoniesSection",
-    //},
     {
-      label: "Contact",
+      key: "certificates",
+      href: "#certificatesSection",
+    },
+    {
+      key: "contact",
       href: "#contactSection",
     },
   ],
   navMenuItems: [
     {
-      label: "About me",
-      href: "/",
+      key: "aboutMe",
+      href: "#aboutMeSection",
     },
     {
-      label: "Skills",
-      href: "#skillsSection", 
+      key: "skills",
+      href: "#skillsSection",
     },
     {
-      label: "Portfolio",
+      key: "projects",
       href: "#projectsSection",
     },
     {
-      label: "Experience",
+      key: "experience",
       href: "#experienceSection",
     },
     {
-      label: "Contact",
+      key: "certificates",
+      href: "#certificatesSection",
+    },
+    {
+      key: "contact",
       href: "#contactSection",
     },
   ],

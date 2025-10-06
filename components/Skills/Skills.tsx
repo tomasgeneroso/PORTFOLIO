@@ -1,12 +1,16 @@
+"use client";
 import React from "react";
 import { TitleSeparator } from "../TitleSeparator/TitleSeparator";
 import { Progress } from "@heroui/react";
 import { UserProps } from "@/types";
+import { useI18n } from "@/lib/i18n/context";
 
 const Skills: React.FC<UserProps> = ({ userData }) => {
+  const { t } = useI18n();
+
   return (
     <section className="flex flex-col w-full" id="skillsSection">
-      <TitleSeparator titleText="Skills" />
+      <TitleSeparator titleText={t.skills.title} />
       <div className="flex flex-wrap justify-center gap-6 py-6">
         {userData.skills.map((skill, index) => (
           <div

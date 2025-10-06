@@ -45,7 +45,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
     const handleScroll = () => {
       if (!listRef.current) return;
       const scrollX = listRef.current.scrollLeft;
-      const itemWidth = listRef.current.clientWidth * 0.8;
+      const itemWidth = listRef.current.clientWidth;
       const index = Math.round(scrollX / itemWidth);
       setActiveIndex(index);
     };
@@ -61,12 +61,14 @@ const TimeLine: React.FC<UserProps> = (userData) => {
   return (
     <div className="w-full flex flex-col items-center">
       <ol
-        className="flex flex-row p-1 sm:flex w-full overflow-x-auto md:overflow-hidden"
+        className="flex flex-row p-1 sm:flex w-full overflow-x-auto snap-x snap-mandatory scrollbar-hide"
         style={{
           scrollBehavior: "smooth",
           userSelect: "none",
           whiteSpace: "nowrap",
           cursor: isDragging ? "grabbing" : "grab",
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
         }}
         ref={listRef}
         onMouseDown={handleMouseDown}
@@ -80,7 +82,8 @@ const TimeLine: React.FC<UserProps> = (userData) => {
         {userData.userData.projects.map((project, index) => (
           <li
             key={index}
-            className="w-[100vw] sm:w-2/3 min-w-[98%] sm:min-w-[33.3333%] flex-shrink-0 px-4 py-2 relative"
+            className="flex-shrink-0 snap-center px-4 py-2 relative"
+            style={{ width: "100%" }}
           >
             <div className="mt-3 sm:pe-8 w-full">
               <div className="flex flex-col sm:flex-row gap-y-4 gap-x-8 my-4 text-center sm:text-left items-center">
@@ -148,12 +151,22 @@ const TimeLine: React.FC<UserProps> = (userData) => {
         {userData.userData.projects.slice(0, 3).map((_, index) => (
           <span
             key={index}
-            className="w-3 h-3 rounded-full transition-all duration-300"
+            onClick={() => {
+              if (listRef.current) {
+                const itemWidth = listRef.current.clientWidth;
+                listRef.current.scrollTo({
+                  left: index * itemWidth,
+                  behavior: "smooth",
+                });
+              }
+            }}
+            className="w-3 h-3 rounded-full transition-all duration-300 cursor-pointer"
             style={{
               backgroundColor: "#c2c2c2aa",
               opacity: activeIndex === index ? 1 : 0.4,
               transform: activeIndex === index ? "scale(1.2)" : "scale(1)",
             }}
+            aria-label={`Go to slide ${index + 1}`}
           />
         ))}
       </div>

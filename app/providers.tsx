@@ -7,6 +7,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 import { VisitTracker } from "@/app/analytics/analytics";
 import { ConnectionIndicator } from "@/components/ConnectionIndicator";
+import { I18nProvider } from "@/lib/i18n/context";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -19,9 +20,11 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <NextThemesProvider {...themeProps}>
       <HeroUIProvider navigate={router.push}>
-        <VisitTracker />
-        <ConnectionIndicator />
-        <div className="min-h-screen">{children}</div>
+        <I18nProvider>
+          <VisitTracker />
+          <ConnectionIndicator />
+          <div className="min-h-screen">{children}</div>
+        </I18nProvider>
       </HeroUIProvider>
     </NextThemesProvider>
   );

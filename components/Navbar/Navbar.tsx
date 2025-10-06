@@ -8,6 +8,8 @@ import {
 import { link as linkStyles } from "@heroui/theme";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
+import { LanguageSelector } from "@/components/LanguageSelector/LanguageSelector";
+import { useI18n } from "@/lib/i18n/context";
 import Github from "@/components/Icons/Github";
 import clsx from "clsx";
 import { UserLinks } from "@/types";
@@ -19,6 +21,7 @@ import {
   trackEmailClick,
 } from "@/app/analytics/analytics";
 const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
+  const { t } = useI18n();
   const [showNavbar, setShowNavbar] = React.useState(true);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const lastScrollY = React.useRef(0);
@@ -32,6 +35,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
       e.preventDefault();
       const id = href.slice(1);
       const offset = 60;
+      const currentPath = window.location.pathname;
 
       const scrollToId = () => {
         const el = document.getElementById(id);
@@ -40,6 +44,13 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
           el.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo({ top, behavior: "smooth" });
       };
+
+      // Si no estamos en la página principal, navegar primero a /
+      if (currentPath !== "/") {
+        if (isMenuOpen) setIsMenuOpen(false);
+        router.push("/" + href);
+        return;
+      }
 
       // Si el menú está abierto: cerralo primero y luego scrollea después de un pequeño delay.
       if (isMenuOpen) {
@@ -55,7 +66,16 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
 
     if (href === "/") {
       e.preventDefault();
-      // Si el menú está abierto, cerrarlo y luego scrollear al top
+      const currentPath = window.location.pathname;
+
+      // Si no estamos en la home, navegar a /
+      if (currentPath !== "/") {
+        if (isMenuOpen) setIsMenuOpen(false);
+        router.push("/");
+        return;
+      }
+
+      // Si estamos en home, scrollear al top
       if (isMenuOpen) {
         setIsMenuOpen(false);
         setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 80);
@@ -156,7 +176,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
                 )}
                 passHref
               >
-                {item.label}
+                {t.nav[item.key as keyof typeof t.nav]}
               </NextLink>
             </NavbarItem>
           ))}
@@ -169,7 +189,8 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
         justify="end"
       >
         <div className="mr-4 mb-8 pr-5 space-x-4 flex items-center">
-          <ThemeSwitch />
+          <LanguageSelector />
+
           <button
             type="button"
             className="py-1 px-3 text-sm font-normal text-center text-gray-700
@@ -184,12 +205,24 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
               download
               className="flex items-center gap-1"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
               </svg>
-              CV
+              {t.nav.cv}
             </a>
           </button>
+          <ThemeSwitch />
         </div>
       </NavbarContent>
 
@@ -276,11 +309,11 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
                     <NextLink
                       href={item.href}
                       onClick={(e) => handleScrollToSection(e, item.href)}
-                      className="block text-lg font-medium text-gray-700 
+                      className="block text-lg font-medium text-gray-700
                           hover:text-primary transition-colors duration-200"
                       passHref
                     >
-                      {item.label}
+                      {t.nav[item.key as keyof typeof t.nav]}
                     </NextLink>
                   </li>
                 ))}
@@ -295,7 +328,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
                 <div>
                   <a
                     href={userLinks.Github}
-                    className="flex items-center gap-3 text-gray-700 
+                    className="flex items-center gap-3 text-gray-700
                       hover:text-primary transition-colors duration-200"
                     aria-label="Github"
                     onClick={() => (setIsMenuOpen(false), trackGitHubClick)}
@@ -305,6 +338,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
                 </div>
               )}
 
+              <LanguageSelector />
               <ThemeSwitch />
             </div>
             {/* CV Download Button */}
@@ -322,10 +356,21 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
                 className="flex items-center justify-center gap-1 w-full"
                 onClick={trackCVDownload}
               >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
                 </svg>
-                CV
+                {t.nav.cv}
               </a>
             </button>
           </div>

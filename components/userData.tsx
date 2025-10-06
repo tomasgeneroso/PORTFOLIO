@@ -227,10 +227,40 @@ My background includes a bachelor's degree in Economics and three years of studi
       link: "",
     },
   ],
+  certificates: [
+    {
+      id: 1,
+      title: "Certificado Coderhouse",
+      imagePath: "/Images/Certificates/CERTIFICADO CODERHOUSE.png",
+      issuer: "Coderhouse",
+      date: "2019",
+    },
+    {
+      id: 2,
+      title: "IA para análisis de datos",
+      imagePath: "/Images/Certificates/Curso IA para analisis de datos.png",
+      issuer: "Udemy",
+      date: "2024",
+    },
+    {
+      id: 3,
+      title: "JavaScript",
+      imagePath: "/Images/Certificates/cert_JAVASCRIPT_aprob_10789_824_2_2019-07-25-11-55-40.png",
+      issuer: "Argentina Programa",
+      date: "2019",
+    },
+    {
+      id: 4,
+      title: "EF SET English Certificate C1 Advanced",
+      imagePath: "/Images/Certificates/EF SET Certificate_page-0001.jpg",
+      issuer: "EF Standard English Test",
+      date: "2024",
+    },
+  ],
   experience: [
     {
       projectName: "Ceconni's, Berlin, Germany",
-      enterpriseicono: "",
+      enterpriseicono: undefined,
       projectImage: "",
       date: "2025-07-19",
       description:
@@ -245,7 +275,7 @@ My background includes a bachelor's degree in Economics and three years of studi
     },
     {
       projectName: "Frontend Developer",
-      enterpriseicono: "",
+      enterpriseicono: undefined,
       projectImage: "",
       date: " 09/09/2023",
       description:
@@ -269,7 +299,7 @@ My background includes a bachelor's degree in Economics and three years of studi
 
     {
       projectName: "System Analyst / Functional Consultor",
-      enterpriseicono: "",
+      enterpriseicono: undefined,
       projectImage: "",
       date: "2023-06-30",
       description:
@@ -285,7 +315,7 @@ My background includes a bachelor's degree in Economics and three years of studi
     },
     {
       projectName: "DO",
-      enterpriseicono: "",
+      enterpriseicono: undefined,
       projectImage: "",
       date: "2020-10-20",
       description:
