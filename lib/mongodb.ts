@@ -1,13 +1,5 @@
 import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.DATABASE_URL || process.env.MONGODB_URI || "";
-
-if (!MONGODB_URI) {
-  throw new Error(
-    "Por favor define la variable de entorno DATABASE_URL o MONGODB_URI en tu archivo .env"
-  );
-}
-
 interface MongooseCache {
   conn: typeof mongoose | null;
   promise: Promise<typeof mongoose> | null;
@@ -27,6 +19,14 @@ if (!global.mongoose) {
 }
 
 export async function connectDB(): Promise<typeof mongoose> {
+  const MONGODB_URI = process.env.DATABASE_URL || process.env.MONGODB_URI || "";
+
+  if (!MONGODB_URI) {
+    throw new Error(
+      "Por favor define la variable de entorno DATABASE_URL o MONGODB_URI en tu archivo .env"
+    );
+  }
+
   if (cached.conn) {
     return cached.conn;
   }
