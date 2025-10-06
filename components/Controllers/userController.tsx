@@ -1,10 +1,9 @@
 "use client";
 import dotenv from "dotenv";
-import UserModel from "@/DB/models&Schemas";
+import UserModel from "@/models/db";
 import { User } from "@/types";
 import mongoose from "mongoose";
 dotenv.config();
-const userUrl = true; // Cambiarlo por la URL
 const userController = {
   getUserData: async () => {
     try {
@@ -19,7 +18,6 @@ const userController = {
   postUserData: async (userData: User) => {
     try {
       if (mongoose.models && mongoose.models.User) {
-        const keysUsermodel = Object.keys(userData);
         const user = new UserModel(userData);
         console.log("🚀 ~ postUserData: ~ user:", user);
         const saved = await user

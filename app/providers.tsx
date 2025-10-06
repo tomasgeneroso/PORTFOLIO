@@ -5,6 +5,8 @@ import { HeroUIProvider } from "@heroui/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
+import { VisitTracker } from "@/app/analytics/analytics";
+import { ConnectionIndicator } from "@/components/ConnectionIndicator";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -17,6 +19,8 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   return (
     <NextThemesProvider {...themeProps}>
       <HeroUIProvider navigate={router.push}>
+        <VisitTracker />
+        <ConnectionIndicator />
         <div className="min-h-screen">{children}</div>
       </HeroUIProvider>
     </NextThemesProvider>

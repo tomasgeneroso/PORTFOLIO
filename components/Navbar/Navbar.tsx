@@ -13,6 +13,11 @@ import clsx from "clsx";
 import { UserLinks } from "@/types";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  trackCVDownload,
+  trackGitHubClick,
+  trackEmailClick,
+} from "@/app/analytics/analytics";
 const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
   const [showNavbar, setShowNavbar] = React.useState(true);
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -173,7 +178,15 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
               hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100
               dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
           >
-            <a href="/pdf/TOMAS GENEROSO CV EN.pdf" download>
+            <a
+              href="/pdf/TOMAS GENEROSO CV EN.pdf"
+              onClick={trackCVDownload}
+              download
+              className="flex items-center gap-1"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
               CV
             </a>
           </button>
@@ -183,7 +196,11 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
       {/* Mobile Navigation Controls */}
       <NavbarContent className="lg:hidden basis-1 pl-4" justify="end">
         {Github && userLinks?.Github && (
-          <a href={userLinks.Github} aria-label="Github">
+          <a
+            href={userLinks.Github}
+            onClick={trackGitHubClick}
+            aria-label="Github"
+          >
             <Github className="text-default-500" />
           </a>
         )}
@@ -281,7 +298,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
                     className="flex items-center gap-3 text-gray-700 
                       hover:text-primary transition-colors duration-200"
                     aria-label="Github"
-                    onClick={() => setIsMenuOpen(false)}
+                    onClick={() => (setIsMenuOpen(false), trackGitHubClick)}
                   >
                     <Github className="w-5 h-5" />
                   </a>
@@ -302,8 +319,12 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
               <a
                 href="/pdf/TOMAS GENEROSO CV EN.pdf"
                 download
-                className="block w-full"
+                className="flex items-center justify-center gap-1 w-full"
+                onClick={trackCVDownload}
               >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
                 CV
               </a>
             </button>

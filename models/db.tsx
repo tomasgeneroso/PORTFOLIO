@@ -1,19 +1,18 @@
-import {User} from '@/types/index';
-import mongoose from 'mongoose';
+import { User } from "@/types/index";
+import mongoose from "mongoose";
 const { Schema } = mongoose;
 
 const LinksSchema = new Schema({
   Github: String,
   Linkedin: String,
   Gmail: String,
-  userId: { type: Schema.Types.ObjectId, ref: 'User', unique: true },
+  userId: { type: Schema.Types.ObjectId, ref: "User", unique: true },
 });
 const SkillsSchema = new Schema({
   name: String,
   icono: String,
   level: Number,
   color: String,
-  
 });
 const ProjectSchema = new Schema({
   projectName: String,
@@ -23,14 +22,14 @@ const ProjectSchema = new Schema({
   description: String,
   technologies: [String],
   link: String,
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
 });
 const TestimoniesSchema = new Schema({
   author: String,
   photo: String,
   testimonial: String,
   projectLink: String,
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
+  userId: { type: Schema.Types.ObjectId, ref: "User" },
 });
 const UserSchema = new Schema({
   name: { type: String, required: true },
@@ -45,4 +44,4 @@ const UserSchema = new Schema({
   projects: [ProjectSchema],
 });
 
-export default mongoose.model('User', UserSchema);;
+export default mongoose.model("User", UserSchema);

@@ -6,6 +6,9 @@ import { Providers } from "./providers";
 import Navbar from "@/components/Navbar/Navbar";
 import clsx from "clsx";
 import userData from "@/components/userData";
+if (typeof window !== "undefined") {
+  (window as any).USE_MONGO = true;
+}
 
 export const metadata: Metadata = {
   title: {

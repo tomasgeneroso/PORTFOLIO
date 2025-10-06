@@ -7,12 +7,33 @@ import {
   GmailIcon,
 } from "@/components/Icons/SkillIcons";
 import { sendEmail } from "@/components/Sendmail/Sendmail";
-
+import {
+  trackCVDownload,
+  trackGitHubClick,
+  trackEmailClick,
+  trackContactFormSubmit,
+  trackLinkedinClick,
+} from "@/app/analytics/analytics";
 const ContactForm: React.FC<ContactInfoProps> = ({ contactInfo }) => {
   const sendingEmail = (e: React.FormEvent<HTMLFormElement>) => {
+    const formData = new FormData(e.currentTarget);
+    const message = formData.get("message") as string;
+
     sendEmail(e);
+    trackContactFormSubmit({ message });
     e.currentTarget.reset();
   };
+
+  const handleLinkClick = (platform: string) => {
+    if (platform === "Github") {
+      trackGitHubClick();
+    } else if (platform === "Linkedin") {
+      trackLinkedinClick();
+    } else if (platform === "Gmail") {
+      trackEmailClick();
+    }
+  };
+
   return (
     <div className="px-4 mx-auto max-w-screen-md mb-4">
       <div className="flex flex-col justify-center lg:mb-8">
@@ -26,6 +47,7 @@ const ContactForm: React.FC<ContactInfoProps> = ({ contactInfo }) => {
                   href={href}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => handleLinkClick(platform)}
                 >
                   {platform === "Github" && <GithubIcon size={29} />}
                   {platform === "Linkedin" && <LinkedinIcon size={29} />}
