@@ -227,8 +227,8 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
           </div>
         </NavbarContent>
 
-        {/* Mobile Navigation Controls */}
-        <NavbarContent className="flex lg:hidden basis-1 pl-2 gap-1 sm:gap-2" justify="end">
+        {/* Mobile Navigation - Left side icons */}
+        <NavbarContent className="flex lg:hidden gap-3 sm:gap-4" justify="start">
           {Github && userLinks?.Github && (
             <a
               href={userLinks.Github}
@@ -262,8 +262,10 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
               />
             </svg>
           </a>
+        </NavbarContent>
 
-          {/* Custom Hamburger Menu Button */}
+        {/* Mobile Navigation - Right side hamburger */}
+        <NavbarContent className="flex lg:hidden" justify="end">
           <button
             className="p-1.5 sm:p-2 z-[60] relative"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -295,7 +297,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
         className={`fixed inset-0 bg-white dark:bg-gray-900 transition-all duration-300 ease-in-out lg:hidden ${
           isMenuOpen
             ? "translate-x-0 opacity-100 z-50 pointer-events-auto"
-            : "translate-x-full opacity-0 -z-10 pointer-events-none"
+            : "translate-x-[110%] opacity-0 -z-10 pointer-events-none"
         }`}
         style={{
           position: "fixed",

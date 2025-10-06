@@ -63,11 +63,11 @@ export const metadata: Metadata = {
   alternates: {
     canonical: baseUrl,
     languages: {
-      "en": `${baseUrl}`,
-      "es": `${baseUrl}`,
-      "it": `${baseUrl}`,
-      "fr": `${baseUrl}`,
-      "de": `${baseUrl}`,
+      en: `${baseUrl}`,
+      es: `${baseUrl}`,
+      it: `${baseUrl}`,
+      fr: `${baseUrl}`,
+      de: `${baseUrl}`,
       "x-default": `${baseUrl}`,
     },
   },
@@ -86,7 +86,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth overflow-x-hidden" suppressHydrationWarning>
+    <html
+      lang="en"
+      className="scroll-smooth overflow-x-hidden"
+      suppressHydrationWarning
+    >
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
