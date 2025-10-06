@@ -86,13 +86,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="scroll-smooth" suppressHydrationWarning>
+    <html lang="en" className="scroll-smooth overflow-x-hidden" suppressHydrationWarning>
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
       </head>
       <body
         className={clsx(
-          "min-h-screen mx-1 font-sans antialiased ",
+          "min-h-screen mx-1 font-sans antialiased overflow-x-hidden",
           fontSans.variable
         )}
         style={{ height: "100%" }}
@@ -101,8 +101,8 @@ export default function RootLayout({
           <LanguageMetadata />
           <StructuredData />
           <Navbar userLinks={userData.links} />
-          <main className="container flex w-full h-full mx-auto pt-2 ">
-            <div className="flex w-full mb-4">{children}</div>
+          <main className="container flex w-full h-full mx-auto pt-2 max-w-full overflow-x-hidden">
+            <div className="flex w-full mb-4 max-w-full">{children}</div>
           </main>
         </Providers>
       </body>

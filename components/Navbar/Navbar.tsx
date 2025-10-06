@@ -153,108 +153,103 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
   }, []);
 
   return (
-    <NextUINavbar
-      maxWidth="xl"
-      className={clsx(
-        "transition-transform duration-500 z-50",
-        showNavbar ? "translate-y-0" : "-translate-y-full"
-      )}
-      position="sticky"
-    >
-      {/* Desktop Navigation */}
-      <NavbarContent className="basis-1/5 sm:basis-full flex text-2xl p-5 mb-8 justify-center">
-        <ul className="hidden lg:flex gap-4 justify-center">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.href}>
-              <NextLink
-                href={item.href}
-                onClick={(e) => handleScrollToSection(e, item.href)}
-                className={clsx(
-                  linkStyles,
-                  "hover:text-primary hover:font-medium focus:text-primary focus:font-medium",
-                  "data-[active=true]:text-primary data-[active=true]:font-medium scroll-smooth transition-all duration-300 ease-in-out"
-                )}
-                passHref
-              >
-                {t.nav[item.key as keyof typeof t.nav]}
-              </NextLink>
-            </NavbarItem>
-          ))}
-        </ul>
-      </NavbarContent>
-
-      {/* Desktop CV Button and Theme Switch */}
-      <NavbarContent
-        className="hidden lg:flex basis-1/5 justify-end"
-        justify="end"
-      >
-        <div className="mr-4 mb-8 pr-5 space-x-4 flex items-center">
-          <LanguageSelector />
-
-          <button
-            type="button"
-            className="py-1 px-3 text-sm font-normal text-center text-gray-700
-              bg-amber-100 ring-amber-100 rounded-md ring-1
-              sm:w-fit transition duration-300 ease-in-out
-              hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100
-              dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
-          >
-            <a
-              href="/pdf/TOMAS GENEROSO CV EN.pdf"
-              onClick={trackCVDownload}
-              download
-              className="flex items-center gap-1"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-4 w-4"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              {t.nav.cv}
-            </a>
-          </button>
-          <ThemeSwitch />
-        </div>
-      </NavbarContent>
-
-      {/* Mobile Navigation Controls */}
-      <NavbarContent className="lg:hidden basis-1 pl-4 gap-2" justify="end">
-        {Github && userLinks?.Github && (
-          <a
-            href={userLinks.Github}
-            onClick={trackGitHubClick}
-            aria-label="Github"
-          >
-            <Github className="text-default-500" />
-          </a>
+    <>
+      <NextUINavbar
+        maxWidth="xl"
+        className={clsx(
+          "transition-transform duration-500 z-40",
+          showNavbar ? "translate-y-0" : "-translate-y-full"
         )}
+        position="sticky"
+      >
+        {/* Desktop Navigation */}
+        <NavbarContent className="hidden lg:flex basis-1/5 sm:basis-full text-2xl p-5 mb-8 justify-center">
+          <ul className="flex gap-4 justify-center">
+            {siteConfig.navItems.map((item) => (
+              <NavbarItem key={item.href}>
+                <NextLink
+                  href={item.href}
+                  onClick={(e) => handleScrollToSection(e, item.href)}
+                  className={clsx(
+                    linkStyles,
+                    "hover:text-primary hover:font-medium focus:text-primary focus:font-medium",
+                    "data-[active=true]:text-primary data-[active=true]:font-medium scroll-smooth transition-all duration-300 ease-in-out"
+                  )}
+                  passHref
+                >
+                  {t.nav[item.key as keyof typeof t.nav]}
+                </NextLink>
+              </NavbarItem>
+            ))}
+          </ul>
+        </NavbarContent>
 
-        <button
-          type="button"
-          className="py-1 px-2 text-xs font-normal text-center text-gray-700
-            bg-amber-100 ring-amber-100 rounded-md ring-1
-            transition duration-300 ease-in-out
-            hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100
-            dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
+        {/* Desktop CV Button and Theme Switch */}
+        <NavbarContent
+          className="hidden lg:flex basis-1/5 justify-end"
+          justify="end"
         >
+          <div className="mr-4 mb-8 pr-5 space-x-4 flex items-center">
+            <LanguageSelector />
+
+            <button
+              type="button"
+              className="py-1 px-3 text-sm font-normal text-center text-gray-700
+                bg-amber-100 ring-amber-100 rounded-md ring-1
+                sm:w-fit transition duration-300 ease-in-out
+                hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100
+                dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
+            >
+              <a
+                href="/pdf/TOMAS GENEROSO CV EN.pdf"
+                onClick={trackCVDownload}
+                download
+                className="flex items-center gap-1"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                {t.nav.cv}
+              </a>
+            </button>
+            <ThemeSwitch />
+          </div>
+        </NavbarContent>
+
+        {/* Mobile Navigation Controls */}
+        <NavbarContent className="flex lg:hidden basis-1 pl-2 gap-1 sm:gap-2" justify="end">
+          {Github && userLinks?.Github && (
+            <a
+              href={userLinks.Github}
+              onClick={trackGitHubClick}
+              aria-label="Github"
+              className="p-1.5 sm:p-2"
+            >
+              <Github className="text-default-500 w-5 h-5 sm:w-6 sm:h-6" />
+            </a>
+          )}
+
           <a
             href="/pdf/TOMAS GENEROSO CV EN.pdf"
             onClick={trackCVDownload}
             download
-            className="flex items-center gap-1"
+            aria-label="Download CV"
+            className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 transition duration-300 ease-in-out hover:text-primary"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-3 w-3"
+              className="h-5 w-5 sm:h-6 sm:w-6"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -266,47 +261,59 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
                 d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
-            {t.nav.cv}
           </a>
-        </button>
 
-        {/* Custom Hamburger Menu Button */}
-        <button
-          className="lg:hidden p-2 z-50 relative"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-          aria-label={isMenuOpen ? "Close menu" : "Open menu"}
-        >
-          <div className="w-6 h-5 flex flex-col justify-between">
-            <div
-              className={`w-full h-0.5 bg-current transition-all duration-300 ease-in-out ${
-                isMenuOpen ? "rotate-45 translate-y-2" : ""
-              }`}
-            />
-            <div
-              className={`w-full h-0.5 bg-current transition-all duration-300 ease-in-out ${
-                isMenuOpen ? "opacity-0" : ""
-              }`}
-            />
-            <div
-              className={`w-full h-0.5 bg-current transition-all duration-300 ease-in-out ${
-                isMenuOpen ? "-rotate-45 -translate-y-2" : ""
-              }`}
-            />
-          </div>
-        </button>
-      </NavbarContent>
+          {/* Custom Hamburger Menu Button */}
+          <button
+            className="p-1.5 sm:p-2 z-[60] relative"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            aria-label={isMenuOpen ? "Close menu" : "Open menu"}
+          >
+            <div className="w-6 h-5 flex flex-col justify-between">
+              <div
+                className={`w-full h-0.5 bg-current transition-all duration-300 ease-in-out ${
+                  isMenuOpen ? "rotate-45 translate-y-2" : ""
+                }`}
+              />
+              <div
+                className={`w-full h-0.5 bg-current transition-all duration-300 ease-in-out ${
+                  isMenuOpen ? "opacity-0" : ""
+                }`}
+              />
+              <div
+                className={`w-full h-0.5 bg-current transition-all duration-300 ease-in-out ${
+                  isMenuOpen ? "-rotate-45 -translate-y-2" : ""
+                }`}
+              />
+            </div>
+          </button>
+        </NavbarContent>
+      </NextUINavbar>
 
-      {/* Mobile Menu - Full screen */}
+      {/* Mobile Menu - Full screen - Outside Navbar */}
       <div
-        className={`fixed inset-0 bg-white dark:bg-gray-900 z-50 transform transition-transform duration-300 ease-in-out lg:hidden h-screen ${
-          isMenuOpen ? "translate-x-0" : "translate-x-full"
+        className={`fixed inset-0 bg-white dark:bg-gray-900 transition-all duration-300 ease-in-out lg:hidden ${
+          isMenuOpen
+            ? "translate-x-0 opacity-100 z-50 pointer-events-auto"
+            : "translate-x-full opacity-0 -z-10 pointer-events-none"
         }`}
+        style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          width: "100vw",
+          height: "100vh",
+          maxWidth: "100vw",
+          overflow: "hidden",
+        }}
       >
         {/* Menu Header */}
-        <div className="flex items-center justify-end p-6 bg-white dark:bg-gray-900">
+        <div className="flex items-center justify-end p-4 sm:p-6 bg-white dark:bg-gray-900">
           <button
             onClick={() => setIsMenuOpen(false)}
-            className="p-2"
+            className="p-2 z-[60]"
             aria-label="Close menu"
           >
             <svg
@@ -326,16 +333,16 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
         </div>
 
         {/* Menu Content */}
-        <div className="flex flex-col h-full bg-white dark:bg-gray-900">
-          <div className="flex-1 px-6 bg-white dark:bg-gray-900">
+        <div className="flex flex-col h-full bg-white dark:bg-gray-900 overflow-y-auto">
+          <div className="flex-1 px-4 sm:px-6 bg-white dark:bg-gray-900">
             <nav>
-              <ul className="space-y-6 justify-center items-center text-center">
+              <ul className="space-y-4 sm:space-y-6 justify-center items-center text-center">
                 {siteConfig.navMenuItems.map((item, index) => (
                   <li key={`${item.href}-${index}`} className="bg-white dark:bg-gray-900">
                     <NextLink
                       href={item.href}
                       onClick={(e) => handleScrollToSection(e, item.href)}
-                      className="block text-lg font-medium text-gray-700 dark:text-gray-200
+                      className="block text-base sm:text-lg font-medium text-gray-700 dark:text-gray-200
                           hover:text-primary transition-colors duration-200"
                       passHref
                     >
@@ -348,15 +355,15 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
           </div>
 
           {/* Footer */}
-          <div className="p-6 bg-white dark:bg-gray-900">
-            <div className="flex items-center justify-center gap-4 mb-4">
+          <div className="p-4 sm:p-6 bg-white dark:bg-gray-900 pb-safe">
+            <div className="flex items-center justify-center gap-3 sm:gap-4 mb-4">
               <LanguageSelector />
               <ThemeSwitch />
             </div>
           </div>
         </div>
       </div>
-    </NextUINavbar>
+    </>
   );
 };
 
