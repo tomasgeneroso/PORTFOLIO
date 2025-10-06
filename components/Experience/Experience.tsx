@@ -78,7 +78,7 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
   }, []);
 
   return (
-    <section className="flex flex-col w-full" id="experienceSection">
+    <section className="flex flex-col w-full min-h-screen" id="experienceSection">
       <TitleSeparator titleText={t.experience.title} />
       <div className="flex flex-wrap w-full gap-4">
         <ol

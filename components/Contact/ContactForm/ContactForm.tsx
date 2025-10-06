@@ -95,16 +95,47 @@ const ContactForm: React.FC<ContactInfoProps> = ({ contactInfo }) => {
             placeholder="Let us know how we can help you..."
           />
         </div>
-        <div className="flex items-center justify-center">
+        <div className="flex items-center justify-center gap-4 flex-wrap">
           <button
             type="submit"
             className="py-3 px-5 text-sm font-normal text-center  text-gray-700
             bg-amber-100 ring ring-amber-100 rounded-md
-            sm:w-fit transition duration-300 ease-in-out 
-            hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100 
+            sm:w-fit transition duration-300 ease-in-out
+            hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100
             dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
           >
             Send message
+          </button>
+          <button
+            type="button"
+            className="py-3 px-5 text-sm font-normal text-center text-gray-700
+            bg-amber-100 ring ring-amber-100 rounded-md
+            sm:w-fit transition duration-300 ease-in-out
+            hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100
+            dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
+          >
+            <a
+              href="/pdf/TOMAS GENEROSO CV EN.pdf"
+              onClick={trackCVDownload}
+              download
+              className="flex items-center gap-2"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-4 w-4"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                />
+              </svg>
+              Download CV
+            </a>
           </button>
         </div>
       </form>

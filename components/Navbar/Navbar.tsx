@@ -162,8 +162,8 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
       position="sticky"
     >
       {/* Desktop Navigation */}
-      <NavbarContent className="basis-1/5 sm:basis-full flex text-2xl p-5 mb-8 ml-12 justify-center">
-        <ul className="hidden lg:flex gap-4 justify-start ml-2">
+      <NavbarContent className="basis-1/5 sm:basis-full flex text-2xl p-5 mb-8 justify-center">
+        <ul className="hidden lg:flex gap-4 justify-center">
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.href}>
               <NextLink
@@ -227,7 +227,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
       </NavbarContent>
 
       {/* Mobile Navigation Controls */}
-      <NavbarContent className="lg:hidden basis-1 pl-4" justify="end">
+      <NavbarContent className="lg:hidden basis-1 pl-4 gap-2" justify="end">
         {Github && userLinks?.Github && (
           <a
             href={userLinks.Github}
@@ -237,6 +237,38 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
             <Github className="text-default-500" />
           </a>
         )}
+
+        <button
+          type="button"
+          className="py-1 px-2 text-xs font-normal text-center text-gray-700
+            bg-amber-100 ring-amber-100 rounded-md ring-1
+            transition duration-300 ease-in-out
+            hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100
+            dark:bg-[#3D2548] dark:text-gray-300 dark:ring-[#777272] dark:hover:ring-[#777272] dark:hover:bg-[#777272]"
+        >
+          <a
+            href="/pdf/TOMAS GENEROSO CV EN.pdf"
+            onClick={trackCVDownload}
+            download
+            className="flex items-center gap-1"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-3 w-3"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+            {t.nav.cv}
+          </a>
+        </button>
 
         {/* Custom Hamburger Menu Button */}
         <button
@@ -264,24 +296,21 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
         </button>
       </NavbarContent>
 
-      {/* Mobile Menu - Full screen con fondo blanco sólido */}
+      {/* Mobile Menu - Full screen */}
       <div
-        className={`fixed inset-0 bg-white z-50 transform transition-transform duration-300 ease-in-out lg:hidden ${
+        className={`fixed inset-0 bg-white dark:bg-gray-900 z-50 transform transition-transform duration-300 ease-in-out lg:hidden h-screen ${
           isMenuOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
         {/* Menu Header */}
-        <div className="flex items-center justify-between p-6 bg-white">
-          <h2 className="text-xl font-semibold text-center text-gray-800">
-            Menu
-          </h2>
+        <div className="flex items-center justify-end p-6 bg-white dark:bg-gray-900">
           <button
             onClick={() => setIsMenuOpen(false)}
             className="p-2"
             aria-label="Close menu"
           >
             <svg
-              className="w-6 h-6 text-gray-600"
+              className="w-6 h-6 text-gray-600 dark:text-gray-300"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -296,20 +325,17 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
           </button>
         </div>
 
-        {/* Simple white space separator */}
-        <div className="h-8 bg-white"></div>
-
         {/* Menu Content */}
-        <div className="flex flex-col h-full bg-white">
-          <div className="flex-1 px-6 bg-white">
+        <div className="flex flex-col h-full bg-white dark:bg-gray-900">
+          <div className="flex-1 px-6 bg-white dark:bg-gray-900">
             <nav>
               <ul className="space-y-6 justify-center items-center text-center">
                 {siteConfig.navMenuItems.map((item, index) => (
-                  <li key={`${item.href}-${index}`} className="bg-white">
+                  <li key={`${item.href}-${index}`} className="bg-white dark:bg-gray-900">
                     <NextLink
                       href={item.href}
                       onClick={(e) => handleScrollToSection(e, item.href)}
-                      className="block text-lg font-medium text-gray-700
+                      className="block text-lg font-medium text-gray-700 dark:text-gray-200
                           hover:text-primary transition-colors duration-200"
                       passHref
                     >
@@ -322,57 +348,11 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
           </div>
 
           {/* Footer */}
-          <div className="p-6 space-x-2  bg-white">
+          <div className="p-6 bg-white dark:bg-gray-900">
             <div className="flex items-center justify-center gap-4 mb-4">
-              {Github && userLinks?.Github && (
-                <div>
-                  <a
-                    href={userLinks.Github}
-                    className="flex items-center gap-3 text-gray-700
-                      hover:text-primary transition-colors duration-200"
-                    aria-label="Github"
-                    onClick={() => (setIsMenuOpen(false), trackGitHubClick)}
-                  >
-                    <Github className="w-5 h-5" />
-                  </a>
-                </div>
-              )}
-
               <LanguageSelector />
               <ThemeSwitch />
             </div>
-            {/* CV Download Button */}
-            <button
-              type="button"
-              className="w-full py-2 px-3 text-sm font-normal text-center text-gray-700
-                  bg-amber-100 ring-amber-100 rounded-md ring-1
-                  transition duration-300 ease-in-out
-                  hover:bg-white focus:ring-4 focus:outline-white focus:ring-amber-100"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              <a
-                href="/pdf/TOMAS GENEROSO CV EN.pdf"
-                download
-                className="flex items-center justify-center gap-1 w-full"
-                onClick={trackCVDownload}
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-4 w-4"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                  />
-                </svg>
-                {t.nav.cv}
-              </a>
-            </button>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ const PortfolioSection: React.FC<UserProps> = ({ userData }) => {
   const { t } = useI18n();
 
   return (
-    <section className="flex flex-col w-full" id="projectsSection">
+    <section className="flex flex-col w-full min-h-screen" id="projectsSection">
       <TitleSeparator titleText={t.projects.title} />
       <div className="flex flex-wrap w-full gap-4">
         <TimeLine userData={userData} />

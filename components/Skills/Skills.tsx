@@ -9,7 +9,7 @@ const Skills: React.FC<UserProps> = ({ userData }) => {
   const { t } = useI18n();
 
   return (
-    <section className="flex flex-col w-full" id="skillsSection">
+    <section className="flex flex-col w-full min-h-screen" id="skillsSection">
       <TitleSeparator titleText={t.skills.title} />
       <div className="flex flex-wrap justify-center gap-6 py-6">
         {userData.skills.map((skill, index) => (

@@ -7,6 +7,10 @@ export default function Testimonies({ testimonies }) {
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
+
+    // Create duplicated testimonies for infinite scroll
+    const duplicatedTestimonies = [...testimonies, ...testimonies, ...testimonies];
+
     const handleMouseDown = (e) => {
         setIsDragging(true);
         setStartX(e.pageX - carouselRef.current.offsetLeft);
@@ -41,6 +45,34 @@ export default function Testimonies({ testimonies }) {
         setIsDragging(false);
     };
 
+    // Handle infinite scroll loop
+    const handleScroll = () => {
+        if (!carouselRef.current) return;
+        const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+        const singleSetWidth = scrollWidth / 3;
+
+        // If scrolled to the end, jump back to the middle set
+        if (scrollLeft >= singleSetWidth * 2) {
+            carouselRef.current.scrollLeft = scrollLeft - singleSetWidth;
+        }
+        // If scrolled to the beginning, jump to the middle set
+        else if (scrollLeft <= 0) {
+            carouselRef.current.scrollLeft = scrollLeft + singleSetWidth;
+        }
+    };
+
+    React.useEffect(() => {
+        const carousel = carouselRef.current;
+        if (!carousel) return;
+
+        // Set initial scroll position to the middle set
+        const singleSetWidth = carousel.scrollWidth / 3;
+        carousel.scrollLeft = singleSetWidth;
+
+        carousel.addEventListener('scroll', handleScroll);
+        return () => carousel.removeEventListener('scroll', handleScroll);
+    }, []);
+
     return (
         <section className="flex flex-col w-full mx-0 p-2 h-screen" id="testimoniesSection">
             <TitleSeparator titleText="Testimonies" />
@@ -59,7 +91,7 @@ export default function Testimonies({ testimonies }) {
                             onTouchEnd={handleTouchEnd}
                             style={{ scrollbarWidth: 'none', cursor: isDragging ? 'grabbing' : 'grab', }}
                         >
-                            {testimonies.map((testimonial, index) => (
+                            {duplicatedTestimonies.map((testimonial, index) => (
                                 <div key={index} style={{ width: '100%' }} className="inline-block">
                                     <TestimonialCard {...testimonial} />
                                 </div>

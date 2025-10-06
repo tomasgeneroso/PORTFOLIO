@@ -55,7 +55,7 @@ const Certificates: React.FC<CertificatesProps> = ({ certificates }) => {
   });
 
   return (
-    <section className="flex flex-col w-full py-8" id="certificatesSection">
+    <section className="flex flex-col w-full py-8 min-h-screen" id="certificatesSection">
       <TitleSeparator titleText={t.certificates.title} />
 
       <div className="relative px-4 md:px-8 py-8">

@@ -14,7 +14,7 @@ const AboutMe: React.FC<UserProps> = ({ userData }) => {
   const { t } = useI18n();
 
   return (
-    <section className="flex flex-col w-full mx-0 px-2 " id="aboutMeSection">
+    <section className="flex flex-col w-full mx-0 px-2 min-h-screen" id="aboutMeSection">
       <TitleSeparator titleText={t.aboutMe.title} />
       <div className="flex flex-col md:flex-row w-full mx-auto gap-4 p-8 bg-amber-200/10 rounded-lg shadow-lg dark:bg-[#2B1A33] dark:text-white ">
         <div className="flex flex-col items-center justify-center md:w-40">
