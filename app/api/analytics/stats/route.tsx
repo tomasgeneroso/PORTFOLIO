@@ -95,6 +95,58 @@ export async function GET(request: NextRequest) {
     const conversionRate =
       totalVisits > 0 ? ((contactForms / totalVisits) * 100).toFixed(2) : 0;
 
+    // Ubicaciones más comunes (países)
+    const topCountries = await Analytics.aggregate([
+      {
+        $match: {
+          event: "page_visit",
+          timestamp: { $gte: startDate.getTime() },
+          "location.country": { $exists: true, $ne: null },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            country: "$location.country",
+            countryCode: "$location.countryCode",
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      {
+        $limit: 10,
+      },
+    ]);
+
+    // Ciudades más comunes
+    const topCities = await Analytics.aggregate([
+      {
+        $match: {
+          event: "page_visit",
+          timestamp: { $gte: startDate.getTime() },
+          "location.city": { $exists: true, $ne: null },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            city: "$location.city",
+            country: "$location.country",
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { count: -1 },
+      },
+      {
+        $limit: 10,
+      },
+    ]);
+
     return NextResponse.json({
       success: true,
       data: {
@@ -113,6 +165,8 @@ export async function GET(request: NextRequest) {
         },
         eventCounts,
         topReferrers,
+        topCountries,
+        topCities,
       },
     });
   } catch (error) {

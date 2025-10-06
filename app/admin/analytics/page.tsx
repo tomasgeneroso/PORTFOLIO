@@ -21,6 +21,14 @@ interface AnalyticsStats {
   };
   eventCounts: Array<{ _id: string; count: number }>;
   topReferrers: Array<{ _id: string; count: number }>;
+  topCountries: Array<{
+    _id: { country: string; countryCode: string };
+    count: number;
+  }>;
+  topCities: Array<{
+    _id: { city: string; country: string };
+    count: number;
+  }>;
 }
 
 export default function AnalyticsDashboard() {
@@ -247,6 +255,91 @@ export default function AnalyticsDashboard() {
             ) : (
               <p className="text-gray-500 dark:text-gray-400 text-center py-4">
                 No hay referrers registrados
+              </p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Location Stats */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+        {/* Top Countries */}
+        <div className="bg-amber-50 dark:bg-[#3D2548] rounded-lg shadow-lg p-6 border border-amber-200 dark:border-[#4D3558]">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
+            <span>🌍</span> Países
+          </h2>
+          <div className="space-y-3">
+            {stats.topCountries && stats.topCountries.length > 0 ? (
+              stats.topCountries.map((country, index) => (
+                <div
+                  key={country._id.countryCode}
+                  className="flex items-center justify-between p-3 bg-amber-100 dark:bg-[#4D3558] rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg font-bold text-gray-400">
+                      #{index + 1}
+                    </span>
+                    <span className="text-2xl">
+                      {country._id.countryCode === "US" && "🇺🇸"}
+                      {country._id.countryCode === "MX" && "🇲🇽"}
+                      {country._id.countryCode === "ES" && "🇪🇸"}
+                      {country._id.countryCode === "AR" && "🇦🇷"}
+                      {country._id.countryCode === "CO" && "🇨🇴"}
+                      {country._id.countryCode === "CL" && "🇨🇱"}
+                      {country._id.countryCode === "PE" && "🇵🇪"}
+                      {country._id.countryCode === "VE" && "🇻🇪"}
+                      {!["US", "MX", "ES", "AR", "CO", "CL", "PE", "VE"].includes(country._id.countryCode) && "🌐"}
+                    </span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {country._id.country}
+                    </span>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                    {country.count}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                No hay datos de ubicación disponibles
+              </p>
+            )}
+          </div>
+        </div>
+
+        {/* Top Cities */}
+        <div className="bg-amber-50 dark:bg-[#3D2548] rounded-lg shadow-lg p-6 border border-amber-200 dark:border-[#4D3558]">
+          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
+            <span>🏙️</span> Ciudades
+          </h2>
+          <div className="space-y-3">
+            {stats.topCities && stats.topCities.length > 0 ? (
+              stats.topCities.map((city, index) => (
+                <div
+                  key={`${city._id.city}-${city._id.country}`}
+                  className="flex items-center justify-between p-3 bg-amber-100 dark:bg-[#4D3558] rounded-lg"
+                >
+                  <div className="flex items-center gap-3">
+                    <span className="text-lg font-bold text-gray-400">
+                      #{index + 1}
+                    </span>
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        {city._id.city}
+                      </span>
+                      <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {city._id.country}
+                      </span>
+                    </div>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+                    {city.count}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
+                No hay datos de ciudades disponibles
               </p>
             )}
           </div>

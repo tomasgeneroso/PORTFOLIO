@@ -19,6 +19,15 @@ const AnalyticsSchema = new mongoose.Schema({
   userAgent: String,
   referrer: String,
   ip: String,
+  location: {
+    country: String,
+    countryCode: String,
+    region: String,
+    city: String,
+    latitude: Number,
+    longitude: Number,
+    timezone: String,
+  },
   data: mongoose.Schema.Types.Mixed,
   createdAt: {
     type: Date,
