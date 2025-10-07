@@ -78,11 +78,14 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
   }, []);
 
   return (
-    <section className="flex flex-col w-full min-h-screen" id="experienceSection">
+    <section
+      className="flex flex-col w-full min-h-screen"
+      id="experienceSection"
+    >
       <TitleSeparator titleText={t.experience.title} />
-      <div className="flex flex-wrap w-full gap-4">
+      <div className="flex flex-wrap w-full gap-x-4">
         <ol
-          className="flex flex-row p-1 sm:flex w-full overflow-x-auto md:overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+          className="flex flex-row mb-0 sm:flex w-full overflow-x-auto md:overflow-x-auto snap-x snap-mandatory scrollbar-hide"
           style={{
             scrollBehavior: "smooth",
             userSelect: "none",
@@ -116,33 +119,35 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
               return (
                 <li
                   key={index}
-                  className="relative mb-6 sm:mb-0 mx-2 sm:mx-4 py-2 flex-shrink-0 snap-center"
+                  className="flex relative mt-6 sm:mb-0 mx-2 sm:mx-4 pt-12  flex-shrink-0 snap-center"
                   style={{ width: "100%" }}
                 >
-                  <div className="mt-3 sm:pe-8 w-full px-4 max-w-4xl mx-auto">
-                    <div className="flex flex-row gap-x-8 my-8 text-center ">
-                      <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
+                  <div className="mt-3 sm:px-8 w-full px-4 max-w-3xl mx-auto mb-0">
+                    <div className="flex flex-row gap-x-8 mt-6 text-center ">
+                      <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                         {translation?.projectName || projectName}
                       </h3>
                     </div>
                     <div className=" overflow-hidden rounded-md">
                       {projectImage}
                     </div>
-                    <p className="block my-2 text-lg font-normal leading-none text-gray-400 dark:text-gray-500">
+                    <p className="block my-2 text-base font-normal leading-none text-gray-400 dark:text-gray-500">
                       {new Date(date).toLocaleDateString()}
                     </p>
                     <div className="flex flex-wrap gap-2 mb-2 w-full">
-                      {(translation?.technologies || technologies).map((tech, techIndex) => (
-                        <span
-                          key={techIndex}
-                          className="bg-gray-700 text-gray-100 text-base px-3 py-1 rounded-full shadow-sm whitespace-nowrap"
-                        >
-                          {tech}
-                        </span>
-                      ))}
+                      {(translation?.technologies || technologies).map(
+                        (tech, techIndex) => (
+                          <span
+                            key={techIndex}
+                            className="bg-gray-700 text-gray-100 text-sm px-2.5 py-1 rounded-full shadow-sm whitespace-nowrap"
+                          >
+                            {tech}
+                          </span>
+                        )
+                      )}
                     </div>
                     <div className="text-wrap ">
-                      <p className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 break-words">
+                      <p className="text-base md:text-sm font-normal text-wrap text-gray-500 dark:text-gray-400">
                         {translation?.description || description}
                       </p>
                     </div>
@@ -160,7 +165,7 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
         </ol>
 
         {/* Dots Navigation */}
-        <div className="flex gap-2 mt-4 justify-center w-full">
+        <div className="flex gap-2 mb-8 justify-center w-full">
           {userData.experience.map((_, index) => (
             <span
               key={index}
@@ -184,7 +189,7 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
           ))}
         </div>
       </div>
-      <div className="flex justify-center my-10">
+      <div className="flex justify-center mb-16">
         <button
           type="submit"
           className="py-3 px-5 text-sm font-normal text-center text-gray-700  bg-amber-100 ring ring-amber-100 rounded-md

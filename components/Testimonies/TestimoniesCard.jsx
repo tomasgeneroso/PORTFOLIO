@@ -15,7 +15,7 @@ const TestimonialCard = ({ author, logo, projectLink, testimonial }) => {
             <a href={projectLink} className="text-base md:text-lg text-blue-500 hover:underline">
                 {projectLink}
             </a>
-            <p className="mt-2 text-base md:text-lg text-wrap">{testimonial}</p>
+            <p className="mt-2 text-base md:text-sm font-normal text-wrap text-gray-500 dark:text-gray-400">{testimonial}</p>
         </div>
     );
 };

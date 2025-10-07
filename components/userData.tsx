@@ -16,6 +16,9 @@ import {
   Cordova,
   CSharpLogo,
   Java,
+  PowerBILogo,
+  VercelLogo,
+  OpenAILogo,
 } from "@/components/Icons/SkillIcons";
 import { JSX, ClassAttributes, ImgHTMLAttributes } from "react";
 
@@ -118,6 +121,18 @@ My background includes a bachelor's degree in Economics and three years of studi
     {
       icono: <Java size={80} />,
       level: 40,
+    },
+    {
+      icono: <PowerBILogo size={80} />,
+      level: 75,
+    },
+    {
+      icono: <VercelLogo size={80} />,
+      level: 70,
+    },
+    {
+      icono: <OpenAILogo size={80} />,
+      level: 65,
     },
   ],
   projects: [

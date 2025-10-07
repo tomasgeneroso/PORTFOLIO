@@ -85,13 +85,13 @@ const TimeLine: React.FC<UserProps> = (userData) => {
             className="flex-shrink-0 snap-center px-4 py-2 relative"
             style={{ width: "100%" }}
           >
-            <div className="mt-3 sm:pe-8 w-full">
+            <div className="mt-3 sm:pe-8 w-full max-w-3xl mx-auto">
               <div className="flex flex-col sm:flex-row gap-y-4 gap-x-8 my-4 text-center sm:text-left items-center">
-                <div className="z-10 flex items-center justify-center w-14 h-14 bg-gray-100 rounded-full ring-0 ring-white dark:bg-gray-800 sm:ring-8 dark:ring-gray-900 shrink-0">
+                <div className="z-10 flex items-center justify-center w-12 h-12 bg-gray-100 rounded-full ring-0 ring-white dark:bg-gray-800 sm:ring-8 dark:ring-gray-900 shrink-0">
                   {project.enterpriseicono ? (
                     React.createElement(project.enterpriseicono, {
-                      width: 40,
-                      height: 40,
+                      width: 32,
+                      height: 32,
                     })
                   ) : (
                     <svg
@@ -105,7 +105,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                     </svg>
                   )}
                 </div>
-                <h3 className="text-xl sm:text-2xl font-semibold text-gray-900 dark:text-white">
+                <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-white">
                   {project.projectName}
                 </h3>
               </div>
@@ -116,7 +116,7 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                 )}
               </div>
 
-              <p className="block my-2 text-base md:text-lg font-normal leading-none text-gray-400 dark:text-gray-500">
+              <p className="block my-2 text-sm md:text-base font-normal leading-none text-gray-400 dark:text-gray-500">
                 {new Date(project.date).toLocaleDateString()}
               </p>
 
@@ -125,13 +125,13 @@ const TimeLine: React.FC<UserProps> = (userData) => {
                   {project.technologies.map((tech, index) => (
                     <span
                       key={index}
-                      className="bg-gray-700 text-gray-100 text-sm md:text-base px-3 py-1 rounded-full shadow-sm"
+                      className="bg-gray-700 text-gray-100 text-sm px-2.5 py-1 rounded-full shadow-sm"
                     >
                       {tech}
                     </span>
                   ))}
                 </div>
-                <p className="text-lg md:text-xl font-normal text-wrap text-gray-500 dark:text-gray-400">
+                <p className="text-base md:text-sm font-normal text-wrap text-gray-500 dark:text-gray-400">
                   {project.description}
                 </p>
                 <a

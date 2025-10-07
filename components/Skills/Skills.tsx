@@ -11,30 +11,28 @@ const Skills: React.FC<UserProps> = ({ userData }) => {
   return (
     <section className="flex flex-col w-full min-h-screen" id="skillsSection">
       <TitleSeparator titleText={t.skills.title} />
-      <div className="flex flex-wrap justify-center gap-8 md:gap-10 lg:gap-12 py-6 px-4">
-        {userData.skills.map((skill, index) => (
-          <div
-            key={index}
-            className="flex flex-col items-center w-20 sm:w-24 md:w-28 lg:w-32"
-          >
-            <div className="w-full aspect-square flex items-center justify-center mb-3">
-              <div className="w-full h-full flex items-center justify-center">
+      <div className="w-full px-4 md:px-8 lg:px-12 py-6">
+        <div className="grid grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-x-4 gap-y-8 md:gap-x-6 md:gap-y-10 lg:gap-x-8 lg:gap-y-12 w-full">
+          {userData.skills.map((skill, index) => (
+            <div
+              key={index}
+              className="flex flex-col items-center justify-start w-full"
+            >
+              <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mb-3">
                 {React.cloneElement(skill.icono as React.ReactElement, {
-                  size: undefined,
-                  className: "w-full h-full object-contain",
-                  style: { width: '100%', height: '100%' }
+                  className: "w-20 h-20 md:w-24 md:h-24 object-contain"
                 })}
               </div>
+              <Progress
+                className="w-full"
+                color="primary"
+                aria-label={`Skill ${index}`}
+                value={skill.level}
+                size="sm"
+              />
             </div>
-            <Progress
-              className="w-full"
-              color="primary"
-              aria-label={`Skill ${index}`}
-              value={skill.level}
-              size="sm"
-            />
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );

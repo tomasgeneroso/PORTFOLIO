@@ -94,7 +94,7 @@ const Certificates: React.FC<CertificatesProps> = ({ certificates }) => {
                     </h3>
 
                     {(translation?.issuer || certificate.issuer) && (
-                      <p className="text-base md:text-lg text-gray-600 dark:text-gray-300 mb-1">
+                      <p className="text-base md:text-sm font-normal text-wrap text-gray-500 dark:text-gray-400 mb-1">
                         {translation?.issuer || certificate.issuer}
                       </p>
                     )}
