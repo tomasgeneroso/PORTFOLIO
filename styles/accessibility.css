@@ -1,0 +1,143 @@
+/**
+ * Estilos de Accesibilidad - WCAG AA
+ */
+
+/* Screen Reader Only - Esconde visualmente pero mantiene accesible */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Mostrar cuando tiene focus (para skip links) */
+.sr-only:focus,
+.sr-only:active {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0.5rem 1rem;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* Focus visible mejorado */
+*:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Asegurar que los focus outlines sean visibles */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: 2px solid #0066cc;
+  outline-offset: 2px;
+}
+
+/* Mejorar contraste de texto en modo claro */
+.light {
+  --text-color: #1a1a1a;
+  --bg-color: #ffffff;
+}
+
+/* Mejorar contraste de texto en modo oscuro */
+.dark {
+  --text-color: #f0f0f0;
+  --bg-color: #1a1a1a;
+}
+
+/* Reducir motion para usuarios que lo prefieran */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Asegurar que los links sean distinguibles */
+a {
+  text-decoration-skip-ink: auto;
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+  color: #0066cc;
+}
+
+a:not([class]):hover {
+  text-decoration: underline;
+}
+
+/* Mejorar legibilidad de inputs */
+input,
+textarea,
+select {
+  font-size: 16px; /* Prevenir zoom en iOS */
+}
+
+/* Asegurar que los botones disabled sean claramente visibles */
+button:disabled,
+input:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Target para skip link */
+#main-content:target {
+  scroll-margin-top: 2rem;
+}
+
+/* Animación shimmer para skeletons */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor;
+  }
+
+  button,
+  a {
+    outline: 2px solid currentColor;
+  }
+}
+
+/* Asegurar que el contenido sea legible en todos los tamaños */
+@media (max-width: 640px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+/* Mejorar tap targets en móvil (mínimo 44x44px) */
+@media (pointer: coarse) {
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}

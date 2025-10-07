@@ -8,6 +8,8 @@ import userData from "@/components/userData";
 import { LanguageMetadata } from "@/components/LanguageMetadata";
 import { StructuredData } from "@/components/StructuredData";
 import Navbar from "@/components/Navbar/Navbar";
+import { SkipToContent } from "@/components/Accessibility/SkipToContent";
+import { PWAInstaller } from "@/components/PWA/PWAInstaller";
 
 if (typeof window !== "undefined") {
   (window as any).USE_MONGO = true;
@@ -93,6 +95,12 @@ export default function RootLayout({
     >
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+        <link rel="manifest" href="/manifest.json" />
+        <meta name="theme-color" content="#3D2548" />
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       </head>
       <body
         className={clsx(
@@ -102,10 +110,12 @@ export default function RootLayout({
         style={{ height: "100%" }}
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
+          <SkipToContent />
+          <PWAInstaller />
           <LanguageMetadata />
           <StructuredData />
           <Navbar userLinks={userData.links} />
-          <main className="container flex w-full h-full mx-auto pt-2 max-w-full overflow-x-hidden">
+          <main id="main-content" className="container flex w-full h-full mx-auto pt-2 max-w-full overflow-x-hidden">
             <div className="flex w-full mb-4 max-w-full">{children}</div>
           </main>
         </Providers>
