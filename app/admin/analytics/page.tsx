@@ -4,6 +4,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { useRouter } from "next/navigation";
+import { AnalyticsDashboardSkeleton } from "@/components/Loading/AnalyticsSkeleton";
 
 interface AnalyticsStats {
   overview: {
@@ -12,6 +13,14 @@ interface AnalyticsStats {
     firstTimeVisitors: number;
     returningVisitors: number;
     conversionRate: string;
+  };
+  today: {
+    visits: number;
+    uniqueVisitors: number;
+    cvDownloads: number;
+    contactForms: number;
+    githubClicks: number;
+    linkedinClicks: number;
   };
   events: {
     cvDownloads: number;
@@ -29,6 +38,7 @@ interface AnalyticsStats {
     _id: { city: string; country: string };
     count: number;
   }>;
+  hourlyActivity: Array<{ _id: number; count: number }>;
 }
 
 export default function AnalyticsDashboard() {
@@ -67,11 +77,7 @@ export default function AnalyticsDashboard() {
   }, [fetchStats]);
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen w-full">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <AnalyticsDashboardSkeleton />;
   }
 
   if (!stats) {
@@ -137,6 +143,39 @@ export default function AnalyticsDashboard() {
               />
             </svg>
           </button>
+        </div>
+      </div>
+
+      {/* Today's Activity - Destacado */}
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-xl p-6 mb-8 text-white">
+        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+          <span>📊</span> Actividad de Hoy
+        </h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+            <p className="text-sm opacity-90 mb-1">Visitas</p>
+            <p className="text-3xl font-bold">{stats.today.visits}</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+            <p className="text-sm opacity-90 mb-1">Únicos</p>
+            <p className="text-3xl font-bold">{stats.today.uniqueVisitors}</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+            <p className="text-sm opacity-90 mb-1">CV</p>
+            <p className="text-3xl font-bold">{stats.today.cvDownloads}</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+            <p className="text-sm opacity-90 mb-1">Forms</p>
+            <p className="text-3xl font-bold">{stats.today.contactForms}</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+            <p className="text-sm opacity-90 mb-1">GitHub</p>
+            <p className="text-3xl font-bold">{stats.today.githubClicks}</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+            <p className="text-sm opacity-90 mb-1">LinkedIn</p>
+            <p className="text-3xl font-bold">{stats.today.linkedinClicks}</p>
+          </div>
         </div>
       </div>
 

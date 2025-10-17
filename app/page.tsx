@@ -7,6 +7,8 @@ import Experience from "@/components/Experience/Experience";
 import Certificates from "@/components/Certificates/Certificates";
 import userData from "@/components/userData";
 import LoadingScreen from "@/components/Loading/LoadingScreen";
+import { SectionTracker } from "@/components/Analytics/SectionTracker";
+import { SectionReveal } from "@/components/Animations/SectionReveal";
 import React, { useEffect, useState } from "react";
 const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -37,12 +39,41 @@ const Home = () => {
   if (isLoading) return <LoadingScreen />;
   return (
     <div className="w-full mx-0 overflow-hidden scroll-smooth">
-      <AboutMe userData={userData} />
-      <Skills userData={userData} />
-      <PortfolioSection userData={userData} />
-      <Experience userData={userData} />
-      <Certificates certificates={userData.certificates} />
-      <ContactSection userData={userData} />
+      <SectionTracker sectionId="about" sectionName="About Me" threshold={7}>
+        <SectionReveal direction="up" duration={0.8}>
+          <AboutMe userData={userData} />
+        </SectionReveal>
+      </SectionTracker>
+
+      <SectionTracker sectionId="skillsSection" sectionName="Skills" threshold={7}>
+        <SectionReveal direction="up" delay={0.2}>
+          <Skills userData={userData} />
+        </SectionReveal>
+      </SectionTracker>
+
+      <SectionTracker sectionId="projects" sectionName="Projects" threshold={7}>
+        <SectionReveal direction="up" delay={0.2}>
+          <PortfolioSection userData={userData} />
+        </SectionReveal>
+      </SectionTracker>
+
+      <SectionTracker sectionId="experience" sectionName="Experience" threshold={7}>
+        <SectionReveal direction="up" delay={0.2}>
+          <Experience userData={userData} />
+        </SectionReveal>
+      </SectionTracker>
+
+      <SectionTracker sectionId="certificates" sectionName="Certificates" threshold={7}>
+        <SectionReveal direction="up" delay={0.2}>
+          <Certificates certificates={userData.certificates} />
+        </SectionReveal>
+      </SectionTracker>
+
+      <SectionTracker sectionId="contact" sectionName="Contact" threshold={7}>
+        <SectionReveal direction="up" delay={0.2}>
+          <ContactSection userData={userData} />
+        </SectionReveal>
+      </SectionTracker>
     </div>
   );
 };

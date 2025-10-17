@@ -147,6 +147,64 @@ export async function GET(request: NextRequest) {
       },
     ]);
 
+    // Actividad del día corriente
+    const todayStart = new Date();
+    todayStart.setHours(0, 0, 0, 0);
+
+    const todayVisits = await Analytics.countDocuments({
+      event: "page_visit",
+      timestamp: { $gte: todayStart.getTime() },
+    });
+
+    const todayUniqueVisitors = await Analytics.distinct("sessionId", {
+      event: "page_visit",
+      timestamp: { $gte: todayStart.getTime() },
+    });
+
+    const todayCVDownloads = await Analytics.countDocuments({
+      event: "cv_download",
+      timestamp: { $gte: todayStart.getTime() },
+    });
+
+    const todayContactForms = await Analytics.countDocuments({
+      event: "contact_form_submit",
+      timestamp: { $gte: todayStart.getTime() },
+    });
+
+    const todayGithubClicks = await Analytics.countDocuments({
+      event: "github_click",
+      timestamp: { $gte: todayStart.getTime() },
+    });
+
+    const todayLinkedinClicks = await Analytics.countDocuments({
+      event: "linkedin_click",
+      timestamp: { $gte: todayStart.getTime() },
+    });
+
+    // Actividad por hora del día (últimas 24 horas)
+    const last24Hours = new Date();
+    last24Hours.setHours(last24Hours.getHours() - 24);
+
+    const hourlyActivity = await Analytics.aggregate([
+      {
+        $match: {
+          event: "page_visit",
+          timestamp: { $gte: last24Hours.getTime() },
+        },
+      },
+      {
+        $group: {
+          _id: {
+            $hour: { $toDate: "$timestamp" }
+          },
+          count: { $sum: 1 },
+        },
+      },
+      {
+        $sort: { "_id": 1 },
+      },
+    ]);
+
     return NextResponse.json({
       success: true,
       data: {
@@ -156,6 +214,14 @@ export async function GET(request: NextRequest) {
           firstTimeVisitors,
           returningVisitors: totalVisits - firstTimeVisitors,
           conversionRate: `${conversionRate}%`,
+        },
+        today: {
+          visits: todayVisits,
+          uniqueVisitors: todayUniqueVisitors.length,
+          cvDownloads: todayCVDownloads,
+          contactForms: todayContactForms,
+          githubClicks: todayGithubClicks,
+          linkedinClicks: todayLinkedinClicks,
         },
         events: {
           cvDownloads,
@@ -167,6 +233,7 @@ export async function GET(request: NextRequest) {
         topReferrers,
         topCountries,
         topCities,
+        hourlyActivity,
       },
     });
   } catch (error) {

@@ -20,17 +20,11 @@ const nextConfig = {
   // Output standalone para mejor performance en producción
   output: 'standalone',
 
-  // Optimización de fuentes
-  optimizeFonts: true,
-
   // Compresión
   compress: true,
 
   // React Strict Mode
   reactStrictMode: true,
-
-  // SWC Minification (más rápido que Terser)
-  swcMinify: true,
 
   // Headers de seguridad y caché
   async headers() {
@@ -103,7 +97,6 @@ const nextConfig = {
 
   // Experimental features
   experimental: {
-    optimizeCss: true,
     optimizePackageImports: ['@heroui/react', 'framer-motion'],
   },
 

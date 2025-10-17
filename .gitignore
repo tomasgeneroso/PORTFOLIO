@@ -34,6 +34,17 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Environment variables
 .env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.staging
 
 package-lock.json
+
+claude/
+claude_config/
+*.claude.json
+claude_api_test/
