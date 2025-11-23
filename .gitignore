@@ -48,3 +48,4 @@ claude/
 claude_config/
 *.claude.json
 claude_api_test/
+.claude
