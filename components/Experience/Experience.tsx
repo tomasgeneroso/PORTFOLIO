@@ -165,7 +165,7 @@ const Experience: React.FC<UserProps> = ({ userData }) => {
         </ol>
 
         {/* Dots Navigation */}
-        <div className="flex gap-2 mb-8 justify-center w-full">
+        <div className="flex gap-2 mb-8 justify-center items-center w-full">
           {userData.experience.map((_, index) => (
             <span
               key={index}
