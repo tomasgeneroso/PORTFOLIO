@@ -143,11 +143,11 @@ My background includes a bachelor's degree in Economics and three years of studi
           ClassAttributes<HTMLImageElement> &
           ImgHTMLAttributes<HTMLImageElement>
         // eslint-disable-next-line @next/next/no-img-element
-      ) => <img src="./Images/ZAIFOminilogo.png" alt="ZAIFO logo" {...props} />,
+      ) => <img src="/Images/ZAIFOminilogo.png" alt="ZAIFO logo" {...props} />,
       projectImage: [
-        "./Images/ZAIFOHome.png",
-        "./Images/ZAIFOChat.png",
-        "./Images/ZAIFOEmpresasPerfil.png",
+        "/Images/ZAIFOHome.png",
+        "/Images/ZAIFOChat.png",
+        "/Images/ZAIFOEmpresasPerfil.png",
       ],
 
       date: "2018-07-01",
@@ -164,16 +164,16 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
       ) => (
         <img
-          src="./Images/DOlogo.svg"
+          src="/Images/DOlogo.svg"
           alt="DO mini logo"
           className="w-6 h-6 object-contain"
         />
       ),
       projectImage: [
-        "./Images/DOlogin.png",
-        "./Images/DOregistrate.png",
-        "./Images/DOhome.png",
-        "./Images/DOarmarcaja.png",
+        "/Images/DOlogin.png",
+        "/Images/DOregistrate.png",
+        "/Images/DOhome.png",
+        "/Images/DOarmarcaja.png",
       ],
       date: "2020-10-20",
       description:
@@ -195,7 +195,7 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
       ) => (
         <img
-          src="./Images/ClubSanMartinLogo.jpg"
+          src="/Images/ClubSanMartinLogo.jpg"
           alt="Club San Martín logo"
           className="w-6 h-6 object-contain"
         />
@@ -221,12 +221,12 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
       ) => (
         <img
-          src="./Images/DOlogo.svg"
+          src="/Images/DOlogo.svg"
           alt="DO mini logo"
           className="w-6 h-6 object-contain"
         />
       ),
-      projectImage: ["./Images/Mateworld_CRUDCart.png"],
+      projectImage: ["/Images/Mateworld_CRUDCart.png"],
       date: "2024-09-12",
       description:
         "I developed different modules like cart, dashboard, prepayment and Context in Next.js, Typescript, using Prisma and PostgreSQL",
@@ -352,14 +352,14 @@ My background includes a bachelor's degree in Economics and three years of studi
           ImgHTMLAttributes<HTMLImageElement>
       ) => (
         <img
-          src="./Images/DOlogo.svg"
+          src="/Images/DOlogo.svg"
           alt="DO mini logo"
           className="w-6 h-6 object-contain"
         />
       ),
       projectImage: (
         <img
-          src="./Images/Mateworld_CRUDCart.png"
+          src="/Images/Mateworld_CRUDCart.png"
           alt="Front-End Project logo"
         />
       ),

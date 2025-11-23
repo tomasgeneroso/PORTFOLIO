@@ -1,9 +1,7 @@
 {
   "permissions": {
     "allow": [
-      "Bash(npm run build:*)",
-      "mcp__ide__getDiagnostics",
-      "Bash(dir \"components\\Icons\"\" /b)"
+      "Bash(nul)"
     ],
     "deny": [],
     "ask": []

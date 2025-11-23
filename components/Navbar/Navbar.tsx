@@ -245,7 +245,7 @@ const Navbar: React.FC<UserLinks> = ({ userLinks }) => {
             onClick={trackCVDownload}
             download
             aria-label="Download CV"
-            className="p-1.5 sm:p-2 text-gray-700 dark:text-gray-300 transition duration-300 ease-in-out hover:text-primary"
+            className="p-1.5 sm:p-2 text-gray-700 bg-amber-100 rounded-md dark:bg-[#3D2548] dark:text-gray-300 transition duration-300 ease-in-out hover:bg-white dark:hover:bg-[#777272]"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
