@@ -89,7 +89,7 @@ export function SectionTracker({
         });
       }
     };
-  }, [sectionId, sectionName, threshold]);
+  }, [sectionId, sectionName, threshold, analytics]);
 
   return (
     <section ref={sectionRef} id={sectionId}>

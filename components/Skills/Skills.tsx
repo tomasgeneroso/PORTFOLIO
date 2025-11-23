@@ -23,7 +23,7 @@ const Skills: React.FC<UserProps> = ({ userData }) => {
               className="flex flex-col items-center justify-start w-full"
             >
               <div className="w-20 h-20 md:w-24 md:h-24 flex items-center justify-center mb-3 transition-transform hover:scale-110 duration-300">
-                {React.cloneElement(skill.icono as React.ReactElement, {
+                {React.isValidElement<{ className?: string }>(skill.icono) && React.cloneElement(skill.icono, {
                   className: "w-20 h-20 md:w-24 md:h-24 object-contain"
                 })}
               </div>
