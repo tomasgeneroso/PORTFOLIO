@@ -5,7 +5,7 @@ export async function POST(request: NextRequest) {
     const { username, password } = await request.json();
 
     // Verificar usuario y contraseña
-    if (username === process.env.ADMIN_USER && password === process.env.ADMIN_KEY) {
+    if (username === process.env.ADMIN_USER && password === process.env.ADMIN_PASSWORD) {
       // Crear la respuesta con cookie
       const response = NextResponse.json(
         { success: true, message: "Autenticación exitosa" },

@@ -40,22 +40,27 @@ export default function AdminLogin() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-amber-50 to-amber-100 dark:from-[#1a1a1a] dark:to-[#2a2a2a]">
-      <div className="bg-white dark:bg-[#3D2548] rounded-lg shadow-xl p-8 w-full max-w-md border border-amber-200 dark:border-[#4D3558]">
+    <div className="min-h-screen flex items-center justify-center bg-[#1a1025] px-4">
+      <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
-            Admin Access
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[#3D2548] border border-[#5D4568] mb-4">
+            <svg className="w-8 h-8 text-[#C9A8D8]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+          </div>
+          <h1 className="text-2xl font-bold text-gray-100">
+            Admin
           </h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Ingresa tus credenciales para acceder al dashboard
+          <p className="text-sm text-[#9B8BA3] mt-1">
+            Ingresa tus credenciales
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label
               htmlFor="username"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              className="block text-xs font-medium text-[#9B8BA3] mb-1.5 uppercase tracking-wider"
             >
               Usuario
             </label>
@@ -64,11 +69,11 @@ export default function AdminLogin() {
               id="username"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-[#4D3558]
-                bg-white dark:bg-[#2a2a2a] text-gray-800 dark:text-gray-100
-                focus:ring-2 focus:ring-primary focus:border-transparent
+              className="w-full px-4 py-3 rounded-lg border border-[#3D2548]
+                bg-[#2a1d35] text-gray-100 placeholder-[#6B5B73]
+                focus:outline-none focus:ring-2 focus:ring-[#7C5C8F] focus:border-transparent
                 transition-all duration-200"
-              placeholder="Ingresa tu usuario"
+              placeholder="tu usuario"
               required
               autoFocus
             />
@@ -77,7 +82,7 @@ export default function AdminLogin() {
           <div>
             <label
               htmlFor="password"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+              className="block text-xs font-medium text-[#9B8BA3] mb-1.5 uppercase tracking-wider"
             >
               Contraseña
             </label>
@@ -86,32 +91,34 @@ export default function AdminLogin() {
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-[#4D3558]
-                bg-white dark:bg-[#2a2a2a] text-gray-800 dark:text-gray-100
-                focus:ring-2 focus:ring-primary focus:border-transparent
+              className="w-full px-4 py-3 rounded-lg border border-[#3D2548]
+                bg-[#2a1d35] text-gray-100 placeholder-[#6B5B73]
+                focus:outline-none focus:ring-2 focus:ring-[#7C5C8F] focus:border-transparent
                 transition-all duration-200"
-              placeholder="Ingresa la contraseña"
+              placeholder="tu contraseña"
               required
             />
           </div>
 
           {error && (
-            <div className="p-3 rounded-lg bg-red-100 dark:bg-red-900/30 border border-red-300 dark:border-red-700">
-              <p className="text-sm text-red-700 dark:text-red-400">{error}</p>
+            <div className="p-3 rounded-lg bg-red-900/20 border border-red-800/40">
+              <p className="text-sm text-red-400">{error}</p>
             </div>
           )}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-3 px-4 bg-primary text-white rounded-lg font-medium
-              hover:bg-opacity-90 focus:ring-4 focus:ring-primary focus:ring-opacity-50
+            className="w-full py-3 px-4 rounded-lg font-medium
+              bg-[#7C5C8F] text-white
+              hover:bg-[#8D6BA0]
+              focus:outline-none focus:ring-2 focus:ring-[#7C5C8F] focus:ring-offset-2 focus:ring-offset-[#1a1025]
               disabled:opacity-50 disabled:cursor-not-allowed
               transition-all duration-200"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white/30 border-t-white"></div>
                 Verificando...
               </span>
             ) : (
@@ -120,12 +127,12 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <div className="mt-6 text-center">
+        <div className="mt-8 text-center">
           <Link
             href="/"
-            className="text-sm text-gray-600 dark:text-gray-400 hover:text-primary transition-colors"
+            className="text-sm text-[#6B5B73] hover:text-[#C9A8D8] transition-colors"
           >
-            ← Volver al inicio
+            ← Volver al portfolio
           </Link>
         </div>
       </div>
