@@ -2,10 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 export async function POST(request: NextRequest) {
   try {
-    const { password } = await request.json();
+    const { username, password } = await request.json();
 
-    // Verificar la contraseña
-    if (password === process.env.ADMIN_KEY) {
+    // Verificar usuario y contraseña
+    if (username === process.env.ADMIN_USER && password === process.env.ADMIN_KEY) {
       // Crear la respuesta con cookie
       const response = NextResponse.json(
         { success: true, message: "Autenticación exitosa" },

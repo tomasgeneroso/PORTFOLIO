@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function AdminLogin() {
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ export default function AdminLogin() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
@@ -29,7 +30,7 @@ export default function AdminLogin() {
       if (response.ok && data.success) {
         router.push("/admin/analytics");
       } else {
-        setError("Contraseña incorrecta");
+        setError("Usuario o contraseña incorrectos");
       }
     } catch (err) {
       setError("Error al iniciar sesión");
@@ -46,11 +47,33 @@ export default function AdminLogin() {
             Admin Access
           </h1>
           <p className="text-gray-600 dark:text-gray-400">
-            Ingresa la contraseña para acceder al dashboard
+            Ingresa tus credenciales para acceder al dashboard
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label
+              htmlFor="username"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            >
+              Usuario
+            </label>
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-[#4D3558]
+                bg-white dark:bg-[#2a2a2a] text-gray-800 dark:text-gray-100
+                focus:ring-2 focus:ring-primary focus:border-transparent
+                transition-all duration-200"
+              placeholder="Ingresa tu usuario"
+              required
+              autoFocus
+            />
+          </div>
+
           <div>
             <label
               htmlFor="password"
@@ -69,7 +92,6 @@ export default function AdminLogin() {
                 transition-all duration-200"
               placeholder="Ingresa la contraseña"
               required
-              autoFocus
             />
           </div>
 

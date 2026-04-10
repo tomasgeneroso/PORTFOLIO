@@ -10,6 +10,8 @@ import { StructuredData } from "@/components/StructuredData";
 import Navbar from "@/components/Navbar/Navbar";
 import { SkipToContent } from "@/components/Accessibility/SkipToContent";
 import { PWAInstaller } from "@/components/PWA/PWAInstaller";
+import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Analytics } from "@vercel/analytics/next";
 
 if (typeof window !== "undefined") {
   (window as any).USE_MONGO = true;
@@ -119,6 +121,8 @@ export default function RootLayout({
             <div className="flex w-full mb-4 max-w-full">{children}</div>
           </main>
         </Providers>
+        <SpeedInsights />
+        <Analytics />
       </body>
     </html>
   );
