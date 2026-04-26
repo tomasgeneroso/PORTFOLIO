@@ -46,13 +46,16 @@ self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Ignorar peticiones externas y API calls
+  // Ignorar peticiones externas, API calls y métodos no-GET
   if (url.origin !== location.origin) {
     return;
   }
 
-  // Ignorar API calls (dejar que se manejen en tiempo real)
   if (url.pathname.startsWith('/api/')) {
+    return;
+  }
+
+  if (request.method !== 'GET') {
     return;
   }
 
