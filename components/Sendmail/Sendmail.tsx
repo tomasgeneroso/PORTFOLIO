@@ -1,26 +1,10 @@
-import emailjs from "emailjs-com";
-import { FormEvent } from "react";
+export async function sendEmail(senderEmail: string, subject: string, message: string): Promise<{ success: boolean; message: string }> {
+  const response = await fetch("/api/contact", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ senderEmail, subject, message }),
+  });
 
-export const sendEmail = (e: FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-
-  let SENDMAIL_KEY = process.env.SENDMAIL_KEY || "";
-  let SERVICE_MAIL = process.env.EMAIL_SERVICE || "";
-  if (!SENDMAIL_KEY || !SERVICE_MAIL) {
-    emailjs
-      .sendForm(
-        "sendmailservice_tomas",
-        "template_ajm9bmm",
-        e.currentTarget,
-        "plgNbyye6G1kUYz93"
-      )
-      .then(
-        () => {
-          alert("Mensaje enviado con éxito ✅");
-        },
-        (error) => {
-          alert("Error al enviar mensaje ❌: " + error.text);
-        }
-      );
-  }
-};
+  const data = await response.json();
+  return data;
+}
