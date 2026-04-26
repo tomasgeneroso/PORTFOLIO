@@ -9,8 +9,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ success: false, message: "Faltan campos requeridos" }, { status: 400 });
     }
 
+    if (!process.env.GMAIL_USER || !process.env.GMAIL_APP_PASSWORD) {
+      console.error("[Contact] Missing GMAIL_USER or GMAIL_APP_PASSWORD env vars");
+      return NextResponse.json({ success: false, message: "Configuración de email incompleta" }, { status: 500 });
+    }
+
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD,
@@ -34,8 +41,8 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true, message: "Mensaje enviado correctamente" });
-  } catch (error) {
-    console.error("Error enviando email:", error);
+  } catch (error: any) {
+    console.error("[Contact] Error enviando email:", error?.message || error);
     return NextResponse.json({ success: false, message: "Error al enviar el mensaje" }, { status: 500 });
   }
 }
