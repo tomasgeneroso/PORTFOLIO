@@ -9,7 +9,6 @@ import { LanguageMetadata } from "@/components/LanguageMetadata";
 import { StructuredData } from "@/components/StructuredData";
 import Navbar from "@/components/Navbar/Navbar";
 import { SkipToContent } from "@/components/Accessibility/SkipToContent";
-import { PWAInstaller } from "@/components/PWA/PWAInstaller";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
 
@@ -113,7 +112,6 @@ export default function RootLayout({
       >
         <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
           <SkipToContent />
-          <PWAInstaller />
           <LanguageMetadata />
           <StructuredData />
           <Navbar userLinks={userData.links} />
