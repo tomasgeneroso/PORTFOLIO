@@ -28,6 +28,7 @@ export interface IPlannerTask extends Document {
   title: string;
   description: string;
   column: string;
+  color: string | null;
   photos: PlannerPhoto[];
   dueDate: string | null;
   emailNotification: EmailNotification | null;
@@ -86,6 +87,7 @@ const PlannerTaskSchema = new Schema({
     },
     default: null,
   },
+  color: { type: String, default: null },
   calendarEventId: { type: String, default: null },
   order: { type: Number, default: 0 },
   createdAt: { type: String, default: () => new Date().toISOString() },

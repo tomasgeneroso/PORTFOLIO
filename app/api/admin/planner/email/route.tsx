@@ -12,16 +12,23 @@ export async function POST(req: NextRequest) {
   const s = await getOrCreateSettings();
   const { smtp } = s;
 
-  if (!smtp.host || !smtp.user || !smtp.pass) {
-    return NextResponse.json({ error: "SMTP no configurado. Ve a Configuración." }, { status: 400 });
+  // Fallback a las variables de entorno si SMTP no está configurado en settings
+  const smtpHost = smtp.host || "smtp.gmail.com";
+  const smtpPort = smtp.port || 465;
+  const smtpSecure = smtp.host ? smtp.secure : true;
+  const smtpUser = smtp.user || process.env.GMAIL_USER || "";
+  const smtpPass = smtp.pass || process.env.GMAIL_APP_PASSWORD || "";
+
+  if (!smtpUser || !smtpPass) {
+    return NextResponse.json({ error: "SMTP no configurado. Agrega GMAIL_USER y GMAIL_APP_PASSWORD en Vercel." }, { status: 400 });
   }
 
   try {
     const transporter = nodemailer.createTransport({
-      host: smtp.host,
-      port: smtp.port,
-      secure: smtp.secure,
-      auth: { user: smtp.user, pass: smtp.pass },
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpSecure,
+      auth: { user: smtpUser, pass: smtpPass },
     });
 
     if (body.action === "test") {

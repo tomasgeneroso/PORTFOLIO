@@ -25,7 +25,7 @@ interface Photo { id: string; dataUrl: string; name: string; }
 interface EmailNotif { recipient: string; message: string; scheduledAt: string | null; sent: boolean; sentAt: string | null; }
 interface Task {
   id: string; projectId: string; title: string; description: string;
-  column: string; photos: Photo[]; dueDate: string | null;
+  column: string; color: string | null; photos: Photo[]; dueDate: string | null;
   emailNotification: EmailNotif | null; calendarEventId: string | null;
   order: number; createdAt: string; updatedAt: string;
 }
@@ -127,7 +127,11 @@ function SortableCard({ task, onClick }: { task: Task; onClick: () => void }) {
   return (
     <div
       ref={setNodeRef}
-      style={style}
+      style={{
+        ...style,
+        borderLeftColor: task.color ?? undefined,
+        borderLeftWidth: task.color ? "3px" : undefined,
+      }}
       className="bg-[#2D1B3D] border border-[#3D2548] rounded-xl p-3 hover:border-[#6366f1] hover:shadow-lg hover:shadow-purple-900/30 transition-all group"
     >
       {/* Drag handle */}
@@ -422,11 +426,24 @@ function PlannerContent() {
   const createCalEvent = async () => {
     if (!calForm.title || !calForm.start) { toast("Título y fecha son obligatorios", "error"); return; }
     try {
-      const event = await api.post("/api/admin/planner/calendar", { title: calForm.title, description: calForm.description, start: new Date(calForm.start).toISOString(), end: calForm.end ? new Date(calForm.end).toISOString() : null, taskId: calModal.taskId });
+      const result = await api.post("/api/admin/planner/calendar", {
+        title: calForm.title,
+        description: calForm.description,
+        start: new Date(calForm.start).toISOString(),
+        end: calForm.end ? new Date(calForm.end).toISOString() : null,
+        taskId: calModal.taskId,
+        projectId: currentProject?.id,
+      });
+
       if (calModal.taskId) {
-        setTasks(prev => prev.map(t => t.id === calModal.taskId ? { ...t, calendarEventId: event.id } : t));
-        setTaskModal(m => m.task ? { ...m, task: { ...m.task, calendarEventId: event.id } } : m);
+        // Vincular a tarea existente
+        setTasks(prev => prev.map(t => t.id === calModal.taskId ? { ...t, calendarEventId: result.event.id } : t));
+        setTaskModal(m => m.task ? { ...m, task: { ...m.task, calendarEventId: result.event.id } } : m);
+      } else if (result.task) {
+        // Nueva card creada en Backlog
+        setTasks(prev => [...prev, result.task]);
       }
+
       setCalModal({ open: false });
       toast("Evento creado en Google Calendar", "success");
     } catch (e: any) { toast(e.message, "error"); }

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { connectDB } from "@/lib/mongodb";
 import { getOrCreateSettings, PlannerTask } from "@/models/planner";
 import { google } from "googleapis";
+import crypto from "crypto";
 
 const isAuth = (req: NextRequest) => req.cookies.get("admin-auth")?.value === "authenticated";
 
@@ -57,14 +58,35 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    let newTask = null;
+
     if (body.taskId) {
+      // Vincular evento a tarea existente
       await PlannerTask.findOneAndUpdate(
         { id: body.taskId },
         { calendarEventId: event.data.id, updatedAt: new Date().toISOString() }
       );
+    } else if (body.projectId) {
+      // Crear card en Backlog automáticamente (color celeste)
+      const count = await PlannerTask.countDocuments({ column: "Backlog", projectId: body.projectId });
+      newTask = await PlannerTask.create({
+        id: crypto.randomUUID(),
+        projectId: body.projectId,
+        title: body.title,
+        description: body.description || "",
+        column: "Backlog",
+        color: "#67e8f9",
+        dueDate: body.start || null,
+        calendarEventId: event.data.id,
+        order: count,
+        photos: [],
+        emailNotification: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      });
     }
 
-    return NextResponse.json(event.data);
+    return NextResponse.json({ event: event.data, task: newTask });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
