@@ -46,9 +46,11 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const s = await getOrCreateSettings();
 
+  // 1. Crear evento en Google Calendar
+  let calEvent: any;
   try {
     const calendar = google.calendar({ version: "v3", auth: getOAuthClient(s.googleCalendar) });
-    const event = await calendar.events.insert({
+    const response = await calendar.events.insert({
       calendarId: "primary",
       requestBody: {
         summary: body.title,
@@ -57,17 +59,21 @@ export async function POST(req: NextRequest) {
         end: { dateTime: body.end || new Date(new Date(body.start).getTime() + 3600000).toISOString() },
       },
     });
+    calEvent = response.data;
+  } catch (err: any) {
+    console.error("[Calendar] Error creando evento:", err.message);
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
 
-    let newTask = null;
-
+  // 2. Crear o vincular tarea en el planner (independiente del paso anterior)
+  let newTask = null;
+  try {
     if (body.taskId) {
-      // Vincular evento a tarea existente
       await PlannerTask.findOneAndUpdate(
         { id: body.taskId },
-        { calendarEventId: event.data.id, updatedAt: new Date().toISOString() }
+        { calendarEventId: calEvent.id, updatedAt: new Date().toISOString() }
       );
     } else if (body.projectId) {
-      // Crear card en Backlog automáticamente (color celeste)
       const count = await PlannerTask.countDocuments({ column: "Backlog", projectId: body.projectId });
       newTask = await PlannerTask.create({
         id: crypto.randomUUID(),
@@ -77,17 +83,19 @@ export async function POST(req: NextRequest) {
         column: "Backlog",
         color: "#67e8f9",
         dueDate: body.start || null,
-        calendarEventId: event.data.id,
+        calendarEventId: calEvent.id,
         order: count,
         photos: [],
         emailNotification: null,
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       });
+      newTask = newTask.toObject();
     }
-
-    return NextResponse.json({ event: event.data, task: newTask });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("[Calendar] Error creando tarea en planner:", err.message);
+    // No fallamos el request — el evento de Calendar ya fue creado
   }
+
+  return NextResponse.json({ event: calEvent, task: newTask });
 }
