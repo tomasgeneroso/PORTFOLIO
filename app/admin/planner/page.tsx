@@ -11,6 +11,7 @@ import {
   useSensor,
   useSensors,
   closestCorners,
+  useDroppable,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -106,10 +107,20 @@ const COL_COLORS: Record<string, string> = {
 };
 const getColColor = (name: string) => COL_COLORS[name] || "#a78bfa";
 
+// ===== DROPPABLE COLUMN WRAPPER =====
+function DroppableColumn({ id, children }: { id: string; children: React.ReactNode }) {
+  const { setNodeRef, isOver } = useDroppable({ id });
+  return (
+    <div ref={setNodeRef} className={`flex-1 overflow-y-auto p-2 space-y-2 min-h-[80px] rounded-lg transition-colors ${isOver ? "bg-[#6366f1]/10" : ""}`}>
+      {children}
+    </div>
+  );
+}
+
 // ===== SORTABLE CARD =====
 function SortableCard({ task, onClick }: { task: Task; onClick: () => void }) {
-  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
-  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.4 : 1 };
+  const { listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id: task.id });
+  const style = { transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.35 : 1 };
   const due = task.dueDate ? new Date(task.dueDate) : null;
   const overdue = due && due < new Date() && task.column !== "Terminado";
 
@@ -117,24 +128,22 @@ function SortableCard({ task, onClick }: { task: Task; onClick: () => void }) {
     <div
       ref={setNodeRef}
       style={style}
-      {...attributes}
       className="bg-[#2D1B3D] border border-[#3D2548] rounded-xl p-3 hover:border-[#6366f1] hover:shadow-lg hover:shadow-purple-900/30 transition-all group"
     >
-      {/* Drag handle — only this area triggers drag */}
+      {/* Drag handle */}
       <div
         {...listeners}
-        className="flex items-center gap-2 mb-2 cursor-grab active:cursor-grabbing"
-        onClick={e => e.stopPropagation()}
+        className="flex items-center mb-2 cursor-grab active:cursor-grabbing touch-none"
       >
-        <svg className="w-3 h-3 text-[#4D3558] group-hover:text-[#6366f1] transition-colors flex-shrink-0" viewBox="0 0 10 16" fill="currentColor">
+        <svg className="w-3 h-3 text-[#4D3558] group-hover:text-[#6366f1] transition-colors" viewBox="0 0 10 16" fill="currentColor">
           <circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/>
           <circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/>
           <circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/>
         </svg>
       </div>
 
-      {/* Clickable body — opens edit modal */}
-      <div onClick={onClick} className="cursor-pointer">
+      {/* Click to edit */}
+      <div onClick={onClick} className="cursor-pointer select-none">
         <p className="text-sm font-semibold text-gray-100 mb-1 leading-snug">{task.title}</p>
         {task.description && (
           <p className="text-xs text-[#9B8BA3] mb-2 line-clamp-2 leading-relaxed">{task.description}</p>
@@ -359,20 +368,20 @@ function PlannerContent() {
   const handleDragEnd = async (e: DragEndEvent) => {
     setActiveTask(null);
     const { active, over } = e;
-    if (!over || active.id === over.id) return;
+    if (!over) return;
 
-    const activeTask = tasks.find(t => t.id === active.id);
-    if (!activeTask) return;
+    const draggedTask = tasks.find(t => t.id === active.id);
+    if (!draggedTask) return;
 
-    // Check if dropped on a column header
-    const newCol = typeof over.id === "string" && over.id.startsWith("col:") ? over.id.slice(4) : null;
-    const overTask = tasks.find(t => t.id === over.id);
-    const targetCol = newCol || overTask?.column || activeTask.column;
+    // over.id is either "col:ColumnName" (DroppableColumn) or a task id
+    const overId = String(over.id);
+    const targetCol = overId.startsWith("col:")
+      ? overId.slice(4)
+      : tasks.find(t => t.id === overId)?.column ?? draggedTask.column;
 
-    if (targetCol === activeTask.column && !newCol) return;
+    if (targetCol === draggedTask.column && active.id === over.id) return;
 
-    const updated = { ...activeTask, column: targetCol };
-    setTasks(prev => prev.map(t => t.id === active.id ? updated : t));
+    setTasks(prev => prev.map(t => t.id === active.id ? { ...t, column: targetCol } : t));
 
     try {
       await api.put(`/api/admin/planner/tasks/${active.id}`, { column: targetCol });
@@ -561,11 +570,11 @@ function PlannerContent() {
                       <button onClick={() => openNewTask(col)} className="w-6 h-6 flex items-center justify-center rounded-md text-[#9B8BA3] hover:bg-[#2D1B3D] hover:text-white transition-colors text-base leading-none">+</button>
                     </div>
                     <SortableContext items={colTasks.map(t => t.id)} strategy={verticalListSortingStrategy}>
-                      <div className="flex-1 overflow-y-auto p-2 space-y-2 min-h-[60px]">
+                      <DroppableColumn id={`col:${col}`}>
                         {colTasks.map(task => (
                           <SortableCard key={task.id} task={task} onClick={() => openEditTask(task)} />
                         ))}
-                      </div>
+                      </DroppableColumn>
                     </SortableContext>
                   </div>
                 );
