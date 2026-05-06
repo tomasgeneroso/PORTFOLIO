@@ -436,12 +436,13 @@ function PlannerContent() {
       });
 
       if (calModal.taskId) {
-        // Vincular a tarea existente
         setTasks(prev => prev.map(t => t.id === calModal.taskId ? { ...t, calendarEventId: result.event.id } : t));
         setTaskModal(m => m.task ? { ...m, task: { ...m.task, calendarEventId: result.event.id } } : m);
       } else if (result.task) {
-        // Nueva card creada en Backlog
         setTasks(prev => [...prev, result.task]);
+        toast("Card creada en Backlog", "success");
+      } else if (!calModal.taskId && !result.task) {
+        toast("Evento creado, pero no se pudo crear la card (seleccioná un proyecto)", "info");
       }
 
       setCalModal({ open: false });

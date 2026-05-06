@@ -75,8 +75,10 @@ export async function POST(req: NextRequest) {
       );
     } else if (body.projectId) {
       const count = await PlannerTask.countDocuments({ column: "Backlog", projectId: body.projectId });
-      newTask = await PlannerTask.create({
-        id: crypto.randomUUID(),
+      const taskId = crypto.randomUUID();
+      const now = new Date().toISOString();
+      const taskData = {
+        id: taskId,
         projectId: body.projectId,
         title: body.title,
         description: body.description || "",
@@ -87,10 +89,11 @@ export async function POST(req: NextRequest) {
         order: count,
         photos: [],
         emailNotification: null,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      });
-      newTask = newTask.toObject();
+        createdAt: now,
+        updatedAt: now,
+      };
+      await PlannerTask.create(taskData);
+      newTask = taskData;
     }
   } catch (err: any) {
     console.error("[Calendar] Error creando tarea en planner:", err.message);
