@@ -1,11 +1,10 @@
 "use client";
 
-import React, { Suspense, useState, useEffect, useCallback, useRef } from "react";
+import React, { Suspense, useState, useEffect, useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   DndContext,
   DragEndEvent,
-  DragOverEvent,
   DragOverlay,
   DragStartEvent,
   PointerSensor,
@@ -119,30 +118,44 @@ function SortableCard({ task, onClick }: { task: Task; onClick: () => void }) {
       ref={setNodeRef}
       style={style}
       {...attributes}
-      {...listeners}
-      onClick={onClick}
-      className="bg-[#2D1B3D] border border-[#3D2548] rounded-xl p-3 cursor-pointer hover:border-[#6366f1] hover:shadow-lg hover:shadow-purple-900/30 transition-all group"
+      className="bg-[#2D1B3D] border border-[#3D2548] rounded-xl p-3 hover:border-[#6366f1] hover:shadow-lg hover:shadow-purple-900/30 transition-all group"
     >
-      <p className="text-sm font-semibold text-gray-100 mb-1 leading-snug">{task.title}</p>
-      {task.description && (
-        <p className="text-xs text-[#9B8BA3] mb-2 line-clamp-2 leading-relaxed">{task.description}</p>
-      )}
-      {due && (
-        <p className={`text-xs mb-2 flex items-center gap-1 ${overdue ? "text-red-400 font-medium" : "text-[#9B8BA3]"}`}>
-          📅 {due.toLocaleDateString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-        </p>
-      )}
-      {task.photos.length > 0 && (
-        <div className="flex gap-1 mb-2 flex-wrap">
-          {task.photos.slice(0, 4).map(p => (
-            <img key={p.id} src={p.dataUrl} alt="" className="w-10 h-10 rounded-lg object-cover border border-[#4D3558]" />
-          ))}
-          {task.photos.length > 4 && <span className="text-xs text-[#9B8BA3] self-center">+{task.photos.length - 4}</span>}
+      {/* Drag handle — only this area triggers drag */}
+      <div
+        {...listeners}
+        className="flex items-center gap-2 mb-2 cursor-grab active:cursor-grabbing"
+        onClick={e => e.stopPropagation()}
+      >
+        <svg className="w-3 h-3 text-[#4D3558] group-hover:text-[#6366f1] transition-colors flex-shrink-0" viewBox="0 0 10 16" fill="currentColor">
+          <circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/>
+          <circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/>
+          <circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/>
+        </svg>
+      </div>
+
+      {/* Clickable body — opens edit modal */}
+      <div onClick={onClick} className="cursor-pointer">
+        <p className="text-sm font-semibold text-gray-100 mb-1 leading-snug">{task.title}</p>
+        {task.description && (
+          <p className="text-xs text-[#9B8BA3] mb-2 line-clamp-2 leading-relaxed">{task.description}</p>
+        )}
+        {due && (
+          <p className={`text-xs mb-2 flex items-center gap-1 ${overdue ? "text-red-400 font-medium" : "text-[#9B8BA3]"}`}>
+            📅 {due.toLocaleDateString("es-ES", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+          </p>
+        )}
+        {task.photos.length > 0 && (
+          <div className="flex gap-1 mb-2 flex-wrap">
+            {task.photos.slice(0, 4).map(p => (
+              <img key={p.id} src={p.dataUrl} alt="" className="w-10 h-10 rounded-lg object-cover border border-[#4D3558]" />
+            ))}
+            {task.photos.length > 4 && <span className="text-xs text-[#9B8BA3] self-center">+{task.photos.length - 4}</span>}
+          </div>
+        )}
+        <div className="flex gap-2 flex-wrap">
+          {task.emailNotification && <span className="text-xs text-[#9B8BA3] bg-[#3D2548] px-2 py-0.5 rounded-full">{task.emailNotification.sent ? "📧✓" : "📧"}</span>}
+          {task.calendarEventId && <span className="text-xs text-[#9B8BA3] bg-[#3D2548] px-2 py-0.5 rounded-full">📅</span>}
         </div>
-      )}
-      <div className="flex gap-2 flex-wrap">
-        {task.emailNotification && <span className="text-xs text-[#9B8BA3] bg-[#3D2548] px-2 py-0.5 rounded-full">{task.emailNotification.sent ? "📧✓" : "📧"}</span>}
-        {task.calendarEventId && <span className="text-xs text-[#9B8BA3] bg-[#3D2548] px-2 py-0.5 rounded-full">📅</span>}
       </div>
     </div>
   );
@@ -174,6 +187,8 @@ function PlannerContent() {
   const [settingsModal, setSettingsModal] = useState(false);
   const [calModal, setCalModal] = useState<{ open: boolean; taskId?: string }>({ open: false });
   const [newProjectModal, setNewProjectModal] = useState(false);
+  const [editProjectModal, setEditProjectModal] = useState(false);
+  const [editProjectForm, setEditProjectForm] = useState({ name: "", color: "#6366f1" });
   const [lightbox, setLightbox] = useState<{ open: boolean; photos: Photo[]; idx: number }>({ open: false, photos: [], idx: 0 });
 
   // Form state
@@ -202,7 +217,7 @@ function PlannerContent() {
         const calStat = await api.get("/api/admin/planner/calendar?action=status");
         setCalConnected(calStat.connected);
 
-        if (projs.length > 0) await selectProject(projs[0], projs);
+        if (projs.length > 0) await selectProject(projs[0]);
       } catch (e: any) { toast(e.message, "error"); }
       finally { setLoading(false); }
     }
@@ -228,7 +243,7 @@ function PlannerContent() {
     });
   };
 
-  const selectProject = async (project: Project, projList?: Project[]) => {
+  const selectProject = async (project: Project) => {
     setCurrentProject(project);
     const t = await api.get(`/api/admin/planner/tasks?projectId=${project.id}`);
     setTasks(t);
@@ -420,6 +435,37 @@ function PlannerContent() {
     } catch (e: any) { toast(e.message, "error"); }
   };
 
+  // ===== EDIT PROJECT =====
+  const openEditProject = (p: Project) => {
+    setEditProjectForm({ name: p.name, color: p.color });
+    setEditProjectModal(true);
+  };
+
+  const updateProject = async () => {
+    if (!currentProject) return;
+    if (!editProjectForm.name.trim()) { toast("El nombre es obligatorio", "error"); return; }
+    try {
+      const updated = await api.put(`/api/admin/planner/projects/${currentProject.id}`, editProjectForm);
+      setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
+      setCurrentProject(updated);
+      setEditProjectModal(false);
+      toast("Proyecto actualizado", "success");
+    } catch (e: any) { toast(e.message, "error"); }
+  };
+
+  const deleteProject = async () => {
+    if (!currentProject || !confirm(`¿Eliminar "${currentProject.name}" y todas sus tareas?`)) return;
+    try {
+      await api.del(`/api/admin/planner/projects/${currentProject.id}`);
+      const remaining = projects.filter(p => p.id !== currentProject.id);
+      setProjects(remaining);
+      setEditProjectModal(false);
+      if (remaining.length > 0) await selectProject(remaining[0]);
+      else { setCurrentProject(null); setTasks([]); }
+      toast("Proyecto eliminado", "info");
+    } catch (e: any) { toast(e.message, "error"); }
+  };
+
   // ===== PHOTOS FOR TASK MODAL =====
   const currentTaskPhotos = (() => {
     if (!taskModal.task) return pendingPhotos;
@@ -453,10 +499,21 @@ function PlannerContent() {
         </div>
         <nav className="flex-1 p-2 overflow-y-auto">
           {projects.map(p => (
-            <button key={p.id} onClick={() => selectProject(p)} className={`w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-sm font-medium mb-1 transition-all text-left ${currentProject?.id === p.id ? "bg-[#2D1B3D] text-white" : "text-[#9B8BA3] hover:bg-[#2D1B3D]/60 hover:text-gray-200"}`}>
-              <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: p.color }} />
-              {p.name}
-            </button>
+            <div key={p.id} className={`group flex items-center gap-1 rounded-lg mb-1 transition-all ${currentProject?.id === p.id ? "bg-[#2D1B3D]" : "hover:bg-[#2D1B3D]/60"}`}>
+              <button onClick={() => selectProject(p)} className={`flex-1 flex items-center gap-2.5 px-3 py-2 text-sm font-medium text-left ${currentProject?.id === p.id ? "text-white" : "text-[#9B8BA3] group-hover:text-gray-200"}`}>
+                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: p.color }} />
+                {p.name}
+              </button>
+              <button
+                onClick={() => { selectProject(p); openEditProject(p); }}
+                className="opacity-0 group-hover:opacity-100 p-1.5 mr-1 rounded text-[#9B8BA3] hover:text-[#C9A8D8] transition-all"
+                title="Editar proyecto"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+            </div>
           ))}
         </nav>
         <div className="p-2 border-t border-[#2D1B3D] space-y-1">
@@ -746,6 +803,49 @@ function PlannerContent() {
             <div className="flex justify-end gap-2 px-5 py-4 border-t border-[#3D2548] flex-shrink-0">
               <button onClick={() => setSettingsModal(false)} className="px-4 py-2 text-xs font-medium rounded-lg border border-[#3D2548] text-[#9B8BA3] hover:text-gray-200 transition-colors">Cancelar</button>
               <button onClick={saveSettings} className="px-4 py-2 text-xs font-medium rounded-lg bg-[#6366f1] hover:bg-[#4f46e5] text-white transition-colors">Guardar configuración</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ===== MODAL: EDITAR PROYECTO ===== */}
+      {editProjectModal && currentProject && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) setEditProjectModal(false); }}>
+          <div className="bg-[#1E1230] border border-[#3D2548] rounded-2xl w-full max-w-sm shadow-2xl">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-[#3D2548]">
+              <h2 className="font-bold text-base">Editar proyecto</h2>
+              <button onClick={() => setEditProjectModal(false)} className="w-7 h-7 rounded-lg bg-[#2D1B3D] hover:bg-red-900/40 text-[#9B8BA3] hover:text-red-400 flex items-center justify-center text-sm transition-colors">✕</button>
+            </div>
+            <div className="p-5 space-y-3">
+              <div>
+                <label className="block text-xs text-[#9B8BA3] mb-1">Nombre *</label>
+                <input
+                  value={editProjectForm.name}
+                  onChange={e => setEditProjectForm(f => ({ ...f, name: e.target.value }))}
+                  placeholder="Nombre del proyecto"
+                  onKeyDown={e => e.key === "Enter" && updateProject()}
+                  className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]"
+                  autoFocus
+                />
+              </div>
+              <div>
+                <label className="block text-xs text-[#9B8BA3] mb-1">Color</label>
+                <input
+                  type="color"
+                  value={editProjectForm.color}
+                  onChange={e => setEditProjectForm(f => ({ ...f, color: e.target.value }))}
+                  className="w-12 h-9 rounded-lg cursor-pointer border border-[#3D2548] bg-transparent p-1"
+                />
+              </div>
+            </div>
+            <div className="flex items-center justify-between px-5 pb-5">
+              <button onClick={deleteProject} className="px-4 py-2 text-xs font-medium rounded-lg bg-red-900/30 hover:bg-red-900/50 border border-red-800/40 text-red-400 transition-colors">
+                Eliminar proyecto
+              </button>
+              <div className="flex gap-2">
+                <button onClick={() => setEditProjectModal(false)} className="px-4 py-2 text-xs font-medium rounded-lg border border-[#3D2548] text-[#9B8BA3] hover:text-gray-200 transition-colors">Cancelar</button>
+                <button onClick={updateProject} className="px-4 py-2 text-xs font-medium rounded-lg bg-[#6366f1] hover:bg-[#4f46e5] text-white transition-colors">Guardar</button>
+              </div>
             </div>
           </div>
         </div>
