@@ -1,4 +1,3 @@
-// app/admin/analytics/page.tsx
 "use client";
 
 import React, { useState, useEffect, useCallback } from "react";
@@ -30,16 +29,20 @@ interface AnalyticsStats {
   };
   eventCounts: Array<{ _id: string; count: number }>;
   topReferrers: Array<{ _id: string; count: number }>;
-  topCountries: Array<{
-    _id: { country: string; countryCode: string };
-    count: number;
-  }>;
-  topCities: Array<{
-    _id: { city: string; country: string };
-    count: number;
-  }>;
+  topCountries: Array<{ _id: { country: string; countryCode: string }; count: number }>;
+  topCities: Array<{ _id: { city: string; country: string }; count: number }>;
   hourlyActivity: Array<{ _id: number; count: number }>;
 }
+
+const countryFlag = (code: string) => {
+  try {
+    return code.toUpperCase().replace(/./g, (c) =>
+      String.fromCodePoint(127397 + c.charCodeAt(0))
+    );
+  } catch {
+    return "🌐";
+  }
+};
 
 export default function AnalyticsDashboard() {
   const [stats, setStats] = useState<AnalyticsStats | null>(null);
@@ -53,9 +56,7 @@ export default function AnalyticsDashboard() {
     try {
       const response = await fetch(`/api/analytics/stats?days=${days}`);
       const data = await response.json();
-      if (data.success) {
-        setStats(data.data);
-      }
+      if (data.success) setStats(data.data);
     } catch (error) {
       console.error("Error fetching stats:", error);
     } finally {
@@ -63,382 +64,229 @@ export default function AnalyticsDashboard() {
     }
   }, [days]);
 
+  useEffect(() => { fetchStats(); }, [fetchStats]);
+
   const handleLogout = async () => {
-    try {
-      await fetch("/api/admin/logout", { method: "POST" });
-      router.push("/admin/login");
-    } catch (error) {
-      console.error("Error al cerrar sesión:", error);
-    }
+    await fetch("/api/admin/logout", { method: "POST" });
+    router.push("/admin/login");
   };
 
-  useEffect(() => {
-    fetchStats();
-  }, [fetchStats]);
+  if (loading) return <AnalyticsDashboardSkeleton />;
+  if (!stats) return (
+    <div className="flex items-center justify-center min-h-screen w-full">
+      <p>No hay datos disponibles</p>
+    </div>
+  );
 
-  if (loading) {
-    return <AnalyticsDashboardSkeleton />;
-  }
-
-  if (!stats) {
-    return (
-      <div className="flex items-center justify-center min-h-screen w-full">
-        <p>No hay datos disponibles</p>
-      </div>
-    );
-  }
+  // Métricas calculadas
+  const avgPerDay = days > 0 ? Math.round(stats.overview.totalVisits / days) : 0;
+  const peakHour = stats.hourlyActivity.length > 0
+    ? stats.hourlyActivity.reduce((a, b) => a.count > b.count ? a : b)._id
+    : null;
+  const totalSocialClicks = stats.events.githubClicks + stats.events.linkedinClicks;
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 max-w-7xl">
+
       {/* Header */}
-      <div className="flex justify-between items-center mb-8">
+      <div className="flex justify-between items-center mb-8 flex-wrap gap-4">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Analytics Dashboard</h1>
+          <h1 className="text-3xl font-bold mb-1">Analytics Dashboard</h1>
           <div className="flex items-center gap-2">
-            <div
-              className={`w-2 h-2 rounded-full ${
-                getConnectionStatus() ? "bg-green-500" : "bg-red-500"
-              }`}
-            />
+            <div className={`w-2 h-2 rounded-full ${getConnectionStatus() ? "bg-green-500" : "bg-red-500"}`} />
             <span className="text-sm text-gray-600 dark:text-gray-400">
               {getConnectionStatus() ? "Conectado a MongoDB" : "Offline"}
             </span>
           </div>
         </div>
 
-        {/* Time Range Selector and Logout */}
-        <div className="flex gap-3 items-center">
-          <div className="flex gap-2">
+        <div className="flex gap-2 items-center flex-wrap">
+          <button
+            onClick={() => router.push("/admin/planner")}
+            className="px-4 py-2 rounded-lg bg-[#3D2548] text-[#C9A8D8] hover:bg-[#4D3558] transition-colors border border-[#5D4568] flex items-center gap-2 text-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+            Planning
+          </button>
+          <div className="flex gap-1">
             {[7, 30, 90].map((d) => (
               <button
                 key={d}
                 onClick={() => setDays(d)}
-                className={`px-4 py-2 rounded-lg transition-colors ${
+                className={`px-3 py-2 rounded-lg text-sm transition-colors ${
                   days === d
                     ? "bg-primary text-white"
                     : "bg-amber-100 dark:bg-[#3D2548] hover:bg-amber-200 dark:hover:bg-[#4D3558] text-gray-700 dark:text-gray-300"
                 }`}
               >
-                {d} días
+                {d}d
               </button>
             ))}
           </div>
           <button
             onClick={handleLogout}
-            className="px-4 py-2 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors border border-red-300 dark:border-red-700"
+            className="px-3 py-2 rounded-lg bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400 hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors border border-red-300 dark:border-red-700"
             title="Cerrar sesión"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
             </svg>
           </button>
         </div>
       </div>
 
-      {/* Today's Activity - Destacado */}
-      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg shadow-xl p-6 mb-8 text-white">
-        <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-          <span>📊</span> Actividad de Hoy
-        </h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-            <p className="text-sm opacity-90 mb-1">Visitas</p>
-            <p className="text-3xl font-bold">{stats.today.visits}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-            <p className="text-sm opacity-90 mb-1">Únicos</p>
-            <p className="text-3xl font-bold">{stats.today.uniqueVisitors}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-            <p className="text-sm opacity-90 mb-1">CV</p>
-            <p className="text-3xl font-bold">{stats.today.cvDownloads}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-            <p className="text-sm opacity-90 mb-1">Forms</p>
-            <p className="text-3xl font-bold">{stats.today.contactForms}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-            <p className="text-sm opacity-90 mb-1">GitHub</p>
-            <p className="text-3xl font-bold">{stats.today.githubClicks}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
-            <p className="text-sm opacity-90 mb-1">LinkedIn</p>
-            <p className="text-3xl font-bold">{stats.today.linkedinClicks}</p>
-          </div>
+      {/* Hoy */}
+      <div className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl shadow-xl p-6 mb-8 text-white">
+        <h2 className="text-lg font-semibold mb-4 opacity-90">Actividad de hoy</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <TodayCard label="Visitas" value={stats.today.visits} />
+          <TodayCard label="CVs descargados" value={stats.today.cvDownloads} />
+          <TodayCard label="Formularios" value={stats.today.contactForms} />
+          <TodayCard label="Clics sociales" value={stats.today.githubClicks + stats.today.linkedinClicks} />
         </div>
       </div>
 
-      {/* Overview Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatsCard
-          title="Visitas Totales"
-          value={stats.overview.totalVisits}
-          icon="👥"
-        />
-        <StatsCard
-          title="Visitantes Únicos"
-          value={stats.overview.uniqueVisitors}
-          icon="👤"
-        />
-        <StatsCard
-          title="Nuevos Visitantes"
-          value={stats.overview.firstTimeVisitors}
-          icon="🆕"
-          subtitle={`${stats.overview.returningVisitors} recurrentes`}
-        />
-        <StatsCard
-          title="Tasa de Conversión"
-          value={stats.overview.conversionRate}
-          icon="📈"
-        />
+      {/* Período */}
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">
+        Últimos {days} días
+      </p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <StatCard label="Visitas totales" value={stats.overview.totalVisits} sub={`~${avgPerDay}/día`} />
+        <StatCard label="Visitantes únicos" value={stats.overview.uniqueVisitors} />
+        <StatCard label="Visitantes recurrentes" value={stats.overview.returningVisitors} sub={`${stats.overview.firstTimeVisitors} nuevos`} />
+        <StatCard label="Hora pico" value={peakHour !== null ? `${peakHour}:00h` : "—"} />
       </div>
 
-      {/* Events Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <EventCard
-          title="CV Downloads"
-          value={stats.events.cvDownloads}
-          color="blue"
-        />
-        <EventCard
-          title="Formularios"
-          value={stats.events.contactForms}
-          color="green"
-        />
-        <EventCard
-          title="Clicks GitHub"
-          value={stats.events.githubClicks}
-          color="purple"
-        />
-        <EventCard
-          title="Clicks LinkedIn"
-          value={stats.events.linkedinClicks}
-          color="blue"
-        />
+      {/* Acciones del período */}
+      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 uppercase tracking-wider">
+        Acciones — últimos {days} días
+      </p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <ActionCard label="CV Downloads" value={stats.events.cvDownloads} color="border-blue-500" />
+        <ActionCard label="Formularios enviados" value={stats.events.contactForms} color="border-green-500" />
+        <ActionCard label="Clics GitHub" value={stats.events.githubClicks} color="border-gray-500" />
+        <ActionCard label="Clics LinkedIn" value={stats.events.linkedinClicks} color="border-sky-500" />
       </div>
 
-      {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Event Distribution */}
-        <div className="bg-amber-50 dark:bg-[#3D2548] rounded-lg shadow-lg p-6 border border-amber-200 dark:border-[#4D3558]">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
-            Distribución de Eventos
-          </h2>
-          <div className="space-y-3">
-            {stats.eventCounts.map((event) => (
-              <div
-                key={event._id}
-                className="flex items-center justify-between"
-              >
-                <div className="flex-1">
-                  <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium capitalize text-gray-700 dark:text-gray-300">
-                      {event._id.replace(/_/g, " ")}
-                    </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-400">{event.count}</span>
-                  </div>
-                  <div className="w-full bg-amber-200 dark:bg-[#4D3558] rounded-full h-2">
-                    <div
-                      className="bg-primary h-2 rounded-full transition-all"
-                      style={{
-                        width: `${
-                          (event.count /
-                            Math.max(
-                              ...stats.eventCounts.map((e) => e.count)
-                            )) *
-                          100
-                        }%`,
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Top Referrers */}
-        <div className="bg-amber-50 dark:bg-[#3D2548] rounded-lg shadow-lg p-6 border border-amber-200 dark:border-[#4D3558]">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">Top Referrers</h2>
-          <div className="space-y-3">
-            {stats.topReferrers.length > 0 ? (
-              stats.topReferrers.map((referrer, index) => (
-                <div
-                  key={referrer._id}
-                  className="flex items-center justify-between p-3 bg-amber-100 dark:bg-[#4D3558] rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg font-bold text-gray-400">
-                      #{index + 1}
-                    </span>
-                    <span className="text-sm truncate max-w-xs text-gray-700 dark:text-gray-300">
-                      {referrer._id || "Direct"}
-                    </span>
-                  </div>
-                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                    {referrer.count}
-                  </span>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                No hay referrers registrados
-              </p>
-            )}
-          </div>
-        </div>
-      </div>
-
-      {/* Location Stats */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
-        {/* Top Countries */}
-        <div className="bg-amber-50 dark:bg-[#3D2548] rounded-lg shadow-lg p-6 border border-amber-200 dark:border-[#4D3558]">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
-            <span>🌍</span> Países
-          </h2>
-          <div className="space-y-3">
-            {stats.topCountries && stats.topCountries.length > 0 ? (
-              stats.topCountries.map((country, index) => (
-                <div
-                  key={country._id.countryCode}
-                  className="flex items-center justify-between p-3 bg-amber-100 dark:bg-[#4D3558] rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg font-bold text-gray-400">
-                      #{index + 1}
-                    </span>
-                    <span className="text-2xl">
-                      {country._id.countryCode === "US" && "🇺🇸"}
-                      {country._id.countryCode === "MX" && "🇲🇽"}
-                      {country._id.countryCode === "ES" && "🇪🇸"}
-                      {country._id.countryCode === "AR" && "🇦🇷"}
-                      {country._id.countryCode === "CO" && "🇨🇴"}
-                      {country._id.countryCode === "CL" && "🇨🇱"}
-                      {country._id.countryCode === "PE" && "🇵🇪"}
-                      {country._id.countryCode === "VE" && "🇻🇪"}
-                      {!["US", "MX", "ES", "AR", "CO", "CL", "PE", "VE"].includes(country._id.countryCode) && "🌐"}
-                    </span>
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      {country._id.country}
-                    </span>
-                  </div>
-                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                    {country.count}
-                  </span>
-                </div>
-              ))
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                No hay datos de ubicación disponibles
-              </p>
-            )}
-          </div>
-        </div>
-
-        {/* Top Cities */}
-        <div className="bg-amber-50 dark:bg-[#3D2548] rounded-lg shadow-lg p-6 border border-amber-200 dark:border-[#4D3558]">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100 flex items-center gap-2">
-            <span>🏙️</span> Ciudades
-          </h2>
-          <div className="space-y-3">
-            {stats.topCities && stats.topCities.length > 0 ? (
-              stats.topCities.map((city, index) => (
-                <div
-                  key={`${city._id.city}-${city._id.country}`}
-                  className="flex items-center justify-between p-3 bg-amber-100 dark:bg-[#4D3558] rounded-lg"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="text-lg font-bold text-gray-400">
-                      #{index + 1}
-                    </span>
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        {city._id.city}
+      {/* Distribución + Referrers */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <Panel title="Distribución de eventos">
+          {stats.eventCounts.length > 0 ? (
+            <div className="space-y-3">
+              {stats.eventCounts.map((event) => {
+                const max = Math.max(...stats.eventCounts.map((e) => e.count));
+                const pct = max > 0 ? (event.count / max) * 100 : 0;
+                return (
+                  <div key={event._id}>
+                    <div className="flex justify-between mb-1">
+                      <span className="text-sm capitalize text-gray-700 dark:text-gray-300">
+                        {event._id.replace(/_/g, " ")}
                       </span>
-                      <span className="text-xs text-gray-500 dark:text-gray-400">
-                        {city._id.country}
-                      </span>
+                      <span className="text-sm font-medium text-gray-800 dark:text-gray-100">{event.count}</span>
+                    </div>
+                    <div className="w-full bg-amber-200 dark:bg-[#4D3558] rounded-full h-1.5">
+                      <div className="bg-primary h-1.5 rounded-full transition-all" style={{ width: `${pct}%` }} />
                     </div>
                   </div>
-                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">
-                    {city.count}
-                  </span>
+                );
+              })}
+            </div>
+          ) : <Empty />}
+        </Panel>
+
+        <Panel title="Top Referrers">
+          {stats.topReferrers.length > 0 ? (
+            <div className="space-y-2">
+              {stats.topReferrers.map((ref, i) => (
+                <div key={ref._id} className="flex items-center justify-between p-3 bg-amber-100 dark:bg-[#4D3558] rounded-lg">
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="text-xs font-bold text-gray-400 w-5">#{i + 1}</span>
+                    <span className="text-sm truncate text-gray-700 dark:text-gray-300">
+                      {ref._id || "Directo"}
+                    </span>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100 ml-2">{ref.count}</span>
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-500 dark:text-gray-400 text-center py-4">
-                No hay datos de ciudades disponibles
-              </p>
-            )}
-          </div>
-        </div>
+              ))}
+            </div>
+          ) : <Empty text="Sin referrers registrados" />}
+        </Panel>
       </div>
 
-      {/* Refresh Button */}
-      <div className="mt-8 text-center">
-        <button
-          onClick={fetchStats}
-          className="px-6 py-3 bg-amber-100 dark:bg-[#3D2548] text-gray-700 dark:text-gray-300 rounded-lg hover:bg-amber-200 dark:hover:bg-[#4D3558] transition-colors border border-amber-200 dark:border-[#4D3558]"
-        >
-          Actualizar Datos
-        </button>
+      {/* Geografía */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Panel title="🌍 Países">
+          {stats.topCountries.length > 0 ? (
+            <div className="space-y-2">
+              {stats.topCountries.map((c, i) => (
+                <div key={c._id.countryCode} className="flex items-center justify-between p-3 bg-amber-100 dark:bg-[#4D3558] rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-gray-400 w-5">#{i + 1}</span>
+                    <span className="text-xl">{countryFlag(c._id.countryCode)}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-300">{c._id.country}</span>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{c.count}</span>
+                </div>
+              ))}
+            </div>
+          ) : <Empty />}
+        </Panel>
+
+        <Panel title="🏙️ Ciudades">
+          {stats.topCities.length > 0 ? (
+            <div className="space-y-2">
+              {stats.topCities.map((c, i) => (
+                <div key={`${c._id.city}-${i}`} className="flex items-center justify-between p-3 bg-amber-100 dark:bg-[#4D3558] rounded-lg">
+                  <div className="flex items-center gap-3">
+                    <span className="text-xs font-bold text-gray-400 w-5">#{i + 1}</span>
+                    <div>
+                      <p className="text-sm text-gray-700 dark:text-gray-300">{c._id.city}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{c._id.country}</p>
+                    </div>
+                  </div>
+                  <span className="text-sm font-semibold text-gray-800 dark:text-gray-100">{c.count}</span>
+                </div>
+              ))}
+            </div>
+          ) : <Empty />}
+        </Panel>
       </div>
     </div>
   );
 }
 
-// Components
-const StatsCard: React.FC<{
-  title: string;
-  value: number | string;
-  icon: string;
-  subtitle?: string;
-}> = ({ title, value, icon, subtitle }) => (
-  <div className="bg-amber-50 dark:bg-[#3D2548] rounded-lg shadow-lg p-6 border border-amber-200 dark:border-[#4D3558]">
-    <div className="flex items-center justify-between mb-4">
-      <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300">
-        {title}
-      </h3>
-      <span className="text-2xl">{icon}</span>
-    </div>
-    <p className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-1">{value}</p>
-    {subtitle && (
-      <p className="text-sm text-gray-500 dark:text-gray-400">{subtitle}</p>
-    )}
+// Sub-components
+const TodayCard = ({ label, value }: { label: string; value: number }) => (
+  <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+    <p className="text-xs opacity-80 mb-1">{label}</p>
+    <p className="text-3xl font-bold">{value}</p>
   </div>
 );
 
-const EventCard: React.FC<{
-  title: string;
-  value: number;
-  color: string;
-}> = ({ title, value, color }) => {
-  const colorClasses = {
-    blue: "border-blue-500",
-    green: "border-green-500",
-    purple: "border-purple-500",
-    red: "border-red-500",
-  };
+const StatCard = ({ label, value, sub }: { label: string; value: number | string; sub?: string }) => (
+  <div className="bg-amber-50 dark:bg-[#3D2548] rounded-xl p-5 border border-amber-200 dark:border-[#4D3558] shadow-sm">
+    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{label}</p>
+    <p className="text-3xl font-bold text-gray-800 dark:text-gray-100">{value}</p>
+    {sub && <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{sub}</p>}
+  </div>
+);
 
-  return (
-    <div
-      className={`bg-amber-50 dark:bg-[#3D2548] rounded-lg shadow-lg p-6 border-l-4 ${colorClasses[color as keyof typeof colorClasses]}`}
-    >
-      <h3 className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2">
-        {title}
-      </h3>
-      <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">{value}</p>
-    </div>
-  );
-};
+const ActionCard = ({ label, value, color }: { label: string; value: number; color: string }) => (
+  <div className={`bg-amber-50 dark:bg-[#3D2548] rounded-xl p-5 border-l-4 ${color} shadow-sm`}>
+    <p className="text-xs text-gray-500 dark:text-gray-400 mb-2">{label}</p>
+    <p className="text-2xl font-bold text-gray-800 dark:text-gray-100">{value}</p>
+  </div>
+);
+
+const Panel = ({ title, children }: { title: string; children: React.ReactNode }) => (
+  <div className="bg-amber-50 dark:bg-[#3D2548] rounded-xl p-6 border border-amber-200 dark:border-[#4D3558] shadow-sm">
+    <h2 className="text-base font-semibold mb-4 text-gray-800 dark:text-gray-100">{title}</h2>
+    {children}
+  </div>
+);
+
+const Empty = ({ text = "Sin datos disponibles" }: { text?: string }) => (
+  <p className="text-gray-500 dark:text-gray-400 text-center py-6 text-sm">{text}</p>
+);

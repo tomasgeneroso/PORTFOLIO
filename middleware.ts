@@ -3,17 +3,17 @@ import type { NextRequest } from "next/server";
 
 export function middleware(request: NextRequest) {
   // Proteger rutas de admin
-  if (request.nextUrl.pathname.startsWith("/admin")) {
-    // Permitir acceso a la página de login sin autenticación
-    if (request.nextUrl.pathname === "/admin/login") {
-      return NextResponse.next();
-    }
+  const path = request.nextUrl.pathname;
 
-    // Verificar cookie de autenticación
+  if (path.startsWith("/api/admin/planner")) {
     const authCookie = request.cookies.get("admin-auth");
-
     if (!authCookie || authCookie.value !== "authenticated") {
-      // Redirigir a login si no está autenticado
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  } else if (path.startsWith("/admin")) {
+    if (path === "/admin/login" || path === "/admin/reset-password") return NextResponse.next();
+    const authCookie = request.cookies.get("admin-auth");
+    if (!authCookie || authCookie.value !== "authenticated") {
       return NextResponse.redirect(new URL("/admin/login", request.url));
     }
   }
@@ -22,5 +22,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/admin/:path*",
+  matcher: ["/admin/:path*", "/api/admin/planner/:path*"],
 };
