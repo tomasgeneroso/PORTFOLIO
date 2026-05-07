@@ -27,7 +27,7 @@ interface Task {
   id: string; projectId: string; title: string; description: string;
   column: string; color: string | null; photos: Photo[]; dueDate: string | null;
   emailNotification: EmailNotif | null; calendarEventId: string | null;
-  order: number; createdAt: string; updatedAt: string;
+  order: number; deletedAt: string | null; createdAt: string; updatedAt: string;
 }
 interface Project { id: string; name: string; color: string; columns: string[]; }
 interface Settings {
@@ -190,6 +190,8 @@ function PlannerContent() {
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [deletedTasks, setDeletedTasks] = useState<Task[]>([]);
+  const [showDeleted, setShowDeleted] = useState(false);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [calConnected, setCalConnected] = useState(false);
@@ -207,7 +209,7 @@ function PlannerContent() {
   // Form state
   const [taskForm, setTaskForm] = useState({ title: "", description: "", column: "Backlog", dueDate: "", emailEnabled: false, emailTo: "", emailMsg: "", emailSchedule: "" });
   const [settingsForm, setSettingsForm] = useState({ myEmail: "", smtpHost: "", smtpPort: 587, smtpSecure: false, smtpUser: "", smtpPass: "", gcClientId: "", gcClientSecret: "", gcRedirectUri: "" });
-  const [calForm, setCalForm] = useState({ title: "", description: "", start: "", end: "" });
+  const [calForm, setCalForm] = useState({ title: "", description: "", start: "", end: "", reminders: [] as number[] });
   const [newProjectForm, setNewProjectForm] = useState({ name: "", color: "#6366f1" });
   const [pendingPhotos, setPendingPhotos] = useState<Photo[]>([]);
   const [smtpTestResult, setSmtpTestResult] = useState("");
@@ -258,8 +260,12 @@ function PlannerContent() {
 
   const selectProject = async (project: Project) => {
     setCurrentProject(project);
-    const t = await api.get(`/api/admin/planner/tasks?projectId=${project.id}`);
-    setTasks(t);
+    const [active, deleted] = await Promise.all([
+      api.get(`/api/admin/planner/tasks?projectId=${project.id}`),
+      api.get(`/api/admin/planner/tasks?projectId=${project.id}&deleted=true`),
+    ]);
+    setTasks(active);
+    setDeletedTasks(deleted);
   };
 
   // ===== TASK MODAL =====
@@ -316,12 +322,14 @@ function PlannerContent() {
 
   const deleteTask = async () => {
     const task = taskModal.task as Task;
-    if (!task?.id || !confirm("¿Eliminar esta tarea?")) return;
+    if (!task?.id || !confirm("¿Mover esta tarea a Eliminados?")) return;
     try {
       await api.del(`/api/admin/planner/tasks/${task.id}`);
+      const deletedTask = { ...task, deletedAt: new Date().toISOString() };
       setTasks(prev => prev.filter(t => t.id !== task.id));
+      setDeletedTasks(prev => [deletedTask, ...prev]);
       setTaskModal({ open: false, task: null, isNew: true });
-      toast("Tarea eliminada", "info");
+      toast("Tarea movida a Eliminados (se borra en 30 días)", "info");
     } catch (e: any) { toast(e.message, "error"); }
   };
 
@@ -433,6 +441,8 @@ function PlannerContent() {
         end: calForm.end ? new Date(calForm.end).toISOString() : null,
         taskId: calModal.taskId,
         projectId: currentProject?.id,
+        projectColor: currentProject?.color,
+        reminders: calForm.reminders,
       });
 
       if (calModal.taskId) {
@@ -559,7 +569,7 @@ function PlannerContent() {
         <header className="h-14 flex-shrink-0 bg-[#120D1E] border-b border-[#2D1B3D] flex items-center justify-between px-5">
           <h1 className="font-bold text-base">{currentProject?.name || "Planner"}</h1>
           <div className="flex items-center gap-2">
-            <button onClick={() => { setCalForm({ title: "", description: "", start: "", end: "" }); setCalModal({ open: true }); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-[#3D2548] text-[#9B8BA3] hover:border-[#6366f1] hover:text-[#C9A8D8] transition-colors">
+            <button onClick={() => { setCalForm({ title: "", description: "", start: "", end: "", reminders: [] }); setCalModal({ open: true }); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-[#3D2548] text-[#9B8BA3] hover:border-[#6366f1] hover:text-[#C9A8D8] transition-colors">
               📅 Google Calendar
             </button>
             {currentProject && (
@@ -572,6 +582,7 @@ function PlannerContent() {
 
         {/* BOARD */}
         {currentProject ? (
+          <>
           <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             <div className="flex-1 flex gap-3 p-4 overflow-x-auto overflow-y-hidden">
               {currentProject.columns.map(col => {
@@ -606,6 +617,38 @@ function PlannerContent() {
               )}
             </DragOverlay>
           </DndContext>
+          {/* SECCIÓN ELIMINADOS */}
+          {currentProject && deletedTasks.length > 0 && (
+            <div className="flex-shrink-0 border-t border-[#2D1B3D] mx-4 mb-4">
+              <button
+                onClick={() => setShowDeleted(v => !v)}
+                className="flex items-center gap-2 w-full py-3 text-xs text-[#6B5B73] hover:text-[#9B8BA3] transition-colors"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className={`w-3.5 h-3.5 transition-transform ${showDeleted ? "rotate-90" : ""}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+                <span>Eliminados</span>
+                <span className="bg-[#2D1B3D] px-1.5 py-0.5 rounded-full">{deletedTasks.length}</span>
+                <span className="text-[10px] opacity-60 ml-1">· se borran a los 30 días</span>
+              </button>
+              {showDeleted && (
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 pb-4">
+                  {deletedTasks.map(task => {
+                    const daysLeft = task.deletedAt
+                      ? Math.max(0, 30 - Math.floor((Date.now() - new Date(task.deletedAt).getTime()) / 86400000))
+                      : 30;
+                    return (
+                      <div key={task.id} className="bg-[#1E1230] border border-[#2D1B3D] rounded-xl p-3 opacity-60">
+                        <p className="text-xs font-medium text-gray-300 line-clamp-2 mb-1">{task.title}</p>
+                        <p className="text-[10px] text-[#6B5B73]">Se borra en {daysLeft}d</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+          </>
         ) : (
           <div className="flex-1 flex items-center justify-center text-[#9B8BA3] flex-col gap-3">
             <div className="text-5xl">🎯</div>
@@ -666,7 +709,7 @@ function PlannerContent() {
               <div className="border border-[#3D2548] rounded-xl p-3">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="text-sm font-semibold">📅 Google Calendar</h3>
-                  <button onClick={() => { const t = taskModal.task as Task; setCalForm({ title: taskForm.title, description: taskForm.description, start: taskForm.dueDate, end: "" }); setCalModal({ open: true, taskId: t?.id }); }} className="text-xs px-2.5 py-1 rounded-lg border border-[#3D2548] hover:border-[#6366f1] text-[#9B8BA3] hover:text-[#C9A8D8] transition-colors">
+                  <button onClick={() => { const t = taskModal.task as Task; setCalForm({ title: taskForm.title, description: taskForm.description, start: taskForm.dueDate, end: "", reminders: [] }); setCalModal({ open: true, taskId: t?.id }); }} className="text-xs px-2.5 py-1 rounded-lg border border-[#3D2548] hover:border-[#6366f1] text-[#9B8BA3] hover:text-[#C9A8D8] transition-colors">
                     Crear evento
                   </button>
                 </div>
@@ -743,6 +786,40 @@ function PlannerContent() {
                 <div className="flex-1">
                   <label className="block text-xs text-[#9B8BA3] mb-1">Fin</label>
                   <input type="datetime-local" value={calForm.end} onChange={e => setCalForm(f => ({ ...f, end: e.target.value }))} className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 [color-scheme:dark]" />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs text-[#9B8BA3] mb-2">Avisos</label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { label: "2h", minutes: 120 },
+                    { label: "5h", minutes: 300 },
+                    { label: "12h", minutes: 720 },
+                    { label: "1 día", minutes: 1440 },
+                    { label: "2 días", minutes: 2880 },
+                    { label: "5 días", minutes: 7200 },
+                  ].map(({ label, minutes }) => {
+                    const active = calForm.reminders.includes(minutes);
+                    return (
+                      <button
+                        key={minutes}
+                        type="button"
+                        onClick={() => setCalForm(f => ({
+                          ...f,
+                          reminders: active
+                            ? f.reminders.filter(m => m !== minutes)
+                            : [...f.reminders, minutes],
+                        }))}
+                        className={`px-3 py-1.5 text-xs rounded-lg border transition-colors ${
+                          active
+                            ? "bg-[#6366f1] border-[#6366f1] text-white"
+                            : "border-[#3D2548] text-[#9B8BA3] hover:border-[#6366f1] hover:text-[#C9A8D8]"
+                        }`}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>

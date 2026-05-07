@@ -21,7 +21,11 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   if (!isAuth(req)) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   await connectDB();
-  await PlannerTask.deleteOne({ id: params.id });
+  // Soft delete — se purga automáticamente a los 30 días
+  await PlannerTask.findOneAndUpdate(
+    { id: params.id },
+    { deletedAt: new Date().toISOString(), updatedAt: new Date().toISOString() }
+  );
   return NextResponse.json({ ok: true });
 }
 

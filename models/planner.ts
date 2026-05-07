@@ -34,6 +34,7 @@ export interface IPlannerTask extends Document {
   emailNotification: EmailNotification | null;
   calendarEventId: string | null;
   order: number;
+  deletedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -88,6 +89,7 @@ const PlannerTaskSchema = new Schema({
     default: null,
   },
   color: { type: String, default: null },
+  deletedAt: { type: String, default: null },
   calendarEventId: { type: String, default: null },
   order: { type: Number, default: 0 },
   createdAt: { type: String, default: () => new Date().toISOString() },
