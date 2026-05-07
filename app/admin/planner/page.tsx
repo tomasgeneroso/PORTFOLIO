@@ -13,6 +13,7 @@ import {
   useSensors,
   closestCorners,
   useDroppable,
+  useDraggable,
 } from "@dnd-kit/core";
 import {
   SortableContext,
@@ -176,6 +177,52 @@ function SortableCard({ task, onClick }: { task: Task; onClick: () => void }) {
   );
 }
 
+// ===== HOME DRAGGABLE CARD =====
+function HomeDraggableCard({ task, project, onClick }: { task: Task; project: Project; onClick: () => void }) {
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: task.id, data: { task, projectId: project.id } });
+  const style = { transform: transform ? `translate(${transform.x}px, ${transform.y}px)` : undefined, opacity: isDragging ? 0.35 : 1, zIndex: isDragging ? 50 : undefined };
+  const due = task.dueDate ? new Date(task.dueDate) : null;
+  const overdue = due && due < new Date();
+
+  return (
+    <div ref={setNodeRef} style={style} className="relative">
+      {/* Drag handle */}
+      <div {...attributes} {...listeners} className="absolute top-2 right-2 cursor-grab active:cursor-grabbing touch-none p-1 opacity-0 group-hover:opacity-100 transition-opacity z-10" onClick={e => e.stopPropagation()}>
+        <svg className="w-3 h-3 text-[#4D3558]" viewBox="0 0 10 16" fill="currentColor">
+          <circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/>
+          <circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/>
+          <circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/>
+        </svg>
+      </div>
+      <div
+        onClick={onClick}
+        className="bg-[#1E1230] border border-[#2D1B3D] rounded-xl p-3 cursor-pointer hover:border-[#6366f1] hover:shadow-lg hover:shadow-purple-900/20 transition-all group"
+        style={task.color ? { borderLeftColor: task.color, borderLeftWidth: "3px" } : {}}
+      >
+        <p className="text-sm font-semibold text-gray-100 mb-1 leading-snug pr-5">{task.title}</p>
+        {task.description && <p className="text-xs text-[#9B8BA3] line-clamp-2 mb-2">{task.description}</p>}
+        {due && (
+          <p className={`text-xs flex items-center gap-1 ${overdue ? "text-red-400 font-medium" : "text-[#9B8BA3]"}`}>
+            📅 {due.toLocaleDateString("es-ES", { day: "numeric", month: "short" })}
+            {overdue && " · Vencida"}
+          </p>
+        )}
+        {task.calendarEventId && <span className="text-[10px] text-[#9B8BA3] bg-[#2D1B3D] px-1.5 py-0.5 rounded-full mt-1 inline-block">📅</span>}
+      </div>
+    </div>
+  );
+}
+
+// ===== HOME DROP ZONE =====
+function HomeDropZone({ projectId, children }: { projectId: string; children: React.ReactNode }) {
+  const { setNodeRef, isOver } = useDroppable({ id: `home-proj:${projectId}` });
+  return (
+    <div ref={setNodeRef} className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 min-h-[80px] rounded-xl p-2 transition-colors ${isOver ? "bg-[#6366f1]/10 ring-1 ring-[#6366f1]/40" : ""}`}>
+      {children}
+    </div>
+  );
+}
+
 // ===== MAIN COMPONENT =====
 export default function PlannerPage() {
   return (
@@ -197,6 +244,7 @@ function PlannerContent() {
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [homeMode, setHomeMode] = useState(true);
   const [allBacklogTasks, setAllBacklogTasks] = useState<Task[]>([]);
+  const [homeDraggingTask, setHomeDraggingTask] = useState<Task | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [calConnected, setCalConnected] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -269,6 +317,41 @@ function PlannerContent() {
       const all: Task[] = await api.get("/api/admin/planner/tasks");
       setAllBacklogTasks(all.filter(t => t.column === "Backlog"));
     } catch { /* silencioso */ }
+  };
+
+  const handleHomeDragEnd = async (e: DragEndEvent) => {
+    setHomeDraggingTask(null);
+    const { active, over } = e;
+    if (!over) return;
+
+    const overId = String(over.id);
+    if (!overId.startsWith("home-proj:")) return;
+
+    const targetProjectId = overId.replace("home-proj:", "");
+    const task = active.data.current?.task as Task;
+    if (!task || task.projectId === targetProjectId) return;
+
+    // Actualizar estado local inmediatamente
+    setAllBacklogTasks(prev => prev.map(t =>
+      t.id === task.id ? { ...t, projectId: targetProjectId } : t
+    ));
+
+    // Obtener color del proyecto destino para actualizar la card
+    const targetProject = projects.find(p => p.id === targetProjectId);
+
+    try {
+      await api.put(`/api/admin/planner/tasks/${task.id}`, {
+        projectId: targetProjectId,
+        color: targetProject?.color || task.color,
+      });
+      toast(`Tarea movida a ${targetProject?.name || "otro proyecto"}`, "success");
+    } catch (err: any) {
+      // Revertir si falla
+      setAllBacklogTasks(prev => prev.map(t =>
+        t.id === task.id ? { ...t, projectId: task.projectId } : t
+      ));
+      toast(err.message, "error");
+    }
   };
 
   const selectProject = async (project: Project) => {
@@ -606,79 +689,77 @@ function PlannerContent() {
 
         {/* HOME DASHBOARD */}
         {homeMode ? (
-          <div className="flex-1 overflow-y-auto p-6">
-            <div className="flex items-center justify-between mb-6">
-              <div>
-                <h2 className="text-xl font-bold text-gray-100">Backlog general</h2>
-                <p className="text-xs text-[#9B8BA3] mt-1">{allBacklogTasks.length} tarea{allBacklogTasks.length !== 1 ? "s" : ""} pendiente{allBacklogTasks.length !== 1 ? "s" : ""}</p>
+          <DndContext
+            sensors={sensors}
+            onDragStart={e => setHomeDraggingTask(e.active.data.current?.task ?? null)}
+            onDragEnd={handleHomeDragEnd}
+            onDragCancel={() => setHomeDraggingTask(null)}
+          >
+            <div className="flex-1 overflow-y-auto p-6">
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <h2 className="text-xl font-bold text-gray-100">Backlog general</h2>
+                  <p className="text-xs text-[#9B8BA3] mt-1">{allBacklogTasks.length} tarea{allBacklogTasks.length !== 1 ? "s" : ""} pendiente{allBacklogTasks.length !== 1 ? "s" : ""}</p>
+                </div>
+                <button onClick={loadHomeView} className="text-xs text-[#9B8BA3] hover:text-[#C9A8D8] transition-colors flex items-center gap-1.5">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                  </svg>
+                  Actualizar
+                </button>
               </div>
-              <button onClick={loadHomeView} className="text-xs text-[#9B8BA3] hover:text-[#C9A8D8] transition-colors flex items-center gap-1.5">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                Actualizar
-              </button>
+
+              {allBacklogTasks.length === 0 ? (
+                <div className="flex flex-col items-center justify-center h-64 text-[#9B8BA3]">
+                  <div className="text-5xl mb-3">🎉</div>
+                  <p className="font-medium">Sin tareas en Backlog</p>
+                  <p className="text-xs mt-1 opacity-60">Todo está al día</p>
+                </div>
+              ) : (
+                <>
+                  {projects.map(proj => {
+                    const projTasks = allBacklogTasks.filter(t => t.projectId === proj.id);
+                    // Mostrar todos los proyectos como drop zone aunque estén vacíos
+                    return (
+                      <div key={proj.id} className="mb-8">
+                        <div className="flex items-center gap-2 mb-3">
+                          <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: proj.color }} />
+                          <h3 className="text-sm font-semibold text-gray-200">{proj.name}</h3>
+                          <span className="text-xs text-[#9B8BA3] bg-[#2D1B3D] px-1.5 py-0.5 rounded-full">{projTasks.length}</span>
+                          <button onClick={() => selectProject(proj)} className="ml-auto text-[10px] text-[#6B5B73] hover:text-[#C9A8D8] transition-colors">
+                            Ver tablero →
+                          </button>
+                        </div>
+                        <HomeDropZone projectId={proj.id}>
+                          {projTasks.sort((a, b) => a.order - b.order).map(task => (
+                            <HomeDraggableCard
+                              key={task.id}
+                              task={task}
+                              project={proj}
+                              onClick={() => { selectProject(proj); setTimeout(() => openEditTask(task), 100); }}
+                            />
+                          ))}
+                          {projTasks.length === 0 && (
+                            <div className="col-span-full flex items-center justify-center h-16 border border-dashed border-[#2D1B3D] rounded-xl text-[#4D3568] text-xs">
+                              Soltá aquí para mover a este proyecto
+                            </div>
+                          )}
+                        </HomeDropZone>
+                      </div>
+                    );
+                  })}
+                </>
+              )}
             </div>
 
-            {allBacklogTasks.length === 0 ? (
-              <div className="flex flex-col items-center justify-center h-64 text-[#9B8BA3]">
-                <div className="text-5xl mb-3">🎉</div>
-                <p className="font-medium">Sin tareas en Backlog</p>
-                <p className="text-xs mt-1 opacity-60">Todo está al día</p>
-              </div>
-            ) : (
-              <>
-                {/* Agrupado por proyecto */}
-                {projects.map(proj => {
-                  const projTasks = allBacklogTasks.filter(t => t.projectId === proj.id);
-                  if (projTasks.length === 0) return null;
-                  return (
-                    <div key={proj.id} className="mb-8">
-                      <div className="flex items-center gap-2 mb-3">
-                        <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: proj.color }} />
-                        <h3 className="text-sm font-semibold text-gray-200">{proj.name}</h3>
-                        <span className="text-xs text-[#9B8BA3] bg-[#2D1B3D] px-1.5 py-0.5 rounded-full">{projTasks.length}</span>
-                        <button
-                          onClick={() => selectProject(proj)}
-                          className="ml-auto text-[10px] text-[#6B5B73] hover:text-[#C9A8D8] transition-colors"
-                        >
-                          Ver tablero →
-                        </button>
-                      </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
-                        {projTasks.sort((a, b) => a.order - b.order).map(task => {
-                          const due = task.dueDate ? new Date(task.dueDate) : null;
-                          const overdue = due && due < new Date();
-                          return (
-                            <div
-                              key={task.id}
-                              onClick={() => { selectProject(proj); setTimeout(() => openEditTask(task), 100); }}
-                              className="bg-[#1E1230] border border-[#2D1B3D] rounded-xl p-3 cursor-pointer hover:border-[#6366f1] hover:shadow-lg hover:shadow-purple-900/20 transition-all group"
-                              style={task.color ? { borderLeftColor: task.color, borderLeftWidth: "3px" } : {}}
-                            >
-                              <p className="text-sm font-semibold text-gray-100 mb-1 leading-snug group-hover:text-white">{task.title}</p>
-                              {task.description && (
-                                <p className="text-xs text-[#9B8BA3] line-clamp-2 mb-2">{task.description}</p>
-                              )}
-                              {due && (
-                                <p className={`text-xs flex items-center gap-1 ${overdue ? "text-red-400 font-medium" : "text-[#9B8BA3]"}`}>
-                                  📅 {due.toLocaleDateString("es-ES", { day: "numeric", month: "short" })}
-                                  {overdue && " · Vencida"}
-                                </p>
-                              )}
-                              {task.calendarEventId && (
-                                <span className="text-[10px] text-[#9B8BA3] bg-[#2D1B3D] px-1.5 py-0.5 rounded-full mt-1 inline-block">📅</span>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })}
-              </>
-            )}
-          </div>
+            <DragOverlay>
+              {homeDraggingTask && (
+                <div className="bg-[#2D1B3D] border border-[#6366f1] rounded-xl p-3 shadow-2xl shadow-purple-900/50 rotate-1 opacity-95 w-56">
+                  <p className="text-sm font-semibold text-gray-100">{homeDraggingTask.title}</p>
+                </div>
+              )}
+            </DragOverlay>
+          </DndContext>
         ) : null}
 
         {/* BOARD */}
