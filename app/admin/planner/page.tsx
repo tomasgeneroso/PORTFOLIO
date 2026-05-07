@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { Suspense, useState, useEffect, useCallback } from "react";
@@ -160,6 +161,7 @@ function SortableCard({ task, onClick }: { task: Task; onClick: () => void }) {
         {task.photos.length > 0 && (
           <div className="flex gap-1 mb-2 flex-wrap">
             {task.photos.slice(0, 4).map(p => (
+              // eslint-disable-next-line @next/next/no-img-element
               <img key={p.id} src={p.dataUrl} alt="" className="w-10 h-10 rounded-lg object-cover border border-[#4D3558]" />
             ))}
             {task.photos.length > 4 && <span className="text-xs text-[#9B8BA3] self-center">+{task.photos.length - 4}</span>}
@@ -246,7 +248,7 @@ function PlannerContent() {
     const cal = searchParams.get("cal");
     if (cal === "ok") toast("Google Calendar conectado correctamente", "success");
     if (cal === "error") toast("Error al conectar Google Calendar", "error");
-  }, []);
+  }, [searchParams, toast]);
 
   const loadSettingsForm = (s: any) => {
     setSettingsForm({
