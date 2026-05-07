@@ -284,9 +284,7 @@ function PlannerContent() {
         const calStat = await api.get("/api/admin/planner/calendar?action=status");
         setCalConnected(calStat.connected);
 
-        // Cargar home view con todos los backlogs
         await loadHomeView();
-        if (projs.length > 0) setProjects(projs);
       } catch (e: any) { toast(e.message, "error"); }
       finally { setLoading(false); }
     }
@@ -315,8 +313,10 @@ function PlannerContent() {
   const loadHomeView = async () => {
     try {
       const all: Task[] = await api.get("/api/admin/planner/tasks");
-      setAllBacklogTasks(all.filter(t => t.column === "Backlog"));
-    } catch { /* silencioso */ }
+      setAllBacklogTasks(all.filter((t: Task) => t.column === "Backlog" && !t.deletedAt));
+    } catch (e: any) {
+      toast("Error cargando home: " + e.message, "error");
+    }
   };
 
   const handleHomeDragEnd = async (e: DragEndEvent) => {
@@ -800,7 +800,7 @@ function PlannerContent() {
             </DragOverlay>
           </DndContext>
           {/* SECCIÓN ELIMINADOS */}
-          {currentProject && deletedTasks.length > 0 && (
+          {currentProject && (
             <div className="flex-shrink-0 border-t border-[#2D1B3D] mx-4 mb-4">
               <button
                 onClick={() => setShowDeleted(v => !v)}
@@ -811,22 +811,26 @@ function PlannerContent() {
                 </svg>
                 <span>Eliminados</span>
                 <span className="bg-[#2D1B3D] px-1.5 py-0.5 rounded-full">{deletedTasks.length}</span>
-                <span className="text-[10px] opacity-60 ml-1">· se borran a los 30 días</span>
+                {deletedTasks.length > 0 && <span className="text-[10px] opacity-60 ml-1">· se borran a los 30 días</span>}
               </button>
               {showDeleted && (
-                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 pb-4">
-                  {deletedTasks.map(task => {
-                    const daysLeft = task.deletedAt
-                      ? Math.max(0, 30 - Math.floor((Date.now() - new Date(task.deletedAt).getTime()) / 86400000))
-                      : 30;
-                    return (
-                      <div key={task.id} className="bg-[#1E1230] border border-[#2D1B3D] rounded-xl p-3 opacity-60">
-                        <p className="text-xs font-medium text-gray-300 line-clamp-2 mb-1">{task.title}</p>
-                        <p className="text-[10px] text-[#6B5B73]">Se borra en {daysLeft}d</p>
-                      </div>
-                    );
-                  })}
-                </div>
+                deletedTasks.length === 0 ? (
+                  <p className="text-xs text-[#4D3568] pb-4 pl-5">No hay tareas eliminadas</p>
+                ) : (
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 pb-4">
+                    {deletedTasks.map(task => {
+                      const daysLeft = task.deletedAt
+                        ? Math.max(0, 30 - Math.floor((Date.now() - new Date(task.deletedAt).getTime()) / 86400000))
+                        : 30;
+                      return (
+                        <div key={task.id} className="bg-[#1E1230] border border-[#2D1B3D] rounded-xl p-3 opacity-60">
+                          <p className="text-xs font-medium text-gray-300 line-clamp-2 mb-1">{task.title}</p>
+                          <p className="text-[10px] text-[#6B5B73]">Se borra en {daysLeft}d</p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )
               )}
             </div>
           )}
