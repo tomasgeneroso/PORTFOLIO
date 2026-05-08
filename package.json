@@ -28,7 +28,6 @@
       "eslint": "8.48.0",
       "eslint-config-next": "^15.4.0-canary.51",
       "framer-motion": "^12.23.12",
-      "googleapis": "^171.4.0",
       "intl-messageformat": "^10.5.0",
       "keen-slider": "^6.8.6",
       "mongodb": "^6.8.0",
