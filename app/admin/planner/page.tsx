@@ -266,6 +266,8 @@ function PlannerContent() {
   const [pendingPhotos, setPendingPhotos] = useState<Photo[]>([]);
   const [smtpTestResult, setSmtpTestResult] = useState("");
 
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   // DnD
   const [activeTask, setActiveTask] = useState<Task | null>(null);
   const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 5 } }));
@@ -357,6 +359,7 @@ function PlannerContent() {
   const selectProject = async (project: Project) => {
     setHomeMode(false);
     setCurrentProject(project);
+    setSidebarOpen(false);
     const [active, deleted] = await Promise.all([
       api.get(`/api/admin/planner/tasks?projectId=${project.id}`),
       api.get(`/api/admin/planner/tasks?projectId=${project.id}&deleted=true`),
@@ -621,15 +624,21 @@ function PlannerContent() {
 
   return (
     <div className="flex h-screen bg-[#1a1025] overflow-hidden text-gray-100">
+      {/* Mobile sidebar backdrop */}
+      <div
+        className={`md:hidden fixed inset-0 bg-black/50 z-20 transition-opacity duration-300 ${sidebarOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        onClick={() => setSidebarOpen(false)}
+      />
+
       {/* SIDEBAR */}
-      <aside className="w-52 flex-shrink-0 bg-[#120D1E] border-r border-[#2D1B3D] flex flex-col">
+      <aside className={`fixed md:relative inset-y-0 left-0 z-30 w-64 md:w-52 flex-shrink-0 bg-[#120D1E] border-r border-[#2D1B3D] flex flex-col transition-transform duration-300 ${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0`}>
         <div className="p-4 border-b border-[#2D1B3D]">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-lg">⚡</span>
             <span className="font-bold text-base tracking-tight">Planner</span>
           </div>
           <button
-            onClick={() => { setHomeMode(true); setCurrentProject(null); loadHomeView(); }}
+            onClick={() => { setHomeMode(true); setCurrentProject(null); loadHomeView(); setSidebarOpen(false); }}
             className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold mb-2 transition-all border ${
               homeMode
                 ? "bg-[#6366f1] border-[#6366f1] text-white shadow-lg shadow-indigo-900/30"
@@ -674,15 +683,25 @@ function PlannerContent() {
       {/* MAIN */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* TOPBAR */}
-        <header className="h-14 flex-shrink-0 bg-[#120D1E] border-b border-[#2D1B3D] flex items-center justify-between px-5">
-          <h1 className="font-bold text-base">{homeMode ? "Planner" : currentProject?.name || "Planner"}</h1>
+        <header className="h-14 flex-shrink-0 bg-[#120D1E] border-b border-[#2D1B3D] flex items-center justify-between px-4">
           <div className="flex items-center gap-2">
-            <button onClick={() => { setCalForm({ title: "", description: "", start: "", end: "", reminders: [] }); setCalModal({ open: true }); }} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg border border-[#3D2548] text-[#9B8BA3] hover:border-[#6366f1] hover:text-[#C9A8D8] transition-colors">
-              📅 Google Calendar
+            <button
+              onClick={() => setSidebarOpen(v => !v)}
+              className="md:hidden p-1.5 rounded-lg text-[#9B8BA3] hover:bg-[#2D1B3D] transition-colors"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <h1 className="font-bold text-base truncate max-w-[160px] sm:max-w-none">{homeMode ? "Planner" : currentProject?.name || "Planner"}</h1>
+          </div>
+          <div className="flex items-center gap-2">
+            <button onClick={() => { setCalForm({ title: "", description: "", start: "", end: "", reminders: [] }); setCalModal({ open: true }); }} className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-lg border border-[#3D2548] text-[#9B8BA3] hover:border-[#6366f1] hover:text-[#C9A8D8] transition-colors">
+              <span>📅</span><span className="hidden sm:inline">Google Calendar</span>
             </button>
             {!homeMode && currentProject && (
-              <button onClick={() => openNewTask()} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-lg bg-[#6366f1] hover:bg-[#4f46e5] text-white transition-colors">
-                + Nueva tarea
+              <button onClick={() => openNewTask()} className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 text-xs font-medium rounded-lg bg-[#6366f1] hover:bg-[#4f46e5] text-white transition-colors">
+                <span>+</span><span className="hidden sm:inline ml-0.5">Nueva tarea</span>
               </button>
             )}
           </div>
@@ -846,19 +865,19 @@ function PlannerContent() {
 
       {/* ===== MODAL: TAREA ===== */}
       {taskModal.open && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) setTaskModal({ open: false, task: null, isNew: true }); }}>
-          <div className="bg-[#1E1230] border border-[#3D2548] rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4" onClick={e => { if (e.target === e.currentTarget) setTaskModal({ open: false, task: null, isNew: true }); }}>
+          <div className="bg-[#1E1230] border-t sm:border border-[#3D2548] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl max-h-[92vh] flex flex-col shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#3D2548] flex-shrink-0">
               <h2 className="font-bold text-base">{taskModal.isNew ? "Nueva tarea" : "Editar tarea"}</h2>
               <button onClick={() => setTaskModal({ open: false, task: null, isNew: true })} className="w-7 h-7 rounded-lg bg-[#2D1B3D] hover:bg-red-900/40 text-[#9B8BA3] hover:text-red-400 flex items-center justify-center text-sm transition-colors">✕</button>
             </div>
             <div className="flex-1 overflow-y-auto p-5 space-y-4">
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-3">
                 <div className="flex-1">
                   <label className="block text-xs font-semibold text-[#9B8BA3] uppercase tracking-wider mb-1.5">Título *</label>
                   <input value={taskForm.title} onChange={e => setTaskForm(f => ({ ...f, title: e.target.value }))} placeholder="Nombre de la tarea" onKeyDown={e => e.key === "Enter" && e.ctrlKey && saveTask()} className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] focus:ring-1 focus:ring-[#6366f1]/30 text-gray-100 placeholder-[#5D4568]" />
                 </div>
-                <div className="w-40">
+                <div className="sm:w-40">
                   <label className="block text-xs font-semibold text-[#9B8BA3] uppercase tracking-wider mb-1.5">Columna</label>
                   <select value={taskForm.column} onChange={e => setTaskForm(f => ({ ...f, column: e.target.value }))} className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100">
                     {currentProject?.columns.map(c => <option key={c} value={c}>{c}</option>)}
@@ -947,7 +966,7 @@ function PlannerContent() {
                 </div>
                 {taskForm.emailEnabled && (
                   <div className="space-y-2.5">
-                    <div className="flex gap-2">
+                    <div className="flex flex-col sm:flex-row gap-2">
                       <div className="flex-1">
                         <label className="block text-xs text-[#9B8BA3] mb-1">Destinatario</label>
                         <input type="email" value={taskForm.emailTo} onChange={e => setTaskForm(f => ({ ...f, emailTo: e.target.value }))} placeholder="correo@ejemplo.com" className="w-full px-3 py-1.5 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]" />
@@ -983,8 +1002,8 @@ function PlannerContent() {
 
       {/* ===== MODAL: CALENDAR ===== */}
       {calModal.open && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) setCalModal({ open: false }); }}>
-          <div className="bg-[#1E1230] border border-[#3D2548] rounded-2xl w-full max-w-md shadow-2xl">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4" onClick={e => { if (e.target === e.currentTarget) setCalModal({ open: false }); }}>
+          <div className="bg-[#1E1230] border-t sm:border border-[#3D2548] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md shadow-2xl max-h-[92vh] overflow-y-auto">
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#3D2548]">
               <h2 className="font-bold text-base">📅 Crear evento en Google Calendar</h2>
               <button onClick={() => setCalModal({ open: false })} className="w-7 h-7 rounded-lg bg-[#2D1B3D] hover:bg-red-900/40 text-[#9B8BA3] hover:text-red-400 flex items-center justify-center text-sm transition-colors">✕</button>
@@ -999,7 +1018,7 @@ function PlannerContent() {
                 <label className="block text-xs text-[#9B8BA3] mb-1">Descripción</label>
                 <textarea value={calForm.description} onChange={e => setCalForm(f => ({ ...f, description: e.target.value }))} rows={2} className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 resize-none" />
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <div className="flex-1">
                   <label className="block text-xs text-[#9B8BA3] mb-1">Inicio *</label>
                   <input type="datetime-local" value={calForm.start} onChange={e => setCalForm(f => ({ ...f, start: e.target.value }))} className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 [color-scheme:dark]" />
@@ -1054,8 +1073,8 @@ function PlannerContent() {
 
       {/* ===== MODAL: CONFIGURACIÓN ===== */}
       {settingsModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) setSettingsModal(false); }}>
-          <div className="bg-[#1E1230] border border-[#3D2548] rounded-2xl w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4" onClick={e => { if (e.target === e.currentTarget) setSettingsModal(false); }}>
+          <div className="bg-[#1E1230] border-t sm:border border-[#3D2548] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-2xl max-h-[92vh] flex flex-col shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#3D2548] flex-shrink-0">
               <h2 className="font-bold text-base">⚙️ Configuración</h2>
               <button onClick={() => setSettingsModal(false)} className="w-7 h-7 rounded-lg bg-[#2D1B3D] hover:bg-red-900/40 text-[#9B8BA3] hover:text-red-400 flex items-center justify-center text-sm transition-colors">✕</button>
@@ -1073,8 +1092,8 @@ function PlannerContent() {
               <section className="border-t border-[#2D1B3D] pt-5">
                 <h3 className="text-sm font-bold mb-1 text-gray-200">📧 Configuración SMTP</h3>
                 <p className="text-xs text-[#9B8BA3] mb-3">Para Gmail: host <code className="bg-[#2D1B3D] px-1 rounded text-purple-300">smtp.gmail.com</code>, puerto <code className="bg-[#2D1B3D] px-1 rounded text-purple-300">587</code>, SSL desactivado. Usa una Contraseña de App.</p>
-                <div className="grid grid-cols-3 gap-2 mb-2">
-                  <div className="col-span-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-2">
+                  <div className="sm:col-span-2">
                     <label className="block text-xs text-[#9B8BA3] mb-1">Servidor SMTP</label>
                     <input value={settingsForm.smtpHost} onChange={e => setSettingsForm(f => ({ ...f, smtpHost: e.target.value }))} placeholder="smtp.gmail.com" className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]" />
                   </div>
@@ -1083,7 +1102,7 @@ function PlannerContent() {
                     <input type="number" value={settingsForm.smtpPort} onChange={e => setSettingsForm(f => ({ ...f, smtpPort: Number(e.target.value) }))} className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100" />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-2 mb-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
                   <div>
                     <label className="block text-xs text-[#9B8BA3] mb-1">Usuario (email)</label>
                     <input value={settingsForm.smtpUser} onChange={e => setSettingsForm(f => ({ ...f, smtpUser: e.target.value }))} placeholder="usuario@gmail.com" className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]" />
@@ -1109,7 +1128,7 @@ function PlannerContent() {
                   En Google Cloud Console, activa Calendar API y crea credenciales OAuth 2.0 con redirect URI:<br />
                   <code className="bg-[#2D1B3D] px-1 rounded text-purple-300 text-xs break-all">{typeof window !== "undefined" ? `${window.location.origin}/api/admin/planner/calendar/callback` : "/api/admin/planner/calendar/callback"}</code>
                 </p>
-                <div className="grid grid-cols-2 gap-2 mb-2">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
                   <div>
                     <label className="block text-xs text-[#9B8BA3] mb-1">Client ID</label>
                     <input value={settingsForm.gcClientId} onChange={e => setSettingsForm(f => ({ ...f, gcClientId: e.target.value }))} placeholder="xxxx.apps.googleusercontent.com" className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]" />
@@ -1135,8 +1154,8 @@ function PlannerContent() {
 
       {/* ===== MODAL: EDITAR PROYECTO ===== */}
       {editProjectModal && currentProject && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) setEditProjectModal(false); }}>
-          <div className="bg-[#1E1230] border border-[#3D2548] rounded-2xl w-full max-w-sm shadow-2xl">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4" onClick={e => { if (e.target === e.currentTarget) setEditProjectModal(false); }}>
+          <div className="bg-[#1E1230] border-t sm:border border-[#3D2548] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-sm shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#3D2548]">
               <h2 className="font-bold text-base">Editar proyecto</h2>
               <button onClick={() => setEditProjectModal(false)} className="w-7 h-7 rounded-lg bg-[#2D1B3D] hover:bg-red-900/40 text-[#9B8BA3] hover:text-red-400 flex items-center justify-center text-sm transition-colors">✕</button>
@@ -1178,8 +1197,8 @@ function PlannerContent() {
 
       {/* ===== MODAL: NUEVO PROYECTO ===== */}
       {newProjectModal && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={e => { if (e.target === e.currentTarget) setNewProjectModal(false); }}>
-          <div className="bg-[#1E1230] border border-[#3D2548] rounded-2xl w-full max-w-sm shadow-2xl">
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4" onClick={e => { if (e.target === e.currentTarget) setNewProjectModal(false); }}>
+          <div className="bg-[#1E1230] border-t sm:border border-[#3D2548] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-sm shadow-2xl">
             <div className="flex items-center justify-between px-5 py-4 border-b border-[#3D2548]">
               <h2 className="font-bold text-base">Nuevo proyecto</h2>
               <button onClick={() => setNewProjectModal(false)} className="w-7 h-7 rounded-lg bg-[#2D1B3D] hover:bg-red-900/40 text-[#9B8BA3] hover:text-red-400 flex items-center justify-center text-sm transition-colors">✕</button>
