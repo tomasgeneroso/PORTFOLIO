@@ -243,7 +243,10 @@ function PlannerContent() {
   const [showDeleted, setShowDeleted] = useState(false);
   const [currentProject, setCurrentProject] = useState<Project | null>(null);
   const [homeMode, setHomeMode] = useState(true);
+  const [statsMode, setStatsMode] = useState(false);
   const [allBacklogTasks, setAllBacklogTasks] = useState<Task[]>([]);
+  const [allTasksForStats, setAllTasksForStats] = useState<Task[]>([]);
+  const [statsLoading, setStatsLoading] = useState(false);
   const [homeDraggingTask, setHomeDraggingTask] = useState<Task | null>(null);
   const [settings, setSettings] = useState<Settings | null>(null);
   const [calConnected, setCalConnected] = useState(false);
@@ -255,7 +258,8 @@ function PlannerContent() {
   const [calModal, setCalModal] = useState<{ open: boolean; taskId?: string }>({ open: false });
   const [newProjectModal, setNewProjectModal] = useState(false);
   const [editProjectModal, setEditProjectModal] = useState(false);
-  const [editProjectForm, setEditProjectForm] = useState({ name: "", color: "#6366f1" });
+  const [editProjectForm, setEditProjectForm] = useState({ name: "", color: "#6366f1", columns: [] as string[] });
+  const [newColInput, setNewColInput] = useState("");
   const [lightbox, setLightbox] = useState<{ open: boolean; photos: Photo[]; idx: number }>({ open: false, photos: [], idx: 0 });
 
   // Form state
@@ -321,6 +325,19 @@ function PlannerContent() {
     }
   };
 
+  const loadStats = async () => {
+    setStatsMode(true);
+    setHomeMode(false);
+    setCurrentProject(null);
+    setSidebarOpen(false);
+    setStatsLoading(true);
+    try {
+      const all: Task[] = await api.get("/api/admin/planner/tasks");
+      setAllTasksForStats(all.filter((t: Task) => !t.deletedAt));
+    } catch (e: any) { toast(e.message, "error"); }
+    finally { setStatsLoading(false); }
+  };
+
   const handleHomeDragEnd = async (e: DragEndEvent) => {
     setHomeDraggingTask(null);
     const { active, over } = e;
@@ -358,6 +375,7 @@ function PlannerContent() {
 
   const selectProject = async (project: Project) => {
     setHomeMode(false);
+    setStatsMode(false);
     setCurrentProject(project);
     setSidebarOpen(false);
     const [active, deleted] = await Promise.all([
@@ -575,17 +593,26 @@ function PlannerContent() {
 
   // ===== EDIT PROJECT =====
   const openEditProject = (p: Project) => {
-    setEditProjectForm({ name: p.name, color: p.color });
+    setEditProjectForm({ name: p.name, color: p.color, columns: [...p.columns] });
+    setNewColInput("");
     setEditProjectModal(true);
   };
 
   const updateProject = async () => {
     if (!currentProject) return;
     if (!editProjectForm.name.trim()) { toast("El nombre es obligatorio", "error"); return; }
+    if (editProjectForm.columns.length === 0) { toast("Debe tener al menos una columna", "error"); return; }
     try {
-      const updated = await api.put(`/api/admin/planner/projects/${currentProject.id}`, editProjectForm);
+      const updated = await api.put(`/api/admin/planner/projects/${currentProject.id}`, {
+        name: editProjectForm.name,
+        color: editProjectForm.color,
+        columns: editProjectForm.columns,
+      });
       setProjects(prev => prev.map(p => p.id === updated.id ? updated : p));
       setCurrentProject(updated);
+      // Reload tasks since orphaned tasks may have moved columns
+      const active = await api.get(`/api/admin/planner/tasks?projectId=${updated.id}`);
+      setTasks(active);
       setEditProjectModal(false);
       toast("Proyecto actualizado", "success");
     } catch (e: any) { toast(e.message, "error"); }
@@ -638,14 +665,24 @@ function PlannerContent() {
             <span className="font-bold text-base tracking-tight">Planner</span>
           </div>
           <button
-            onClick={() => { setHomeMode(true); setCurrentProject(null); loadHomeView(); setSidebarOpen(false); }}
-            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold mb-2 transition-all border ${
-              homeMode
+            onClick={() => { setHomeMode(true); setStatsMode(false); setCurrentProject(null); loadHomeView(); setSidebarOpen(false); }}
+            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold mb-1 transition-all border ${
+              homeMode && !statsMode
                 ? "bg-[#6366f1] border-[#6366f1] text-white shadow-lg shadow-indigo-900/30"
                 : "border-[#3D2548] text-gray-300 hover:bg-[#2D1B3D] hover:border-[#6366f1] hover:text-white"
             }`}
           >
             🏠 Home
+          </button>
+          <button
+            onClick={loadStats}
+            className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-semibold mb-2 transition-all border ${
+              statsMode
+                ? "bg-[#6366f1] border-[#6366f1] text-white shadow-lg shadow-indigo-900/30"
+                : "border-[#3D2548] text-gray-300 hover:bg-[#2D1B3D] hover:border-[#6366f1] hover:text-white"
+            }`}
+          >
+            📊 Estadísticas
           </button>
           <button onClick={() => setNewProjectModal(true)} className="w-full py-2 px-3 text-xs font-medium text-[#9B8BA3] border border-dashed border-[#3D2548] rounded-lg hover:border-[#6366f1] hover:text-[#C9A8D8] transition-colors text-left">
             + Nuevo proyecto
@@ -782,8 +819,114 @@ function PlannerContent() {
           </DndContext>
         ) : null}
 
+        {/* STATS DASHBOARD */}
+        {statsMode && (
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h2 className="text-xl font-bold text-gray-100">Estadísticas</h2>
+                <p className="text-xs text-[#9B8BA3] mt-1">Resumen de todas las tareas</p>
+              </div>
+              <button onClick={loadStats} className="text-xs text-[#9B8BA3] hover:text-[#C9A8D8] transition-colors flex items-center gap-1.5">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" /></svg>
+                Actualizar
+              </button>
+            </div>
+
+            {statsLoading ? (
+              <div className="flex items-center justify-center h-40">
+                <div className="w-8 h-8 border-2 border-purple-500 border-t-transparent rounded-full animate-spin" />
+              </div>
+            ) : (() => {
+              const total = allTasksForStats.length;
+              const done = allTasksForStats.filter(t => t.column === "Terminado").length;
+              const pending = total - done;
+              const overdue = allTasksForStats.filter(t => t.dueDate && new Date(t.dueDate) < new Date() && t.column !== "Terminado").length;
+              const donePercent = total > 0 ? Math.round((done / total) * 100) : 0;
+
+              // Column distribution across all projects
+              const colCounts: Record<string, number> = {};
+              allTasksForStats.forEach(t => { colCounts[t.column] = (colCounts[t.column] || 0) + 1; });
+
+              return (
+                <>
+                  {/* Summary cards */}
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
+                    {[
+                      { label: "Total", value: total, color: "#6366f1", icon: "📋" },
+                      { label: "Terminadas", value: `${done} (${donePercent}%)`, color: "#22c55e", icon: "✅" },
+                      { label: "Pendientes", value: pending, color: "#f59e0b", icon: "⏳" },
+                      { label: "Vencidas", value: overdue, color: "#ef4444", icon: "🚨" },
+                    ].map(({ label, value, color, icon }) => (
+                      <div key={label} className="bg-[#1E1230] border border-[#2D1B3D] rounded-xl p-4" style={{ borderLeftColor: color, borderLeftWidth: "3px" }}>
+                        <div className="text-lg mb-1">{icon}</div>
+                        <div className="text-2xl font-bold text-gray-100">{value}</div>
+                        <div className="text-xs text-[#9B8BA3] mt-1">{label}</div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Per-project breakdown */}
+                  <h3 className="text-sm font-bold text-gray-200 mb-3 uppercase tracking-wider">Por proyecto</h3>
+                  <div className="space-y-3 mb-8">
+                    {projects.map(proj => {
+                      const projTasks = allTasksForStats.filter(t => t.projectId === proj.id);
+                      const projDone = projTasks.filter(t => t.column === "Terminado").length;
+                      const projTotal = projTasks.length;
+                      const pct = projTotal > 0 ? Math.round((projDone / projTotal) * 100) : 0;
+                      return (
+                        <div key={proj.id} className="bg-[#1E1230] border border-[#2D1B3D] rounded-xl p-4">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="flex items-center gap-2">
+                              <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ background: proj.color }} />
+                              <span className="text-sm font-semibold text-gray-200">{proj.name}</span>
+                            </div>
+                            <div className="flex items-center gap-3 text-xs text-[#9B8BA3]">
+                              <span className="text-green-400 font-medium">{projDone} terminadas</span>
+                              <span>{projTotal} total</span>
+                              <button onClick={() => selectProject(proj)} className="text-[#6366f1] hover:text-indigo-300 transition-colors">Ver tablero →</button>
+                            </div>
+                          </div>
+                          <div className="w-full bg-[#2D1B3D] rounded-full h-2">
+                            <div className="h-2 rounded-full transition-all" style={{ width: `${pct}%`, background: proj.color }} />
+                          </div>
+                          <div className="flex gap-3 mt-2 flex-wrap">
+                            {proj.columns.map(col => {
+                              const count = projTasks.filter(t => t.column === col).length;
+                              return count > 0 ? (
+                                <span key={col} className="text-[10px] text-[#9B8BA3] bg-[#2D1B3D] px-2 py-0.5 rounded-full">
+                                  {col}: {count}
+                                </span>
+                              ) : null;
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Column distribution */}
+                  {Object.keys(colCounts).length > 0 && (
+                    <>
+                      <h3 className="text-sm font-bold text-gray-200 mb-3 uppercase tracking-wider">Distribución por estado</h3>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                        {Object.entries(colCounts).sort((a, b) => b[1] - a[1]).map(([col, count]) => (
+                          <div key={col} className="bg-[#1E1230] border border-[#2D1B3D] rounded-xl p-3 text-center">
+                            <div className="text-xl font-bold text-gray-100">{count}</div>
+                            <div className="text-xs text-[#9B8BA3] mt-1 truncate">{col}</div>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  )}
+                </>
+              );
+            })()}
+          </div>
+        )}
+
         {/* BOARD */}
-        {!homeMode && currentProject ? (
+        {!homeMode && !statsMode && currentProject ? (
           <>
           <DndContext sensors={sensors} collisionDetection={closestCorners} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>
             <div className="flex-1 flex gap-3 p-4 overflow-x-auto overflow-y-hidden">
@@ -855,7 +998,7 @@ function PlannerContent() {
             </div>
           )}
           </>
-        ) : !homeMode ? (
+        ) : !homeMode && !statsMode ? (
           <div className="flex-1 flex items-center justify-center text-[#9B8BA3] flex-col gap-3">
             <div className="text-5xl">🎯</div>
             <p className="font-medium">Selecciona un proyecto</p>
@@ -987,6 +1130,32 @@ function PlannerContent() {
                 )}
               </div>
             </div>
+            {/* Mover a otro proyecto */}
+            {!taskModal.isNew && projects.length > 1 && (
+              <div className="px-5 py-3 border-t border-[#2D1B3D] flex items-center gap-2 flex-wrap">
+                <span className="text-xs text-[#9B8BA3]">Mover a:</span>
+                {projects.filter(p => p.id !== currentProject?.id).map(p => (
+                  <button
+                    key={p.id}
+                    onClick={async () => {
+                      const task = taskModal.task as Task;
+                      if (!task?.id) return;
+                      try {
+                        await api.put(`/api/admin/planner/tasks/${task.id}`, { projectId: p.id, color: p.color });
+                        setTasks(prev => prev.filter(t => t.id !== task.id));
+                        setTaskModal({ open: false, task: null, isNew: true });
+                        toast(`Tarea movida a ${p.name}`, "success");
+                        loadHomeView();
+                      } catch (e: any) { toast(e.message, "error"); }
+                    }}
+                    className="flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-lg border border-[#3D2548] text-[#9B8BA3] hover:border-[#6366f1] hover:text-gray-200 transition-colors"
+                  >
+                    <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: p.color }} />
+                    {p.name}
+                  </button>
+                ))}
+              </div>
+            )}
             <div className="flex items-center justify-between px-5 py-4 border-t border-[#3D2548] flex-shrink-0">
               {!taskModal.isNew ? (
                 <button onClick={deleteTask} className="px-4 py-2 text-xs font-medium rounded-lg bg-red-900/30 hover:bg-red-900/50 border border-red-800/40 text-red-400 transition-colors">Eliminar</button>
@@ -1021,7 +1190,11 @@ function PlannerContent() {
               <div className="flex flex-col sm:flex-row gap-2">
                 <div className="flex-1">
                   <label className="block text-xs text-[#9B8BA3] mb-1">Inicio *</label>
-                  <input type="datetime-local" value={calForm.start} onChange={e => setCalForm(f => ({ ...f, start: e.target.value }))} className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 [color-scheme:dark]" />
+                  <input type="datetime-local" value={calForm.start} onChange={e => {
+                    const start = e.target.value;
+                    const autoEnd = start ? new Date(new Date(start).getTime() + 3600000).toISOString().slice(0, 16) : "";
+                    setCalForm(f => ({ ...f, start, end: f.end || autoEnd }));
+                  }} className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 [color-scheme:dark]" />
                 </div>
                 <div className="flex-1">
                   <label className="block text-xs text-[#9B8BA3] mb-1">Fin</label>
@@ -1155,19 +1328,18 @@ function PlannerContent() {
       {/* ===== MODAL: EDITAR PROYECTO ===== */}
       {editProjectModal && currentProject && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-end sm:items-center justify-center sm:p-4" onClick={e => { if (e.target === e.currentTarget) setEditProjectModal(false); }}>
-          <div className="bg-[#1E1230] border-t sm:border border-[#3D2548] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-sm shadow-2xl">
-            <div className="flex items-center justify-between px-5 py-4 border-b border-[#3D2548]">
+          <div className="bg-[#1E1230] border-t sm:border border-[#3D2548] rounded-t-2xl sm:rounded-2xl w-full sm:max-w-md shadow-2xl max-h-[92vh] overflow-y-auto">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-[#3D2548] sticky top-0 bg-[#1E1230] z-10">
               <h2 className="font-bold text-base">Editar proyecto</h2>
               <button onClick={() => setEditProjectModal(false)} className="w-7 h-7 rounded-lg bg-[#2D1B3D] hover:bg-red-900/40 text-[#9B8BA3] hover:text-red-400 flex items-center justify-center text-sm transition-colors">✕</button>
             </div>
-            <div className="p-5 space-y-3">
+            <div className="p-5 space-y-4">
               <div>
                 <label className="block text-xs text-[#9B8BA3] mb-1">Nombre *</label>
                 <input
                   value={editProjectForm.name}
                   onChange={e => setEditProjectForm(f => ({ ...f, name: e.target.value }))}
                   placeholder="Nombre del proyecto"
-                  onKeyDown={e => e.key === "Enter" && updateProject()}
                   className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]"
                   autoFocus
                 />
@@ -1181,8 +1353,51 @@ function PlannerContent() {
                   className="w-12 h-9 rounded-lg cursor-pointer border border-[#3D2548] bg-transparent p-1"
                 />
               </div>
+
+              {/* Gestión de columnas */}
+              <div>
+                <label className="block text-xs font-semibold text-[#9B8BA3] uppercase tracking-wider mb-2">Columnas de estado</label>
+                <div className="flex flex-wrap gap-2 mb-3 min-h-[32px]">
+                  {editProjectForm.columns.map((col, i) => (
+                    <div key={i} className="flex items-center gap-1 bg-[#2D1B3D] border border-[#3D2548] px-2.5 py-1 rounded-lg text-xs text-gray-200 group">
+                      <span>{col}</span>
+                      {editProjectForm.columns.length > 1 && (
+                        <button
+                          onClick={() => setEditProjectForm(f => ({ ...f, columns: f.columns.filter((_, j) => j !== i) }))}
+                          className="ml-1 w-3.5 h-3.5 flex items-center justify-center rounded-full text-[#9B8BA3] hover:text-red-400 hover:bg-red-900/30 transition-colors opacity-0 group-hover:opacity-100"
+                        >✕</button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <div className="flex gap-2">
+                  <input
+                    value={newColInput}
+                    onChange={e => setNewColInput(e.target.value)}
+                    onKeyDown={e => {
+                      if (e.key === "Enter" && newColInput.trim()) {
+                        if (editProjectForm.columns.includes(newColInput.trim())) { toast("Ya existe esa columna", "error"); return; }
+                        setEditProjectForm(f => ({ ...f, columns: [...f.columns, newColInput.trim()] }));
+                        setNewColInput("");
+                      }
+                    }}
+                    placeholder="Nueva columna... (ej: Apostillar)"
+                    className="flex-1 px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]"
+                  />
+                  <button
+                    onClick={() => {
+                      if (!newColInput.trim()) return;
+                      if (editProjectForm.columns.includes(newColInput.trim())) { toast("Ya existe esa columna", "error"); return; }
+                      setEditProjectForm(f => ({ ...f, columns: [...f.columns, newColInput.trim()] }));
+                      setNewColInput("");
+                    }}
+                    className="px-3 py-2 text-xs rounded-lg bg-[#6366f1] hover:bg-[#4f46e5] text-white transition-colors"
+                  >+</button>
+                </div>
+                <p className="text-[10px] text-[#6B5B73] mt-1.5">Las tareas de columnas eliminadas se mueven a la primera columna.</p>
+              </div>
             </div>
-            <div className="flex items-center justify-between px-5 pb-5">
+            <div className="flex items-center justify-between px-5 py-4 border-t border-[#3D2548]">
               <button onClick={deleteProject} className="px-4 py-2 text-xs font-medium rounded-lg bg-red-900/30 hover:bg-red-900/50 border border-red-800/40 text-red-400 transition-colors">
                 Eliminar proyecto
               </button>
