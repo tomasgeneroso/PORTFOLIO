@@ -1,7 +1,10 @@
 {
   "permissions": {
     "allow": [
-      "Bash(nul)"
+      "Bash(nul)",
+      "Bash(mkdir -p \"c:\\\\Users\\\\Tomas\\\\Documents\\\\GitHub\\\\portfolio\\\\app\\\\admin\\\\send\")",
+      "Bash(mkdir -p \"c:\\\\Users\\\\Tomas\\\\Documents\\\\GitHub\\\\portfolio\\\\app\\\\api\\\\admin\\\\send-email\")",
+      "Bash(npx tsc *)"
     ],
     "deny": [],
     "ask": []

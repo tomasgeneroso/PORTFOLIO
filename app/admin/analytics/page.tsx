@@ -110,6 +110,15 @@ export default function AnalyticsDashboard() {
             </svg>
             Planning
           </button>
+          <button
+            onClick={() => router.push("/admin/send")}
+            className="px-4 py-2 rounded-lg bg-[#3D2548] text-[#C9A8D8] hover:bg-[#4D3558] transition-colors border border-[#5D4568] flex items-center gap-2 text-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+            Envío masivo
+          </button>
           <div className="flex gap-1">
             {[7, 30, 90].map((d) => (
               <button

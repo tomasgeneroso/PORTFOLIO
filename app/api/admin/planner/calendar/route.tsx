@@ -26,7 +26,11 @@ function hexToCalendarColorId(hex: string): string {
   return closest;
 }
 
-async function getAccessToken(gc: any): Promise<string> {
+class TokenRevokedError extends Error {
+  constructor() { super("TOKEN_REVOKED"); }
+}
+
+async function getAccessToken(gc: any, settings?: any): Promise<string> {
   if (gc.accessToken && gc.tokenExpiry && Date.now() < gc.tokenExpiry - 60000) {
     return gc.accessToken;
   }
@@ -41,7 +45,20 @@ async function getAccessToken(gc: any): Promise<string> {
     }),
   });
   const data = await res.json();
-  if (!res.ok) throw new Error(data.error_description || "Failed to refresh token");
+  if (!res.ok) {
+    const isRevoked = data.error === "invalid_grant" ||
+      (data.error_description || "").toLowerCase().includes("revoked") ||
+      (data.error_description || "").toLowerCase().includes("expired");
+    if (isRevoked && settings) {
+      // Clear stored tokens so the status shows disconnected
+      settings.googleCalendar.refreshToken = "";
+      settings.googleCalendar.accessToken = "";
+      settings.googleCalendar.tokenExpiry = null;
+      await settings.save();
+      throw new TokenRevokedError();
+    }
+    throw new Error(data.error_description || "Failed to refresh token");
+  }
   return data.access_token;
 }
 
@@ -82,13 +99,10 @@ export async function POST(req: NextRequest) {
 
   let calEvent: any;
   try {
-    const accessToken = await getAccessToken(s.googleCalendar);
+    const accessToken = await getAccessToken(s.googleCalendar, s);
 
-    const reminderMinutes: number[] = Array.isArray(body.reminders) ? body.reminders : [];
-    const reminderOverrides = reminderMinutes.flatMap((m: number) => [
-      { method: "popup", minutes: m },
-      { method: "email", minutes: m },
-    ]);
+    const reminderMinutes: number[] = Array.isArray(body.reminders) ? body.reminders.slice(0, 5) : [];
+    const reminderOverrides = reminderMinutes.map((m: number) => ({ method: "popup", minutes: m }));
 
     const eventBody: any = {
       summary: body.title,
@@ -111,6 +125,9 @@ export async function POST(req: NextRequest) {
     calEvent = data;
   } catch (err: any) {
     console.error("[Calendar] Error creando evento:", err.message);
+    if (err instanceof TokenRevokedError) {
+      return NextResponse.json({ error: "TOKEN_REVOKED", message: "El token de Google Calendar expiró. Reconectá desde Configuración → Google Calendar." }, { status: 401 });
+    }
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 

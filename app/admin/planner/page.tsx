@@ -553,16 +553,32 @@ function PlannerContent() {
   const createCalEvent = async () => {
     if (!calForm.title || !calForm.start) { toast("Título y fecha son obligatorios", "error"); return; }
     try {
-      const result = await api.post("/api/admin/planner/calendar", {
-        title: calForm.title,
-        description: calForm.description,
-        start: new Date(calForm.start).toISOString(),
-        end: calForm.end ? new Date(calForm.end).toISOString() : null,
-        taskId: calModal.taskId,
-        projectId: currentProject?.id,
-        projectColor: currentProject?.color,
-        reminders: calForm.reminders,
+      const res = await fetch("/api/admin/planner/calendar", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: calForm.title,
+          description: calForm.description,
+          start: new Date(calForm.start).toISOString(),
+          end: calForm.end ? new Date(calForm.end).toISOString() : null,
+          taskId: calModal.taskId,
+          projectId: currentProject?.id,
+          projectColor: currentProject?.color,
+          reminders: calForm.reminders,
+        }),
       });
+      const result = await res.json();
+
+      if (!res.ok) {
+        if (result.error === "TOKEN_REVOKED") {
+          setCalConnected(false);
+          setCalModal({ open: false });
+          toast("Token de Google expiró — reconectá desde Configuración", "error");
+          setTimeout(() => { loadSettingsForm(settings); setSettingsModal(true); }, 600);
+          return;
+        }
+        throw new Error(result.message || result.error || "Error al crear evento");
+      }
 
       if (calModal.taskId) {
         setTasks(prev => prev.map(t => t.id === calModal.taskId ? { ...t, calendarEventId: result.event.id } : t));
