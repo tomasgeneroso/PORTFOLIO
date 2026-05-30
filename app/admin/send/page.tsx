@@ -129,7 +129,7 @@ export default function SendPage() {
   const pct = progress ? Math.round((progress.done / progress.total) * 100) : 0;
 
   return (
-    <div className="min-h-screen bg-[#1a1025] text-gray-100 p-6 flex flex-col items-center">
+    <div className="absolute inset-0 overflow-y-auto bg-[#1a1025] text-gray-100 p-6 flex flex-col items-center">
       {/* Header */}
       <div className="w-full max-w-2xl mb-8">
         <div className="flex items-center gap-3 mb-5">
