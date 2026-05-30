@@ -16,6 +16,19 @@ const toBase64 = (file: File): Promise<string> =>
     r.readAsDataURL(file);
   });
 
+function Section({ num, title, children }: { num: string; title: React.ReactNode; children: React.ReactNode }) {
+  return (
+    <div className="bg-[#1E1230] border border-[#2D1B3D] rounded-2xl p-5 mb-4">
+      <div className="flex items-center gap-3 mb-4">
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[#6366f1]">{num}</span>
+        <span className="font-mono text-[11px] uppercase tracking-wider text-[#9B8BA3]">— {title}</span>
+        <div className="flex-1 h-px bg-[#2D1B3D]" />
+      </div>
+      {children}
+    </div>
+  );
+}
+
 interface LogEntry { type: "ok" | "err" | "info"; msg: string; }
 
 export default function SendPage() {
@@ -114,17 +127,6 @@ export default function SendPage() {
   };
 
   const pct = progress ? Math.round((progress.done / progress.total) * 100) : 0;
-
-  const Section = ({ num, title, children }: { num: string; title: string; children: React.ReactNode }) => (
-    <div className="bg-[#1E1230] border border-[#2D1B3D] rounded-2xl p-5 mb-4">
-      <div className="flex items-center gap-3 mb-4">
-        <span className="font-mono text-[10px] uppercase tracking-widest text-[#6366f1]">{num}</span>
-        <span className="font-mono text-[11px] uppercase tracking-wider text-[#9B8BA3]">— {title}</span>
-        <div className="flex-1 h-px bg-[#2D1B3D]" />
-      </div>
-      {children}
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-[#1a1025] text-gray-100 p-6 flex flex-col items-center">
