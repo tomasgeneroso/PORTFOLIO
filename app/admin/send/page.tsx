@@ -148,7 +148,7 @@ export default function SendPage() {
           <span className="text-[#6366f1]">sin rastros</span>
         </h1>
         <p className="font-mono text-xs text-[#6B5B73] mt-2">
-          // cada destinatario recibe su propio correo individual
+          {"// cada destinatario recibe su propio correo individual"}
         </p>
       </div>
 

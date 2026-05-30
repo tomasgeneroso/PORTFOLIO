@@ -730,6 +730,9 @@ function PlannerContent() {
           <button onClick={() => router.push("/admin/analytics")} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-[#9B8BA3] hover:bg-[#2D1B3D] hover:text-gray-200 transition-colors">
             📊 Analytics
           </button>
+          <button onClick={() => router.push("/admin/send")} className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-xs text-[#9B8BA3] hover:bg-[#2D1B3D] hover:text-gray-200 transition-colors">
+            ✉️ Envío masivo
+          </button>
         </div>
       </aside>
 

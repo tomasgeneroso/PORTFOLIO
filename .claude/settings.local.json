@@ -4,7 +4,8 @@
       "Bash(nul)",
       "Bash(mkdir -p \"c:\\\\Users\\\\Tomas\\\\Documents\\\\GitHub\\\\portfolio\\\\app\\\\admin\\\\send\")",
       "Bash(mkdir -p \"c:\\\\Users\\\\Tomas\\\\Documents\\\\GitHub\\\\portfolio\\\\app\\\\api\\\\admin\\\\send-email\")",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(npm run *)"
     ],
     "deny": [],
     "ask": []
