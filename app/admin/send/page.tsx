@@ -73,6 +73,10 @@ export default function SendPage() {
 
   const handleFile = async (file: File | null | undefined) => {
     if (!file || file.type !== "application/pdf") return;
+    if (file.size > 3 * 1024 * 1024) {
+      alert(`El PDF pesa ${fmtSize(file.size)}. El límite es 3 MB.`);
+      return;
+    }
     try {
       const b64 = await toBase64(file);
       setPdfFile(file);
@@ -109,7 +113,8 @@ export default function SendPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ to, subject, body, pdfBase64: pdfB64, pdfName: pdfFile?.name ?? null }),
         });
-        const data = await res.json();
+        if (res.status === 413) throw new Error("Adjunto demasiado grande (límite ~3MB). Reducí el PDF.");
+        const data = await res.json().catch(() => ({ error: `Error del servidor (${res.status})` }));
         if (!res.ok) throw new Error(data.error || `Error ${res.status}`);
         ok++;
         addLog("ok", `✓ Enviado → ${to}`);
