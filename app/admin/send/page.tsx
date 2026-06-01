@@ -110,6 +110,7 @@ export default function SendPage() {
       try {
         const res = await fetch("/api/admin/send-email", {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ to, subject, body, pdfBase64: pdfB64, pdfName: pdfFile?.name ?? null }),
         });

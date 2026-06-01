@@ -111,8 +111,11 @@ const TimeLine: React.FC<UserProps> = (userData) => {
               </div>
 
               <div className="w-full h-auto overflow-hidden rounded-md my-2">
-                {project.projectImage.length > 0 && (
-                  <ImgProtfolioSlider images={project.projectImage} />
+                {Array.isArray(project.projectImage) && project.projectImage.length > 0 && (
+                  <ImgProtfolioSlider images={project.projectImage as string[]} />
+                )}
+                {!Array.isArray(project.projectImage) && project.projectImage && (
+                  project.projectImage as React.ReactNode
                 )}
               </div>
 

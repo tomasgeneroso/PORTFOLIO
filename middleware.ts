@@ -5,7 +5,7 @@ export function middleware(request: NextRequest) {
   // Proteger rutas de admin
   const path = request.nextUrl.pathname;
 
-  if (path.startsWith("/api/admin/planner")) {
+  if (path.startsWith("/api/admin")) {
     // El callback de Google OAuth viene de un redirect cross-site, sin cookie
     if (path === "/api/admin/planner/calendar/callback") return NextResponse.next();
     const authCookie = request.cookies.get("admin-auth");
@@ -24,5 +24,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/api/admin/planner/:path*"],
+  matcher: ["/admin/:path*", "/api/admin/:path*"],
 };

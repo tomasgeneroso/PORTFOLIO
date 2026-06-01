@@ -86,7 +86,7 @@ export default function AnalyticsDashboard() {
   const totalSocialClicks = stats.events.githubClicks + stats.events.linkedinClicks;
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container mx-auto px-4 py-8 pb-24 max-w-7xl">
 
       {/* Header */}
       <div className="flex justify-between items-center mb-8 flex-wrap gap-4">

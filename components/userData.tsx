@@ -241,6 +241,55 @@ My background includes a bachelor's degree in Economics and three years of studi
       ],
       link: "",
     },
+    {
+      projectName: "Personal Planner",
+      enterpriseicono: (
+        props: JSX.IntrinsicAttributes &
+          ClassAttributes<HTMLImageElement> &
+          ImgHTMLAttributes<HTMLImageElement>
+      ) => <img src="/Images/planner-icon.png" alt="Planner" {...props} className="w-6 h-6 object-contain" />,
+      projectImage: (
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 my-4">
+          <img src="/Images/PlannerHome.png" alt="Planner Home" className="rounded-xl w-full object-cover border border-white/10" />
+          <img src="/Images/PlannerStats.png" alt="Planner Stats" className="rounded-xl w-full object-cover border border-white/10" />
+        </div>
+      ),
+      date: "2025-01-01",
+      description:
+        "Full-stack personal productivity tool built into this portfolio. Features a Kanban board with drag-and-drop across columns and projects, Google Calendar integration for event creation with custom reminders, email scheduling via SMTP, photo attachments, soft-delete with 30-day recovery, and a statistics dashboard showing task completion rates per project.",
+      technologies: [
+        "Next.js",
+        "TypeScript",
+        "MongoDB",
+        "dnd-kit",
+        "Google Calendar API",
+        "Nodemailer",
+        "TailwindCSS",
+        "Vercel",
+      ],
+      link: "https://tomasgeneroso.site/admin/planner",
+    },
+    {
+      projectName: "Portfolio Analytics Dashboard",
+      enterpriseicono: undefined,
+      projectImage: (
+        <div className="w-full my-4">
+          <img src="/Images/AnalyticsDashboard.png" alt="Analytics Dashboard" className="rounded-xl w-full object-cover border border-white/10" />
+        </div>
+      ),
+      date: "2025-01-01",
+      description:
+        "Real-time analytics system built for this portfolio. Tracks visits, unique visitors, returning users, CV downloads, contact form submissions, social link clicks, geographic data (country & city), hourly activity patterns, and top referrers. Data is stored in MongoDB and visualised in a custom admin dashboard with configurable time ranges.",
+      technologies: [
+        "Next.js",
+        "TypeScript",
+        "MongoDB",
+        "Vercel Analytics",
+        "TailwindCSS",
+        "REST API",
+      ],
+      link: "https://tomasgeneroso.site/admin/analytics",
+    },
   ],
   certificates: [
     {
