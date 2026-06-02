@@ -1,21 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
+import { connectDB } from "@/lib/mongodb";
+import mongoose from "mongoose";
 
-// Token en memoria (válido 15 minutos)
-const tokens = new Map<string, number>();
+async function getTokensCollection() {
+  await connectDB();
+  return mongoose.connection.db!.collection("admin_reset_tokens");
+}
 
 export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
 
     if (email !== process.env.GMAIL_USER) {
-      // Respuesta genérica para no revelar si el email existe
       return NextResponse.json({ success: true });
     }
 
+    const col = await getTokensCollection();
     const token = crypto.randomBytes(32).toString("hex");
-    tokens.set(token, Date.now() + 15 * 60 * 1000);
+    const expiry = new Date(Date.now() + 15 * 60 * 1000);
+
+    await col.deleteMany({ type: "admin_reset" });
+    await col.insertOne({ type: "admin_reset", token, expiry });
 
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tomasgeneroso.site";
     const resetUrl = `${baseUrl}/admin/reset-password?token=${token}`;
@@ -60,23 +67,29 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ valid: false });
   }
 
-  const expiry = tokens.get(token);
-  if (!expiry || Date.now() > expiry) {
-    tokens.delete(token);
+  try {
+    const col = await getTokensCollection();
+    const doc = await col.findOne({ type: "admin_reset", token });
+
+    if (!doc || new Date() > new Date(doc.expiry)) {
+      await col.deleteOne({ token });
+      return NextResponse.json({ valid: false });
+    }
+
+    await col.deleteOne({ token });
+
+    const response = NextResponse.json({ valid: true });
+    response.cookies.set("admin-auth", "authenticated", {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      maxAge: 60 * 60 * 24 * 365,
+      path: "/",
+    });
+
+    return response;
+  } catch (error) {
+    console.error("[ForgotPassword GET] Error:", error);
     return NextResponse.json({ valid: false });
   }
-
-  // Token válido: crear sesión y eliminar token
-  tokens.delete(token);
-
-  const response = NextResponse.json({ valid: true });
-  response.cookies.set("admin-auth", "authenticated", {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-    maxAge: 60 * 60 * 24,
-    path: "/",
-  });
-
-  return response;
 }

@@ -12,13 +12,11 @@ export async function POST(request: NextRequest) {
         { status: 200 }
       );
 
-      // Establecer cookie segura
-      // La cookie expira en 24 horas
       response.cookies.set("admin-auth", "authenticated", {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
-        maxAge: 60 * 60 * 24, // 24 horas
+        sameSite: "lax",
+        maxAge: 60 * 60 * 24 * 365, // 1 año
         path: "/",
       });
 
