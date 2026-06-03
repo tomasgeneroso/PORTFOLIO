@@ -1338,6 +1338,12 @@ function PlannerContent() {
                   <button onClick={connectGoogle} className="px-3 py-1.5 text-xs rounded-lg border border-[#3D2548] hover:border-[#6366f1] text-[#9B8BA3] hover:text-[#C9A8D8] transition-colors">Conectar con Google</button>
                 </div>
               </section>
+
+              {/* Cambiar contraseña admin */}
+              <section className="border-t border-[#2D1B3D] pt-5">
+                <h3 className="text-sm font-bold mb-3 text-gray-200">🔑 Contraseña de acceso</h3>
+                <ChangePasswordForm />
+              </section>
             </div>
             <div className="flex justify-end gap-2 px-5 py-4 border-t border-[#3D2548] flex-shrink-0">
               <button onClick={() => setSettingsModal(false)} className="px-4 py-2 text-xs font-medium rounded-lg border border-[#3D2548] text-[#9B8BA3] hover:text-gray-200 transition-colors">Cancelar</button>
@@ -1478,5 +1484,47 @@ function PlannerContent() {
         ))}
       </div>
     </div>
+  );
+}
+
+function ChangePasswordForm() {
+  const [current, setCurrent] = useState("");
+  const [next, setNext] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [status, setStatus] = useState<"idle" | "ok" | "error">("idle");
+  const [msg, setMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (next !== confirm) { setStatus("error"); setMsg("Las contraseñas nuevas no coinciden"); return; }
+    setLoading(true);
+    setStatus("idle");
+    try {
+      const res = await fetch("/api/admin/change-password", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ current, next }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) { setStatus("error"); setMsg(data.error || "Error al cambiar"); }
+      else { setStatus("ok"); setMsg("Contraseña actualizada"); setCurrent(""); setNext(""); setConfirm(""); }
+    } catch { setStatus("error"); setMsg("Error de red"); }
+    finally { setLoading(false); }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="space-y-2">
+      <input type="password" value={current} onChange={e => setCurrent(e.target.value)} placeholder="Contraseña actual" required className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]" />
+      <input type="password" value={next} onChange={e => setNext(e.target.value)} placeholder="Nueva contraseña (mín. 6 caracteres)" required className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]" />
+      <input type="password" value={confirm} onChange={e => setConfirm(e.target.value)} placeholder="Confirmar nueva contraseña" required className="w-full px-3 py-2 bg-[#2D1B3D] border border-[#3D2548] rounded-lg text-sm focus:outline-none focus:border-[#6366f1] text-gray-100 placeholder-[#5D4568]" />
+      {status !== "idle" && (
+        <p className={`text-xs ${status === "ok" ? "text-green-400" : "text-red-400"}`}>{msg}</p>
+      )}
+      <button type="submit" disabled={loading} className="px-4 py-2 text-xs font-medium rounded-lg bg-[#3D2548] hover:bg-[#4D3558] text-[#C9A8D8] border border-[#5D4568] transition-colors disabled:opacity-50">
+        {loading ? "Guardando..." : "Cambiar contraseña"}
+      </button>
+    </form>
   );
 }

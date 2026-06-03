@@ -40,6 +40,7 @@ export interface IPlannerTask extends Document {
 }
 
 export interface IPlannerSettings extends Document {
+  adminPassword: string;
   myEmail: string;
   smtp: {
     host: string;
@@ -97,6 +98,7 @@ const PlannerTaskSchema = new Schema({
 });
 
 const PlannerSettingsSchema = new Schema({
+  adminPassword: { type: String, default: "" }, // SHA-256 hash; vacío = usar env var ADMIN_PASSWORD
   myEmail: { type: String, default: "" },
   smtp: {
     host: { type: String, default: "" },
