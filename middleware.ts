@@ -6,8 +6,10 @@ export function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;
 
   if (path.startsWith("/api/admin")) {
-    // El callback de Google OAuth viene de un redirect cross-site, sin cookie
+    // Rutas públicas dentro de /api/admin (no requieren cookie)
     if (path === "/api/admin/planner/calendar/callback") return NextResponse.next();
+    if (path === "/api/admin/forgot-password") return NextResponse.next();
+    if (path === "/api/admin/dev-login") return NextResponse.next();
     const authCookie = request.cookies.get("admin-auth");
     if (!authCookie || authCookie.value !== "authenticated") {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

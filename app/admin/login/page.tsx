@@ -41,20 +41,30 @@ export default function AdminLogin() {
     }
   };
 
+  const [forgotError, setForgotError] = useState("");
+
   const handleForgot = async (e: React.FormEvent) => {
     e.preventDefault();
     setForgotLoading(true);
     setForgotStatus("idle");
+    setForgotError("");
 
     try {
-      await fetch("/api/admin/forgot-password", {
+      const res = await fetch("/api/admin/forgot-password", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: forgotEmail }),
       });
-      setForgotStatus("sent");
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setForgotError(data.error || `Error ${res.status}`);
+        setForgotStatus("error");
+      } else {
+        setForgotStatus("sent");
+      }
     } catch {
       setForgotStatus("error");
+      setForgotError("No se pudo conectar al servidor.");
     } finally {
       setForgotLoading(false);
     }
@@ -172,7 +182,7 @@ export default function AdminLogin() {
 
                 {forgotStatus === "error" && (
                   <div className="p-3 rounded-lg bg-red-900/20 border border-red-800/40">
-                    <p className="text-sm text-red-400">Error al enviar. Intentá de nuevo.</p>
+                    <p className="text-sm text-red-400">{forgotError || "Error al enviar. Intentá de nuevo."}</p>
                   </div>
                 )}
 

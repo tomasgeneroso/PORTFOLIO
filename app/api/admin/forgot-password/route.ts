@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 import crypto from "crypto";
 import { connectDB } from "@/lib/mongodb";
+import { getOrCreateSettings } from "@/models/planner";
 import mongoose from "mongoose";
 
 async function getTokensCollection() {
@@ -13,7 +14,8 @@ export async function POST(request: NextRequest) {
   try {
     const { email } = await request.json();
 
-    if (email !== process.env.GMAIL_USER) {
+    const adminEmail = process.env.GMAIL_USER || "";
+    if (!adminEmail || email !== adminEmail) {
       return NextResponse.json({ success: true });
     }
 
@@ -27,19 +29,28 @@ export async function POST(request: NextRequest) {
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://tomasgeneroso.site";
     const resetUrl = `${baseUrl}/admin/reset-password?token=${token}`;
 
+    const s = await getOrCreateSettings();
+    const { smtp } = s;
+    const smtpHost = smtp.host || "smtp.gmail.com";
+    const smtpPort = smtp.port || 465;
+    const smtpSecure = smtp.host ? smtp.secure : true;
+    const smtpUser = smtp.user || process.env.GMAIL_USER || "";
+    const smtpPass = smtp.pass || process.env.GMAIL_APP_PASSWORD || "";
+
+    if (!smtpUser || !smtpPass) {
+      return NextResponse.json({ success: false, error: "SMTP no configurado" }, { status: 400 });
+    }
+
     const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_APP_PASSWORD,
-      },
+      host: smtpHost,
+      port: smtpPort,
+      secure: smtpSecure,
+      auth: { user: smtpUser, pass: smtpPass },
     });
 
     await transporter.sendMail({
-      from: `"Portfolio Admin" <${process.env.GMAIL_USER}>`,
-      to: process.env.GMAIL_USER,
+      from: `"Portfolio Admin" <${smtpUser}>`,
+      to: adminEmail,
       subject: "Restablecer contraseña - Admin Portfolio",
       html: `
         <div style="font-family: sans-serif; max-width: 500px; margin: 0 auto;">
@@ -54,9 +65,9 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
+  } catch (error: any) {
     console.error("[ForgotPassword] Error:", error);
-    return NextResponse.json({ success: false }, { status: 500 });
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
 
