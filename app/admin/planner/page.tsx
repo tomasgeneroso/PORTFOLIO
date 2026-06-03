@@ -527,13 +527,9 @@ function PlannerContent() {
         smtp: { host: settingsForm.smtpHost, port: settingsForm.smtpPort, secure: settingsForm.smtpSecure, user: settingsForm.smtpUser, pass: settingsForm.smtpPass },
         googleCalendar: { clientId: settingsForm.gcClientId, clientSecret: settingsForm.gcClientSecret, redirectUri: settingsForm.gcRedirectUri || `${window.location.origin}/api/admin/planner/calendar/callback` },
       });
-      // Actualizar el estado local para que al reabrir el modal no cargue valores viejos
-      setSettings((prev: any) => ({
-        ...prev,
-        myEmail: settingsForm.myEmail,
-        smtp: { host: settingsForm.smtpHost, port: settingsForm.smtpPort, secure: settingsForm.smtpSecure, user: settingsForm.smtpUser, pass: settingsForm.smtpPass },
-        googleCalendar: { ...prev?.googleCalendar, clientId: settingsForm.gcClientId, clientSecret: settingsForm.gcClientSecret, redirectUri: settingsForm.gcRedirectUri },
-      }));
+      // Recargar desde DB para que al reabrir el modal tenga los valores actualizados
+      const fresh = await api.get("/api/admin/planner/settings");
+      setSettings(fresh);
       toast("Configuración guardada", "success");
       setSettingsModal(false);
     } catch (e: any) { toast(e.message, "error"); }
