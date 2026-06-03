@@ -13,6 +13,7 @@ export default function AdminLogin() {
   const [forgotEmail, setForgotEmail] = useState("");
   const [forgotStatus, setForgotStatus] = useState<"idle" | "sent" | "error">("idle");
   const [forgotLoading, setForgotLoading] = useState(false);
+  const [resetUrl, setResetUrl] = useState("");
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -60,6 +61,7 @@ export default function AdminLogin() {
         setForgotError(data.error || `Error ${res.status}`);
         setForgotStatus("error");
       } else {
+        setResetUrl(data.resetUrl || "");
         setForgotStatus("sent");
       }
     } catch {
@@ -151,13 +153,21 @@ export default function AdminLogin() {
         ) : (
           <>
             {forgotStatus === "sent" ? (
-              <div className="text-center py-4">
-                <div className="text-3xl mb-3">📧</div>
-                <p className="text-gray-100 font-medium">Revisá tu email</p>
-                <p className="text-[#9B8BA3] text-sm mt-2">Enviamos un enlace de acceso válido por 15 minutos.</p>
+              <div className="py-4">
+                <div className="text-3xl mb-3 text-center">🔑</div>
+                <p className="text-gray-100 font-medium text-center mb-3">Tu enlace de acceso</p>
+                <p className="text-[#9B8BA3] text-xs mb-3 text-center">Válido por 15 minutos. Hacé clic para entrar.</p>
+                {resetUrl && (
+                  <a
+                    href={resetUrl}
+                    className="block w-full py-3 px-4 rounded-lg font-medium bg-[#7C5C8F] text-white hover:bg-[#8D6BA0] transition-colors text-center text-sm break-all"
+                  >
+                    Acceder al panel →
+                  </a>
+                )}
                 <button
-                  onClick={() => { setForgotMode(false); setForgotStatus("idle"); }}
-                  className="mt-6 text-sm text-[#7C5C8F] hover:text-[#C9A8D8] transition-colors"
+                  onClick={() => { setForgotMode(false); setForgotStatus("idle"); setResetUrl(""); }}
+                  className="mt-6 w-full text-sm text-[#6B5B73] hover:text-[#C9A8D8] transition-colors text-center"
                 >
                   ← Volver al login
                 </button>
